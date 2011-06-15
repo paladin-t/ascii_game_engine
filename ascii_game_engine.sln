@@ -8,6 +8,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ascii_game_engine", "ascii_game_engine\ascii_game_engine.vcproj", "{E9FEBB11-9649-4CFC-A5F5-EA7D7BDB1741}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "document", "document", "{40833A61-60B3-41A0-8BF7-7AACE1A47C42}"
+	ProjectSection(SolutionItems) = preProject
+		history.txt = history.txt
+		license.txt = license.txt
+		readme.txt = readme.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32

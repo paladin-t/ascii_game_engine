@@ -6,10 +6,10 @@
 #define _AGE_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
 #define _AGE_VERSION_STRING "1.0.0001"
 
-u32 getVer(void) {
+u32 get_ver(void) {
 	return _AGE_VERSION;
 }
 
-const s8* getVerString(void) {
+const s8* get_ver_string(void) {
 	return _AGE_VERSION_STRING;
 }
