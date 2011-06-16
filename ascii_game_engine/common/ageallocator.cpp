@@ -23,41 +23,18 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_TYPE_H__
-#define __AGE_TYPE_H__
+#include <malloc.h>
+#include <memory.h>
 
-#ifndef bl
-#	define bl int
-#endif
-#ifndef TRUE
-#	define TRUE 1
-#endif
-#ifndef FALSE
-#	define FALSE 0
-#endif
+#include "ageallocator.h"
 
-typedef char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-typedef long long s64;
-typedef unsigned long long u64;
+Ptr age_malloc(s32 _size) {
+	Ptr result = malloc(_size);
+	memset(result, 0, _size);
 
-typedef s8* Str;
-typedef void* Ptr;
+	return result;
+}
 
-typedef unsigned int Color;
-
-typedef struct {
-	s32 x;
-	s32 y;
-} Point;
-
-typedef struct {
-	s32 w;
-	s32 h;
-} Size;
-
-#endif /* __AGE_TYPE_H__ */
+void age_free(Ptr _ptr) {
+	free(_ptr);
+}
