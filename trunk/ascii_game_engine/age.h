@@ -42,15 +42,15 @@ typedef struct {
 } World;
 
 AGE_API u32 get_ver(void);
-AGE_API const s8* get_ver_string(void);
+AGE_API const Str get_ver_string(void);
 
 AGE_API World* create_world(void);
 AGE_API World* get_world(void);
 AGE_API void destroy_world(World* _wld);
 
-AGE_API bl config_world(const s8* _cfgFile);
+AGE_API bl config_world(const Str _cfgFile);
 
-AGE_API bl run_world_script(const s8* _sptFile);
-AGE_API bl run_new_script(const s8* _sptFile);
+AGE_API bl run_world_script(const Str _sptFile);
+AGE_API bl run_new_script(const Str _sptFile);
 
 #endif /* __AGE_H__ */

@@ -38,4 +38,13 @@
 #	define AGE_INTERNAL __attribute__ ((visibility("hidden")))
 #endif
 
+#ifndef CANVAS_WIDTH
+#	define CANVAS_WIDTH 80
+#endif
+#ifndef CANVAS_HEIGHT
+#	define CANVAS_HEIGHT 25
+#endif
+
+#include "libcstl/cstl/cvector.h"
+
 #endif /* __AGE_CONFIG_H__ */

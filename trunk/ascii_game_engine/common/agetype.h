@@ -27,7 +27,7 @@
 #define __AGE_TYPE_H__
 
 #ifndef bl
-#	define bl int
+#	define bl unsigned char
 #endif
 #ifndef TRUE
 #	define TRUE 1
