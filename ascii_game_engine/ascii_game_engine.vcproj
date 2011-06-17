@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="libcstl"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;FREEGLUT_EXPORTS;INTE_COMPILE"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -188,6 +188,14 @@
 		<Filter
 			Name="script"
 			>
+			<File
+				RelativePath=".\script\agescriptapi.c"
+				>
+			</File>
+			<File
+				RelativePath=".\script\agescriptapi.h"
+				>
+			</File>
 			<Filter
 				Name="my_basic"
 				>

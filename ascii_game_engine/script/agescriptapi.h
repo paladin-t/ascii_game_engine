@@ -23,46 +23,14 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef _MSC_VER
-#	include <windows.h>
-#	include <crtdbg.h>
-#endif // _MSC_VER
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __AGE_SCRIPT_API_H__
+#define __AGE_SCRIPT_API_H__
 
-#include "age.h"
+#include "../ageconfig.h"
+#include "../common/agetype.h"
+#include "my_basic/my_basic.h"
 
-static void __exit(void) {
-#ifdef _MSC_VER
-	int c = _CrtDumpMemoryLeaks();
+AGE_INTERNAL int age_api_beep(mb_interpreter_t* s, void** l);
+AGE_INTERNAL int age_api_reg_key_code(mb_interpreter_t* s, void** l);
 
-	if(0 != c) {
-		_asm int 3
-	}
-#endif /* _MSC_VER */
-}
-
-int main(int argc, char* argv[]) {
-#ifdef _MSC_VER
-	_CrtSetBreakAlloc(0);
-#endif /* _MSC_VER */
-
-	atexit(__exit);
-
-	create_world();
-	config_world("data/config.bas");
-	destroy_world(get_world());
-	{
-		HANDLE hConsole;
-		int k;
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		// you can loop k higher to see more color choices
-		for(k = 1; k < 255; k++) {
-			// pick the colorattribute k you want
-			SetConsoleTextAttribute(hConsole, k);
-			printf("%d  I want to be nice today!\n", k);
-		}
-	}
-
-	return 0;
-}
+#endif /* __AGE_SCRIPT_API_H__ */

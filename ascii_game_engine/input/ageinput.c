@@ -1,7 +1,7 @@
 /*
 ** This source file is part of MY-BASIC
 **
-** For the latest info, see http://code.google.com/p/my-basic/
+** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
 ** Copyright (c) 2011 Tony & Tony's Toy Game Development Team
 **
@@ -23,20 +23,49 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <assert.h>
 #include <conio.h>
 
 #include "ageinput.h"
 
-bl is_key_down(KeyCodes _keyCode) {
+static s32 KEY_MAP[MAX_PLAYER_COUNT][KC_COUNT];
+
+bl open_input(void) {
+	bl result = TRUE;
+
+	memset(&KEY_MAP, 0, sizeof(KEY_MAP));
+
+	return result;
+}
+
+bl close_input(void) {
+	bl result = TRUE;
+
+	return result;
+}
+
+bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode) {
+	bl result = TRUE;
+
+	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyCode >= 0 && _keyCode < KC_COUNT);
+
+	KEY_MAP[_player][_keyIdx] = _keyCode;
+
+	return result;
+}
+
+bl is_key_down(s32 _player, KeyIndex _keyCode) {
 	bl result = FALSE;
 	int key = 0;
+
+	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyCode >= 0 && _keyCode < KC_COUNT);
 
 	if(kbhit()) {
 		key = getch();
 		if(224 == key) {
 			key = getch();
 		}
-		result = _keyCode == key;
+		result = KEY_MAP[_player][_keyCode] == key;
 	}
 
 	return result;

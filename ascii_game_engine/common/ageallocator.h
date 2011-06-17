@@ -1,7 +1,7 @@
 /*
 ** This source file is part of MY-BASIC
 **
-** For the latest info, see http://code.google.com/p/my-basic/
+** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
 ** Copyright (c) 2011 Tony & Tony's Toy Game Development Team
 **
