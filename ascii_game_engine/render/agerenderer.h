@@ -30,7 +30,18 @@
 #include "../common/agetype.h"
 
 typedef struct {
+	s8 c;
+	Color color;
+} Pixel;
+
+typedef struct {
 	Size size;
+	Pixel* tex;
+} Sprite;
+
+typedef struct {
+	Size size;
+	vector_t* pixels;
 } Canvas;
 
 AGE_API Canvas* create_canvas(void);

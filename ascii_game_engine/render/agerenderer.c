@@ -27,7 +27,12 @@
 #include "agerenderer.h"
 
 Canvas* create_canvas(void) {
-	return AGE_MALLOC(Canvas);
+	Canvas* result = AGE_MALLOC(Canvas);
+
+	result->size.w = CANVAS_WIDTH;
+	result->size.h = CANVAS_HEIGHT;
+
+	return result;
 }
 
 void destroy_canvas(Canvas* _cvs) {

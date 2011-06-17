@@ -77,7 +77,7 @@ u32 get_ver(void) {
 	return _AGE_VERSION;
 }
 
-const s8* get_ver_string(void) {
+const Str get_ver_string(void) {
 	return _AGE_VERSION_STRING;
 }
 
@@ -113,7 +113,7 @@ void destroy_world(World* _wld) {
 	_gWorld = 0;
 }
 
-bl config_world(const s8* _cfgFile) {
+bl config_world(const Str _cfgFile) {
 	bl result = TRUE;
 
 	assert(_gWorld);
@@ -126,7 +126,7 @@ bl config_world(const s8* _cfgFile) {
 	return result;
 }
 
-bl run_world_script(const s8* _sptFile) {
+bl run_world_script(const Str _sptFile) {
 	bl result = TRUE;
 
 	assert(_gWorld);
@@ -139,7 +139,7 @@ bl run_world_script(const s8* _sptFile) {
 	return result;
 }
 
-bl run_new_script(const s8* _sptFile) {
+bl run_new_script(const Str _sptFile) {
 	bl result = TRUE;
 	mb_interpreter_t* script = 0;
 
