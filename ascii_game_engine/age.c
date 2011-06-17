@@ -36,6 +36,7 @@
 static World* _gWorld = 0;
 
 static void _on_error(mb_interpreter_t* s, mb_error_e e, char* m, int p);
+static bl _register_apis(mb_interpreter_t* s);
 static bl _open_script(mb_interpreter_t** s);
 static bl _close_script(mb_interpreter_t** s);
 
@@ -45,13 +46,21 @@ void _on_error(mb_interpreter_t* s, mb_error_e e, char* m, int p) {
 	}
 }
 
+bl _register_apis(mb_interpreter_t* s) {
+	bl result = TRUE;
+
+	mb_register_func(s, "BEEP", age_api_beep);
+	mb_register_func(s, "REGKEY", age_api_reg_key_code);
+
+	return result;
+}
+
 bl _open_script(mb_interpreter_t** s) {
 	bl result = TRUE;
 
 	mb_open(s);
 	mb_set_error_handler(*s, _on_error);
-	mb_register_func(*s, "BEEP", age_api_beep);
-	mb_register_func(*s, "REG_KEY", age_api_reg_key_code);
+	_register_apis(*s);
 
 	return result;
 }
@@ -109,6 +118,8 @@ bl config_world(const s8* _cfgFile) {
 
 	assert(_gWorld);
 
+	mb_reset(&_gWorld->script);
+	_register_apis(_gWorld->script);
 	mb_load_file(_gWorld->script, _cfgFile);
 	mb_run(_gWorld->script);
 
@@ -120,6 +131,8 @@ bl run_world_script(const s8* _sptFile) {
 
 	assert(_gWorld);
 
+	mb_reset(&_gWorld->script);
+	_register_apis(_gWorld->script);
 	mb_load_file(_gWorld->script, _sptFile);
 	mb_run(_gWorld->script);
 

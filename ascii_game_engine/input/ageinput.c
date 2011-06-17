@@ -23,6 +23,7 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <memory.h>
 #include <assert.h>
 #include <conio.h>
 
@@ -47,25 +48,25 @@ bl close_input(void) {
 bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode) {
 	bl result = TRUE;
 
-	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyCode >= 0 && _keyCode < KC_COUNT);
+	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyIdx >= 0 && _keyIdx < KC_COUNT);
 
 	KEY_MAP[_player][_keyIdx] = _keyCode;
 
 	return result;
 }
 
-bl is_key_down(s32 _player, KeyIndex _keyCode) {
+bl is_key_down(s32 _player, KeyIndex _keyIdx) {
 	bl result = FALSE;
 	int key = 0;
 
-	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyCode >= 0 && _keyCode < KC_COUNT);
+	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyIdx >= 0 && _keyIdx < KC_COUNT);
 
 	if(kbhit()) {
 		key = getch();
 		if(224 == key) {
 			key = getch();
 		}
-		result = KEY_MAP[_player][_keyCode] == key;
+		result = KEY_MAP[_player][_keyIdx] == key;
 	}
 
 	return result;
