@@ -1,7 +1,7 @@
 /*
 ** This source file is part of MY-BASIC
 **
-** For the latest info, see http://code.google.com/p/my-basic/
+** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
 ** Copyright (c) 2011 Tony & Tony's Toy Game Development Team
 **
@@ -34,5 +34,6 @@ typedef struct {
 } Canvas;
 
 AGE_API Canvas* create_canvas(void);
+AGE_API void destroy_canvas(Canvas* _cvs);
 
 #endif /* __AGE_RENDERER_H__ */

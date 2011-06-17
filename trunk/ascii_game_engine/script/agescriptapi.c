@@ -23,46 +23,37 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef _MSC_VER
-#	include <windows.h>
-#	include <crtdbg.h>
-#endif // _MSC_VER
 #include <stdio.h>
-#include <stdlib.h>
+#include <assert.h>
 
-#include "age.h"
+#include "agescriptapi.h"
+#include "../input/ageinput.h"
 
-static void __exit(void) {
-#ifdef _MSC_VER
-	int c = _CrtDumpMemoryLeaks();
+int age_api_beep(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
 
-	if(0 != c) {
-		_asm int 3
-	}
-#endif /* _MSC_VER */
+	assert(s && l);
+
+	putchar('\a');
+
+	return result;
 }
 
-int main(int argc, char* argv[]) {
-#ifdef _MSC_VER
-	_CrtSetBreakAlloc(0);
-#endif /* _MSC_VER */
+int age_api_reg_key_code(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	s32 _ply = 0;
+	s32 _idx = 0;
+	s32 _cod = 0;
 
-	atexit(__exit);
+	assert(s && l);
 
-	create_world();
-	config_world("data/config.bas");
-	destroy_world(get_world());
-	{
-		HANDLE hConsole;
-		int k;
-		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		// you can loop k higher to see more color choices
-		for(k = 1; k < 255; k++) {
-			// pick the colorattribute k you want
-			SetConsoleTextAttribute(hConsole, k);
-			printf("%d  I want to be nice today!\n", k);
-		}
-	}
+	mb_attempt_open_bracket(s, l);
+	mb_pop_int(s, l, &_ply);
+	mb_pop_int(s, l, &_idx);
+	mb_pop_int(s, l, &_cod);
+	mb_attempt_close_bracket(s, l);
 
-	return 0;
+	register_key_map(_ply, _idx, _cod);
+
+	return result;
 }

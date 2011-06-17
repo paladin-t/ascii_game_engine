@@ -1,7 +1,7 @@
 /*
 ** This source file is part of MY-BASIC
 **
-** For the latest info, see http://code.google.com/p/my-basic/
+** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
 ** Copyright (c) 2011 Tony & Tony's Toy Game Development Team
 **
@@ -26,14 +26,31 @@
 #ifndef __AGE_H__
 #define __AGE_H__
 
+#include <assert.h>
+
 #include "ageconfig.h"
 #include "script/my_basic/my_basic.h"
+#include "script/agescriptapi.h"
 #include "common/agetype.h"
 #include "common/ageallocator.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
 
+typedef struct {
+	Canvas* canvas;
+	mb_interpreter_t* script;
+} World;
+
 AGE_API u32 get_ver(void);
 AGE_API const s8* get_ver_string(void);
+
+AGE_API World* create_world(void);
+AGE_API World* get_world(void);
+AGE_API void destroy_world(World* _wld);
+
+AGE_API bl config_world(const s8* _cfgFile);
+
+AGE_API bl run_world_script(const s8* _sptFile);
+AGE_API bl run_new_script(const s8* _sptFile);
 
 #endif /* __AGE_H__ */
