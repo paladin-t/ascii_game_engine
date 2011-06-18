@@ -26,8 +26,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "agescriptapi.h"
+#include "../common/ageutil.h"
 #include "../input/ageinput.h"
+#include "agescriptapi.h"
 
 int age_api_beep(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;

@@ -23,9 +23,11 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <assert.h>
 #include <malloc.h>
 #include <memory.h>
 
+#include "../common/ageutil.h"
 #include "ageallocator.h"
 
 Ptr age_malloc(s32 _size) {
@@ -36,5 +38,7 @@ Ptr age_malloc(s32 _size) {
 }
 
 void age_free(Ptr _ptr) {
+	assert(_ptr);
+
 	free(_ptr);
 }

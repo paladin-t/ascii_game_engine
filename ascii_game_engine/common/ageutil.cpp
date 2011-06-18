@@ -23,23 +23,4 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_ALLOCATOR_H__
-#define __AGE_ALLOCATOR_H__
-
-#include "../ageconfig.h"
-#include "../common/agetype.h"
-
-AGE_API Ptr age_malloc(s32 _size);
-AGE_API void age_free(Ptr _ptr);
-
-#ifndef AGE_MALLOC
-#	define AGE_MALLOC(_type) ((_type*)age_malloc(sizeof(_type)))
-#endif
-#ifndef AGE_MALLOC_ARR
-#	define AGE_MALLOC_ARR(_type, _count) ((_type*)age_malloc(sizeof(_type) * _count))
-#endif
-#ifndef AGE_FREE
-#	define AGE_FREE(_ptr) { age_free(_ptr); (_ptr) = 0; }
-#endif
-
-#endif /* __AGE_ALLOCATOR_H__ */
+#include "ageutil.h"

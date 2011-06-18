@@ -56,9 +56,9 @@ extern "C" {
 /** Macros */
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 8
+#define _VER_REVISION 9
 #define _MB_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _MB_VERSION_STRING "1.0.0008"
+#define _MB_VERSION_STRING "1.0.0009"
 
 /* Helper */
 #ifndef sgn
@@ -1661,6 +1661,7 @@ bool_t _is_comment(char c) {
 bool_t _is_identifier_char(char c) {
 	/* Determine whether a char is a identifier char */
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+		(c == '_') ||
 		(c >= '0' && c <= '9') ||
 		(c == '$') ||
 		(c == '-') ||
@@ -2887,7 +2888,7 @@ int mb_close(mb_interpreter_t** s) {
 	return result;
 }
 
-int mb_reset(mb_interpreter_t** s) {
+int mb_reset(mb_interpreter_t** s, bool_t clrf/* = false*/) {
 	/* Reset a MY-BASIC environment */
 	int result = MB_FUNC_OK;
 	_ht_node_t* global_scope = 0;
@@ -2914,9 +2915,11 @@ int mb_reset(mb_interpreter_t** s) {
 	_ht_foreach(global_scope, _destroy_object);
 	_ht_clear(global_scope);
 
-	global_scope = (_ht_node_t*)((*s)->global_func_dict);
-	_ht_foreach(global_scope, _ls_free_extra);
-	_ht_clear(global_scope);
+	if(clrf) {
+		global_scope = (_ht_node_t*)((*s)->global_func_dict);
+		_ht_foreach(global_scope, _ls_free_extra);
+		_ht_clear(global_scope);
+	}
 
 	result = _open_constant(*s);
 	assert(MB_FUNC_OK == result);
