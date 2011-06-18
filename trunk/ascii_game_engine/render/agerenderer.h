@@ -37,14 +37,25 @@ typedef struct {
 typedef struct {
 	Size size;
 	Pixel* tex;
+} Frame;
+
+typedef struct {
+	Size frameSize;
+	s32 frameCount;
+	Frame* frames;
 } Sprite;
 
 typedef struct {
 	Size size;
-	vector_t* pixels;
+	Pixel* pixels;
+	vector_t* sprites;
 } Canvas;
 
 AGE_API Canvas* create_canvas(void);
 AGE_API void destroy_canvas(Canvas* _cvs);
+
+AGE_API void set_cursor_visible(bl _vis);
+AGE_API void goto_xy(s32 _x, s32 _y);
+AGE_API void set_color(Color _col);
 
 #endif /* __AGE_RENDERER_H__ */

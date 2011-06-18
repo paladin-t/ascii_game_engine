@@ -184,6 +184,14 @@
 				RelativePath=".\common\agetype.h"
 				>
 			</File>
+			<File
+				RelativePath=".\common\ageutil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\common\ageutil.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="script"

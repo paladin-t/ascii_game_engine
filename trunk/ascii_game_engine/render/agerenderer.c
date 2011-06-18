@@ -23,18 +23,52 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <windows.h>
+
 #include "../common/ageallocator.h"
+#include "../common/ageutil.h"
 #include "agerenderer.h"
 
+static const Color COLOR_MAP[] = {
+	0,   1,   2,   3,   4,   5,   6,   7,
+	8,   9,   10,  11,  12,  13,  14,  15,
+};
+
 Canvas* create_canvas(void) {
+	int count = CANVAS_WIDTH * CANVAS_HEIGHT;
 	Canvas* result = AGE_MALLOC(Canvas);
 
 	result->size.w = CANVAS_WIDTH;
 	result->size.h = CANVAS_HEIGHT;
+	result->pixels = AGE_MALLOC_ARR(Pixel, count);
 
 	return result;
 }
 
 void destroy_canvas(Canvas* _cvs) {
+	AGE_FREE(_cvs->pixels);
 	AGE_FREE(_cvs);
+}
+
+void set_cursor_visible(bl _vis) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cci;
+	GetConsoleCursorInfo(hOut, &cci);
+	cci.bVisible = _vis;
+	SetConsoleCursorInfo(hOut, &cci);
+}
+
+void goto_xy(s32 _x, s32 _y) {
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD pos;
+	pos.X = _x;
+	pos.Y = _y;
+	SetConsoleCursorPosition(hOut, pos);
+}
+
+void set_color(Color _col) {
+	HANDLE hConsole;
+	assert(_col >= 0 && _col < _countof(COLOR_MAP));
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, COLOR_MAP[_col]);
 }

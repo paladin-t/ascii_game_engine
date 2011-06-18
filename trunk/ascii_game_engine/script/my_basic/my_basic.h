@@ -156,7 +156,7 @@ MBAPI int mb_init(void);
 MBAPI int mb_dispose(void);
 MBAPI int mb_open(mb_interpreter_t** s);
 MBAPI int mb_close(mb_interpreter_t** s);
-MBAPI int mb_reset(mb_interpreter_t** s);
+MBAPI int mb_reset(mb_interpreter_t** s, bool_t clrf);
 
 MBAPI int mb_register_func(mb_interpreter_t* s, const char* n, mb_func_t f);
 MBAPI int mb_remove_func(mb_interpreter_t* s, const char* n);

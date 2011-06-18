@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <conio.h>
 
+#include "../common/ageutil.h"
 #include "ageinput.h"
 
 static s32 KEY_MAP[MAX_PLAYER_COUNT][KC_COUNT];

@@ -50,7 +50,7 @@ bl _register_apis(mb_interpreter_t* s) {
 	bl result = TRUE;
 
 	mb_register_func(s, "BEEP", age_api_beep);
-	mb_register_func(s, "REGKEY", age_api_reg_key_code);
+	mb_register_func(s, "REG_KEY", age_api_reg_key_code);
 
 	return result;
 }
@@ -118,8 +118,7 @@ bl config_world(const Str _cfgFile) {
 
 	assert(_gWorld);
 
-	mb_reset(&_gWorld->script);
-	_register_apis(_gWorld->script);
+	mb_reset(&_gWorld->script, FALSE);
 	mb_load_file(_gWorld->script, _cfgFile);
 	mb_run(_gWorld->script);
 
@@ -131,8 +130,7 @@ bl run_world_script(const Str _sptFile) {
 
 	assert(_gWorld);
 
-	mb_reset(&_gWorld->script);
-	_register_apis(_gWorld->script);
+	mb_reset(&_gWorld->script, FALSE);
 	mb_load_file(_gWorld->script, _sptFile);
 	mb_run(_gWorld->script);
 

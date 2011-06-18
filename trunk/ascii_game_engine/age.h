@@ -33,6 +33,7 @@
 #include "script/agescriptapi.h"
 #include "common/agetype.h"
 #include "common/ageallocator.h"
+#include "common/ageutil.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
 
