@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	destroy_world(get_world());
 	{
 		int k;
-		for(k = 1; k < 255; k++) {
+		for(k = 0; k < 16; k++) {
 			set_color(k);
 			printf("%d  I want to be nice today!\n", k);
 		}
