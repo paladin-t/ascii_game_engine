@@ -45,6 +45,4 @@
 #	define CANVAS_HEIGHT 25
 #endif
 
-#include "libcstl/cstl/cvector.h"
-
 #endif /* __AGE_CONFIG_H__ */
