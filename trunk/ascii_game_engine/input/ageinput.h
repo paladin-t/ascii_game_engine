@@ -31,17 +31,6 @@
 
 #define MAX_PLAYER_COUNT 2
 
-/*
-typedef enum {
-	KC_UP = 72,
-	KC_DOWN = 80,
-	KC_LEFT = 75,
-	KC_RIGHT = 77,
-	KC_OK = 13,
-	KC_ESC = 27,
-} KeyCodes;
-*/
-
 typedef enum {
 	KC_UP,
 	KC_DOWN,
