@@ -44,6 +44,8 @@ typedef int s32;
 typedef unsigned int u32;
 typedef long long s64;
 typedef unsigned long long u64;
+typedef float f32;
+typedef double f64;
 
 typedef s8* Str;
 typedef void* Ptr;

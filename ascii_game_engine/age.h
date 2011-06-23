@@ -26,8 +26,6 @@
 #ifndef __AGE_H__
 #define __AGE_H__
 
-#include <assert.h>
-
 #include "ageconfig.h"
 #include "script/my_basic/my_basic.h"
 #include "script/agescriptapi.h"
@@ -36,6 +34,13 @@
 #include "common/ageutil.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
+
+#ifndef AGE_WLD
+#	define AGE_WLD get_world()
+#endif
+#ifndef AGE_CVS
+#	define AGE_CVS get_world()->canvas
+#endif
 
 typedef struct {
 	Canvas* canvas;

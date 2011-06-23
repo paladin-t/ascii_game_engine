@@ -23,35 +23,33 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "../common/ageutil.h"
-#include "../input/ageinput.h"
-#include "agescriptapi.h"
+#ifndef __AGE_HASH_TABLE_H__
+#define __AGE_HASH_TABLE_H__
 
-int age_api_beep(mb_interpreter_t* s, void** l) {
-	int result = MB_FUNC_OK;
+#include "../ageconfig.h"
+#include "../common/agetype.h"
+#include "agelist.h"
 
-	assert(s && l);
+u32 ht_hash_string(Ptr ht, Ptr d);
+u32 ht_hash_int(Ptr ht, Ptr d);
+u32 ht_hash_real(Ptr ht, Ptr d);
+u32 ht_hash_ptr(Ptr ht, Ptr d);
 
-	putchar('\a');
+s32 ht_cmp_string(Ptr d1, Ptr d2);
+s32 ht_cmp_int(Ptr d1, Ptr d2);
+s32 ht_cmp_real(Ptr d1, Ptr d2);
+s32 ht_cmp_ptr(Ptr d1, Ptr d2);
 
-	return result;
-}
+ht_node_t* ht_create(u32 size, ht_compare cmp, ht_hash hs, ls_operation freeextra);
+ls_node_t* ht_find(ht_node_t* ht, Ptr key);
+u32 ht_count(ht_node_t* ht);
+u32 ht_get(ht_node_t* ht, Ptr key, Ptr* value);
+u32 ht_set(ht_node_t* ht, Ptr key, Ptr value);
+u32 ht_set_or_insert(ht_node_t* ht, Ptr key, Ptr value);
+u32 ht_remove(ht_node_t* ht, Ptr key);
+u32 ht_foreach(ht_node_t* ht, ht_operation op);
+bl ht_empty(ht_node_t* ht);
+void ht_clear(ht_node_t* ht);
+void ht_destroy(ht_node_t* ht);
 
-int age_api_reg_key_code(mb_interpreter_t* s, void** l) {
-	int result = MB_FUNC_OK;
-	s32 _ply = 0;
-	s32 _idx = 0;
-	s32 _cod = 0;
-
-	assert(s && l);
-
-	mb_attempt_open_bracket(s, l);
-	mb_pop_int(s, l, &_ply);
-	mb_pop_int(s, l, &_idx);
-	mb_pop_int(s, l, &_cod);
-	mb_attempt_close_bracket(s, l);
-
-	register_key_map(_ply, _idx, _cod);
-
-	return result;
-}
+#endif /* __AGE_HASH_TABLE_H__ */

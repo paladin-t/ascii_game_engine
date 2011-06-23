@@ -23,4 +23,18 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "ageutil.h"
+#include "../common/ageutil.h"
+#include "ageallocator.h"
+
+Ptr age_malloc(s32 _size) {
+	Ptr result = malloc(_size);
+	memset(result, 0, _size);
+
+	return result;
+}
+
+void age_free(Ptr _ptr) {
+	assert(_ptr);
+
+	free(_ptr);
+}

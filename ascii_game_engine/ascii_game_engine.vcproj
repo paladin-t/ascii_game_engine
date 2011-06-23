@@ -173,7 +173,7 @@
 			Name="common"
 			>
 			<File
-				RelativePath=".\common\ageallocator.cpp"
+				RelativePath=".\common\ageallocator.c"
 				>
 			</File>
 			<File
@@ -181,11 +181,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\common\agehashtable.c"
+				>
+			</File>
+			<File
+				RelativePath=".\common\agehashtable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\common\agelist.c"
+				>
+			</File>
+			<File
+				RelativePath=".\common\agelist.h"
+				>
+			</File>
+			<File
 				RelativePath=".\common\agetype.h"
 				>
 			</File>
 			<File
-				RelativePath=".\common\ageutil.cpp"
+				RelativePath=".\common\ageutil.c"
 				>
 			</File>
 			<File

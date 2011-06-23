@@ -23,9 +23,6 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <assert.h>
-#include <windows.h>
-
 #include "../common/ageallocator.h"
 #include "../common/ageutil.h"
 #include "agerenderer.h"
@@ -53,11 +50,28 @@ void destroy_canvas(Canvas* _cvs) {
 
 Sprite* create_sprite(Canvas* _cvs, const Str _shapeFile, const Str _brushFile, const Str _paleteFile) {
 	Sprite* result = 0;
+	FILE* fp = 0;
+	s8 buf[AGE_STR_LEN];
+	Str bs = buf;
+
+	assert(_cvs);
+
+	result = AGE_MALLOC(Sprite);
+
+	/* Shape */
+	fp = fopen(_shapeFile, "rb+");
+	if(fp != 0) {
+		freadln(fp, &bs);
+		fclose(fp);
+	}
 
 	return result;
 }
 
 void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
+	assert(_cvs);
+
+	AGE_FREE(_spr);
 }
 
 void set_cursor_visible(bl _vis) {
