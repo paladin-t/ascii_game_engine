@@ -23,8 +23,6 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <stdio.h>
-
 #include "age.h"
 
 #define _VER_MAJOR 1

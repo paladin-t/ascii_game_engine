@@ -23,10 +23,6 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <memory.h>
-#include <assert.h>
-#include <conio.h>
-
 #include "../common/ageutil.h"
 #include "ageinput.h"
 

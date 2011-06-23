@@ -23,22 +23,22 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <assert.h>
-#include <malloc.h>
-#include <memory.h>
+#include "ageutil.h"
 
-#include "../common/ageutil.h"
-#include "ageallocator.h"
+s32 freadln(FILE* fp, Str* buf) {
+	s32 result = 0;
+	s8 ch = 0;
 
-Ptr age_malloc(s32 _size) {
-	Ptr result = malloc(_size);
-	memset(result, 0, _size);
+	assert(fp && buf);
+
+	ch = (s8)fgetc(fp);
+	while(ch != EOF && ch != '\r' && ch != 'n') {
+		if(ch != EOF) {
+			(*buf)[result++] = ch;
+		}
+		ch = (s8)fgetc(fp);
+	}
+	buf[result] = '\0';
 
 	return result;
-}
-
-void age_free(Ptr _ptr) {
-	assert(_ptr);
-
-	free(_ptr);
 }

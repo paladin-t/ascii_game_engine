@@ -26,13 +26,13 @@
 #ifndef __AGE_UTIL_H__
 #define __AGE_UTIL_H__
 
-#include <stdlib.h>
-
 #include "../ageconfig.h"
 #include "../common/agetype.h"
 
 #ifndef _countof
 #	define _countof(_a) (sizeof(_a) / sizeof(_a[0]))
 #endif
+
+s32 freadln(FILE* fp, Str* buf);
 
 #endif /* __AGE_UTIL_H__ */

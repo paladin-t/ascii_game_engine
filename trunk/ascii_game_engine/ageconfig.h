@@ -45,4 +45,17 @@
 #	define CANVAS_HEIGHT 25
 #endif
 
+#ifndef AGE_STR_LEN
+#	define AGE_STR_LEN 256
+#endif
+
+#include <assert.h>
+#include <malloc.h>
+#include <memory.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <conio.h>
+#include <windows.h>
+
 #endif /* __AGE_CONFIG_H__ */
