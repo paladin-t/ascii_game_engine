@@ -257,6 +257,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="message"
+			>
+			<File
+				RelativePath=".\message\agemessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\message\agemessage.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\age.c"
 			>

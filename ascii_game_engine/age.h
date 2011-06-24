@@ -32,8 +32,11 @@
 #include "common/agetype.h"
 #include "common/ageallocator.h"
 #include "common/ageutil.h"
+#include "common/agelist.h"
+#include "common/agehashtable.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
+#include "message/agemessage.h"
 
 #ifndef AGE_WLD
 #	define AGE_WLD get_world()
@@ -44,6 +47,7 @@
 
 typedef struct {
 	Canvas* canvas;
+	ht_node_t* messageDispatcher;
 	mb_interpreter_t* script;
 } World;
 

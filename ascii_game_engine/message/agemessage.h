@@ -23,62 +23,30 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_RENDERER_H__
-#define __AGE_RENDERER_H__
+#ifndef __AGE_MESSAGE_H__
+#define __AGE_MESSAGE_H__
 
 #include "../ageconfig.h"
 #include "../common/agetype.h"
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
-#include "../message/agemessage.h"
 
-#define MAX_CACHED_FRAME_COUNT 16
+#define MESSAGE_TABLE_SIZE 8
 
-struct Frame;
-struct Sprite;
+typedef enum {
+	MSG_GET_PROP,
+	MSG_SET_PROP,
 
-typedef struct {
-	s8 shape;
-	Color color;
-	s32 zorder;
+	MSG_USER,
+} MESSAGES;
 
-	struct Frame* ownerFrames[MAX_CACHED_FRAME_COUNT];
-	s32 frameCount;
-} Pixel;
+typedef s32 (* MessageProc)(Ptr _sender, MESSAGES _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+
+typedef s32 (* ControlProc)(Ptr _obj, const Str _name, u32 _lparam, u32 _wparam, Ptr _extra);
 
 typedef struct {
-	struct Sprite* parent;
-	Pixel* tex;
-} Frame;
+	MessageProc fastTable[MESSAGE_TABLE_SIZE];
+	ht_node_t* procMap;
+} MessageMap;
 
-typedef struct {
-	Size frameSize;
-
-	Frame* frames;
-	s32 frameCount;
-
-	s32 currentFrame;
-
-	MessageMap messageMap;
-	ControlProc control;
-} Sprite;
-
-typedef struct {
-	Size size;
-	Pixel* pixels;
-
-	ht_node_t* sprites;
-	s32 spriteCount;
-} Canvas;
-
-AGE_API Canvas* create_canvas(void);
-AGE_API void destroy_canvas(Canvas* _cvs);
-
-AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
-AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
-
-AGE_API void set_cursor_visible(bl _vis);
-AGE_API void goto_xy(s32 _x, s32 _y);
-AGE_API void set_color(Color _col);
-
-#endif /* __AGE_RENDERER_H__ */
+#endif /* __AGE_MESSAGE_H__ */

@@ -23,62 +23,6 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_RENDERER_H__
-#define __AGE_RENDERER_H__
-
-#include "../ageconfig.h"
-#include "../common/agetype.h"
-#include "../common/agelist.h"
-#include "../common/agehashtable.h"
-#include "../message/agemessage.h"
-
-#define MAX_CACHED_FRAME_COUNT 16
-
-struct Frame;
-struct Sprite;
-
-typedef struct {
-	s8 shape;
-	Color color;
-	s32 zorder;
-
-	struct Frame* ownerFrames[MAX_CACHED_FRAME_COUNT];
-	s32 frameCount;
-} Pixel;
-
-typedef struct {
-	struct Sprite* parent;
-	Pixel* tex;
-} Frame;
-
-typedef struct {
-	Size frameSize;
-
-	Frame* frames;
-	s32 frameCount;
-
-	s32 currentFrame;
-
-	MessageMap messageMap;
-	ControlProc control;
-} Sprite;
-
-typedef struct {
-	Size size;
-	Pixel* pixels;
-
-	ht_node_t* sprites;
-	s32 spriteCount;
-} Canvas;
-
-AGE_API Canvas* create_canvas(void);
-AGE_API void destroy_canvas(Canvas* _cvs);
-
-AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
-AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
-
-AGE_API void set_cursor_visible(bl _vis);
-AGE_API void goto_xy(s32 _x, s32 _y);
-AGE_API void set_color(Color _col);
-
-#endif /* __AGE_RENDERER_H__ */
+#include "../common/ageallocator.h"
+#include "../common/ageutil.h"
+#include "agemessage.h"
