@@ -30,6 +30,24 @@
 #include "../common/agetype.h"
 #include "agelist.h"
 
+#define HT_ARRAY_SIZE_SMALL 193
+#define HT_ARRAY_SIZE_MID 1543
+#define HT_ARRAY_SIZE_BIG 12289
+#define HT_ARRAY_SIZE_DEFAULT HT_ARRAY_SIZE_SMALL
+
+typedef u32 (* ht_hash)(Ptr, Ptr);
+typedef acl_common_compare ht_compare;
+typedef acl_common_operation ht_operation;
+
+typedef struct ht_node_t {
+	ls_operation free_extra;
+	ht_compare compare;
+	ht_hash hash;
+	u32 array_size;
+	u32 count;
+	ls_node_t** array;
+} ht_node_t;
+
 u32 ht_hash_string(Ptr ht, Ptr d);
 u32 ht_hash_int(Ptr ht, Ptr d);
 u32 ht_hash_real(Ptr ht, Ptr d);

@@ -29,20 +29,12 @@
 #include "../ageconfig.h"
 #include "../common/agetype.h"
 
-/* Hash table size */
-#define HT_ARRAY_SIZE_SMALL 193
-#define HT_ARRAY_SIZE_MID 1543
-#define HT_ARRAY_SIZE_BIG 12289
-#define HT_ARRAY_SIZE_DEFAULT HT_ARRAY_SIZE_SMALL
-
 typedef s32 (* acl_common_compare)(Ptr, Ptr);
 
-/* Container operation */
 #define ACL_OP_RESULT_NORMAL 0
 #define ACL_OP_RESULT_DEL_NODE -1
 typedef s32 (* acl_common_operation)(Ptr, Ptr);
 
-/** List */
 typedef acl_common_compare ls_compare;
 typedef acl_common_operation ls_operation;
 
@@ -52,20 +44,6 @@ typedef struct ls_node_t {
 	struct ls_node_t* next;
 	Ptr extra;
 } ls_node_t;
-
-/** Dictionary */
-typedef u32 (* ht_hash)(Ptr, Ptr);
-typedef acl_common_compare ht_compare;
-typedef acl_common_operation ht_operation;
-
-typedef struct ht_node_t {
-	ls_operation free_extra;
-	ht_compare compare;
-	ht_hash hash;
-	u32 array_size;
-	u32 count;
-	ls_node_t** array;
-} ht_node_t;
 
 s32 ls_cmp_data(Ptr node, Ptr info);
 s32 ls_cmp_extra(Ptr node, Ptr info);
