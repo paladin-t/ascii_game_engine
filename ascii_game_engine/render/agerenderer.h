@@ -74,7 +74,10 @@ typedef struct {
 AGE_API Canvas* create_canvas(void);
 AGE_API void destroy_canvas(Canvas* _cvs);
 
-AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
+AGE_API void update_canvas(Canvas* _cvs, s32 _elapsedTime);
+AGE_API void render_canvas(Canvas* _cvs, s32 _elapsedTime);
+
+AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
 AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
 
 AGE_API void set_cursor_visible(bl _vis);

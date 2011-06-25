@@ -25,6 +25,7 @@
 
 #include "../common/ageallocator.h"
 #include "../common/ageutil.h"
+#include "../common/agestringtable.h"
 #include "agerenderer.h"
 
 static const Color COLOR_MAP[] = {
@@ -48,20 +49,42 @@ void destroy_canvas(Canvas* _cvs) {
 	AGE_FREE(_cvs);
 }
 
-Sprite* create_sprite(Canvas* _cvs, const Str _shapeFile, const Str _brushFile, const Str _paleteFile) {
+void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
+}
+
+void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
+}
+
+Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile) {
 	Sprite* result = 0;
 	FILE* fp = 0;
 	s8 buf[AGE_STR_LEN];
+	Str str = 0;
 	Str bs = buf;
+	s32 c = 0;
+	s32 w = 0;
+	s32 h = 0;
 
 	assert(_cvs);
 
 	result = AGE_MALLOC(Sprite);
 
-	/* Shape */
+	/* shape */
 	fp = fopen(_shapeFile, "rb+");
 	if(fp != 0) {
+		/* frame count */
 		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_COUNT);
+		c = atoi(str);
+		/* frame width */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_WIDTH);
+		w = atoi(str);
+		/* frame height */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_HEIGHT);
+		h = atoi(str);
+		/* close */
 		fclose(fp);
 	}
 

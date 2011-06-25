@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\common\agestringtable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\common\agetype.h"
 				>
 			</File>

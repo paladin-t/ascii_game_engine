@@ -25,4 +25,99 @@
 
 #include "../common/ageallocator.h"
 #include "../common/ageutil.h"
+#include "../render/agerenderer.h"
 #include "agemessage.h"
+
+bl create_message_map_sprite(Ptr _obj) {
+	bl result = TRUE;
+	Sprite* spr = (Sprite*)_obj;
+
+	assert(_obj);
+
+	if(spr->messageMap.procMap) {
+		result = FALSE;
+	} else {
+		spr->messageMap.procMap = ht_create(0, ht_cmp_ptr, ht_hash_ptr, 0);
+	}
+
+	return result;
+}
+
+bl destroy_message_map_sprite(Ptr _obj) {
+	bl result = TRUE;
+	Sprite* spr = (Sprite*)_obj;
+
+	assert(_obj);
+
+	if(!spr->messageMap.procMap) {
+		result = FALSE;
+	} else {
+		ht_destroy(spr->messageMap.procMap);
+		spr->messageMap.procMap = 0;
+	}
+
+	return result;
+}
+
+void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc) {
+	Sprite* spr = (Sprite*)_obj;
+	ht_node_t* pm = 0;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_obj);
+
+	if(_msg < MESSAGE_TABLE_SIZE) {
+		spr->messageMap.fastTable[_msg] = _proc;
+	} else {
+		pm = spr->messageMap.procMap;
+		u.uint = _msg;
+		ht_set_or_insert(pm, u.ptr, _proc);
+	}
+}
+
+MessageProc get_message_proc_sprite(Ptr _obj, u32 _msg) {
+	MessageProc result = 0;
+	Sprite* spr = (Sprite*)_obj;
+	ht_node_t* pm = 0;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_obj);
+
+	if(_msg < MESSAGE_TABLE_SIZE) {
+		result = spr->messageMap.fastTable[_msg];
+	} else {
+		pm = spr->messageMap.procMap;
+		u.uint = _msg;
+		ht_get(pm, u.ptr, (Ptr*)&result);
+	}
+
+	return result;
+}
+
+void unregister_message_proc_sprite(Ptr _obj, u32 _msg) {
+	Sprite* spr = (Sprite*)_obj;
+	ht_node_t* pm = 0;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_obj);
+
+	if(_msg < MESSAGE_TABLE_SIZE) {
+		spr->messageMap.fastTable[_msg] = 0;
+	} else {
+		pm = spr->messageMap.procMap;
+		u.uint = _msg;
+		ht_set_or_insert(pm, u.ptr, 0);
+	}
+}
+
+s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	MessageProc proc = 0;
+	
+	proc = get_message_proc_sprite(_receiver, _msg);
+	if(proc) {
+		proc(_sender, _msg, _lparam, _wparam, _extra);
+	}
+
+	return result;
+}

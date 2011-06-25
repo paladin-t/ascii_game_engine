@@ -33,6 +33,9 @@
 #	define _countof(_a) (sizeof(_a) / sizeof(_a[0]))
 #endif
 
+u32 get_tick_count(void);
+void sys_sleep(s32 _time);
+
 s32 freadln(FILE* fp, Str* buf);
 
 #endif /* __AGE_UTIL_H__ */

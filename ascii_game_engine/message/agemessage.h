@@ -40,7 +40,7 @@ typedef enum {
 	MSG_USER,
 } MESSAGES;
 
-typedef s32 (* MessageProc)(Ptr _sender, MESSAGES _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+typedef s32 (* MessageProc)(Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 typedef s32 (* ControlProc)(Ptr _obj, const Str _name, u32 _lparam, u32 _wparam, Ptr _extra);
 
@@ -48,5 +48,14 @@ typedef struct {
 	MessageProc fastTable[MESSAGE_TABLE_SIZE];
 	ht_node_t* procMap;
 } MessageMap;
+
+AGE_API bl create_message_map_sprite(Ptr _obj);
+AGE_API bl destroy_message_map_sprite(Ptr _obj);
+
+AGE_API void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc);
+AGE_API MessageProc get_message_proc_sprite(Ptr _obj, u32 _msg);
+AGE_API void unregister_message_proc_sprite(Ptr _obj, u32 _msg);
+
+AGE_API s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 #endif /* __AGE_MESSAGE_H__ */
