@@ -30,4 +30,6 @@ static const Str ST_SPRITE_FRAME_COUNT		= "count: ";
 static const Str ST_SPRITE_FRAME_WIDTH		= "width: ";
 static const Str ST_SPRITE_FRAME_HEIGHT		= "height: ";
 
+static const Str ST_DEFAULT_CANVAS_NAME		= "canvas";
+
 #endif /* __AGE_STRING_TABLE_H__ */

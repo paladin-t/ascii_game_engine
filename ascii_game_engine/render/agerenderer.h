@@ -31,11 +31,13 @@
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
 #include "../message/agemessage.h"
+#include "../controller/agecontroller.h"
 
 #define MAX_CACHED_FRAME_COUNT 16
 
 struct Frame;
 struct Sprite;
+struct Canvas;
 
 typedef struct {
 	s8 shape;
@@ -52,6 +54,9 @@ typedef struct {
 } Frame;
 
 typedef struct {
+	Str name;
+	struct Canvas* owner;
+
 	Size frameSize;
 
 	Frame* frames;
@@ -64,21 +69,37 @@ typedef struct {
 } Sprite;
 
 typedef struct {
+	s32 lastElapsedTime;
+	u32 lastLParam;
+	u32 lastWParam;
+	Ptr lastExtra;
+} RunningContext;
+
+typedef struct {
+	Str name;
+
 	Size size;
 	Pixel* pixels;
 
 	ht_node_t* sprites;
-	s32 spriteCount;
+
+	RunningContext context;
+
+	ControlProc control;
 } Canvas;
 
-AGE_API Canvas* create_canvas(void);
+AGE_API Canvas* create_canvas(const Str _name);
 AGE_API void destroy_canvas(Canvas* _cvs);
 
 AGE_API void update_canvas(Canvas* _cvs, s32 _elapsedTime);
 AGE_API void render_canvas(Canvas* _cvs, s32 _elapsedTime);
 
+AGE_API Sprite* get_sprite_by_name(Canvas* _cvs, const Str _name);
 AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
 AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
+AGE_API void destroy_all_sprites(Canvas* _cvs);
+AGE_API void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+AGE_API void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
 AGE_API void set_cursor_visible(bl _vis);
 AGE_API void goto_xy(s32 _x, s32 _y);

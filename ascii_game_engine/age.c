@@ -80,7 +80,7 @@ World* create_world(void) {
 	assert(!_gWorld);
 
 	result = AGE_MALLOC(World);
-	result->canvas = create_canvas();
+	result->canvas = create_canvas(ST_DEFAULT_CANVAS_NAME);
 
 	mb_init();
 	_open_script(&result->script);

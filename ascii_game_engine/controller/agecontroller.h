@@ -23,54 +23,20 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "ageallocator.h"
-#include "ageutil.h"
+#ifndef __AGE_CONTROLLER_H__
+#define __AGE_CONTROLLER_H__
 
-#pragma comment(lib, "winmm.lib")
+#include "../ageconfig.h"
+#include "../common/agetype.h"
+#include "../common/agelist.h"
+#include "../common/agehashtable.h"
 
-u32 get_tick_count(void) {
-	return timeGetTime();
-}
+typedef s32 (* ControlProc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
-void sys_sleep(s32 _time) {
-	Sleep(_time);
-}
+AGE_API void set_controller_canvas(Ptr _obj, ControlProc _proc);
+AGE_API ControlProc get_controller_canvas(Ptr _obj);
 
-s32 freadln(FILE* _fp, Str* _buf) {
-	s32 result = 0;
-	s8 ch = 0;
-	long ft = 0;
+AGE_API void set_controller_sprite(Ptr _obj, ControlProc _proc);
+AGE_API ControlProc get_controller_sprite(Ptr _obj);
 
-	assert(_fp && _buf);
-
-	ch = (s8)fgetc(_fp);
-	while(ch != EOF && ch != '\r' && ch != '\n') {
-		if(ch != EOF) {
-			(*_buf)[result++] = ch;
-		}
-		ch = (s8)fgetc(_fp);
-	}
-	(*_buf)[result] = '\0';
-
-	if(ch != EOF) {
-		ft = ftell(_fp);
-		ch = (s8)fgetc(_fp);
-		if(ch != '\n') {
-			fseek(_fp, ft, 0);
-		}
-	}
-
-	return result;
-}
-
-Str copy_string(const Str _str) {
-	Str result = 0;
-	s32 l = (s32)strlen(_str);
-
-	assert(_str);
-
-	result = (Str)age_malloc(l + 1);
-	strcpy(result, _str);
-
-	return result;
-}
+#endif /* __AGE_CONTROLLER_H__ */

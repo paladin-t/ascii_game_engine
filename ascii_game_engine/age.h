@@ -38,6 +38,7 @@
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
 #include "message/agemessage.h"
+#include "controller/agecontroller.h"
 
 #ifndef AGE_WLD
 #	define AGE_WLD get_world()

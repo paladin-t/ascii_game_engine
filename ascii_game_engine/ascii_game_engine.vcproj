@@ -273,6 +273,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="controller"
+			>
+			<File
+				RelativePath=".\controller\agecontroller.c"
+				>
+			</File>
+			<File
+				RelativePath=".\controller\agecontroller.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\age.c"
 			>

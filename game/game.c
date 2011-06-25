@@ -23,36 +23,44 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef _MSC_VER
-#	include <windows.h>
-#	include <crtdbg.h>
-#endif // _MSC_VER
+#include <windows.h>
+#include <crtdbg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "age.h"
 
-static void __exit(void) {
-#ifdef _MSC_VER
+static void _on_exit(void) {
 	s32 c = _CrtDumpMemoryLeaks();
 
 	if(0 != c) {
 		_asm int 3
 	}
-#endif /* _MSC_VER */
+}
+
+static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	if(is_key_down(0, KC_ESC)) {
+		exit_world();
+	}
+
+	return result;
 }
 
 s32 main(s32 argc, Str argv[]) {
 	Sprite* spr = 0;
 
-#ifdef _MSC_VER
 	_CrtSetBreakAlloc(0);
-#endif /* _MSC_VER */
 
-	atexit(__exit);
+	atexit(_on_exit);
 
+	/* initialize */
 	create_world();
 	config_world("data/config.bas");
+	/* set canvas controller */
+	set_controller_canvas(AGE_CVS, _canvasControlProc);
+	/* create objects and connect them with controllers */
 	spr = create_sprite(
 		AGE_CVS,
 		"ascii_hero",
@@ -60,7 +68,9 @@ s32 main(s32 argc, Str argv[]) {
 		"data/sprite/brush_ascii_hero.txt",
 		"data/sprite/palete_ascii_hero.txt"
 	);
+	/* the main loop,go! */
 	run_world();
+	/* destroy everything */
 	destroy_world();
 
 	return 0;
