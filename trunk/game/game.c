@@ -34,7 +34,7 @@
 
 static void __exit(void) {
 #ifdef _MSC_VER
-	int c = _CrtDumpMemoryLeaks();
+	s32 c = _CrtDumpMemoryLeaks();
 
 	if(0 != c) {
 		_asm int 3
@@ -42,7 +42,9 @@ static void __exit(void) {
 #endif /* _MSC_VER */
 }
 
-int main(int argc, char* argv[]) {
+s32 main(s32 argc, Str argv[]) {
+	Sprite* spr = 0;
+
 #ifdef _MSC_VER
 	_CrtSetBreakAlloc(0);
 #endif /* _MSC_VER */
@@ -51,14 +53,15 @@ int main(int argc, char* argv[]) {
 
 	create_world();
 	config_world("data/config.bas");
-	destroy_world(get_world());
-	{
-		int k;
-		for(k = 0; k < 16; k++) {
-			set_color(k);
-			printf("%d  I want to be nice today!\n", k);
-		}
-	}
+	spr = create_sprite(
+		AGE_CVS,
+		"ascii_hero",
+		"data/sprite/shape_ascii_hero.txt",
+		"data/sprite/brush_ascii_hero.txt",
+		"data/sprite/palete_ascii_hero.txt"
+	);
+	run_world();
+	destroy_world();
 
 	return 0;
 }

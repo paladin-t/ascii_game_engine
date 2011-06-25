@@ -26,6 +26,15 @@
 #ifndef __AGE_CONFIG_H__
 #define __AGE_CONFIG_H__
 
+#include <assert.h>
+#include <malloc.h>
+#include <memory.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <conio.h>
+#include <windows.h>
+
 #ifdef _MSC_VER
 #	ifdef INTE_COMPILE
 #		define AGE_API __declspec(dllexport)
@@ -49,13 +58,11 @@
 #	define AGE_STR_LEN 256
 #endif
 
-#include <assert.h>
-#include <malloc.h>
-#include <memory.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <conio.h>
-#include <windows.h>
+#ifndef EXPECTED_FPS
+#	define EXPECTED_FPS 60
+#endif
+#ifndef EXPECTED_FRAME_TIME
+#	define EXPECTED_FRAME_TIME (1000 / EXPECTED_FPS)
+#endif
 
 #endif /* __AGE_CONFIG_H__ */

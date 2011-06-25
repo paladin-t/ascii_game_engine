@@ -198,6 +198,22 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="sprite"
+				>
+				<File
+					RelativePath=".\data\sprite\brush_ascii_hero.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\palete_ascii_hero.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\shape_ascii_hero.txt"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\game.c"

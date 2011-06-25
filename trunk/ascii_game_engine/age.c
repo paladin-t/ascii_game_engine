@@ -33,18 +33,13 @@
 
 static World* _gWorld = 0;
 
-static void _on_error(mb_interpreter_t* s, mb_error_e e, char* m, int p);
-static bl _register_apis(mb_interpreter_t* s);
-static bl _open_script(mb_interpreter_t** s);
-static bl _close_script(mb_interpreter_t** s);
-
-void _on_error(mb_interpreter_t* s, mb_error_e e, char* m, int p) {
+static void _on_error(mb_interpreter_t* s, mb_error_e e, char* m, int p) {
 	if(SE_NO_ERR != e) {
 		printf("Error : [POS] %d, [CODE] %d, [MESSAGE] %s\n", p, e, m);
 	}
 }
 
-bl _register_apis(mb_interpreter_t* s) {
+static bl _register_apis(mb_interpreter_t* s) {
 	bl result = TRUE;
 
 	mb_register_func(s, "BEEP", age_api_beep);
@@ -53,7 +48,7 @@ bl _register_apis(mb_interpreter_t* s) {
 	return result;
 }
 
-bl _open_script(mb_interpreter_t** s) {
+static bl _open_script(mb_interpreter_t** s) {
 	bl result = TRUE;
 
 	mb_open(s);
@@ -63,7 +58,7 @@ bl _open_script(mb_interpreter_t** s) {
 	return result;
 }
 
-bl _close_script(mb_interpreter_t** s) {
+static bl _close_script(mb_interpreter_t** s) {
 	bl result = TRUE;
 
 	mb_close(s);
@@ -99,14 +94,14 @@ World* get_world(void) {
 	return _gWorld;
 }
 
-void destroy_world(World* _wld) {
+void destroy_world(void) {
 	assert(_gWorld);
 
-	_close_script(&_wld->script);
+	_close_script(&_gWorld->script);
 	mb_dispose();
 
-	destroy_canvas(_wld->canvas);
-	AGE_FREE(_wld);
+	destroy_canvas(_gWorld->canvas);
+	AGE_FREE(_gWorld);
 
 	_gWorld = 0;
 }
@@ -121,6 +116,35 @@ bl config_world(const Str _cfgFile) {
 	mb_run(_gWorld->script);
 
 	return result;
+}
+
+s32 run_world(void) {
+	s32 result = 0;
+	s32 time = 0;
+	s32 elapsed = 0;
+	s32 delay = 0;
+
+	assert(_gWorld);
+
+	_gWorld->running = TRUE;
+	while(_gWorld->running) {
+		time = get_tick_count();
+		update_canvas(AGE_CVS, elapsed);
+		render_canvas(AGE_CVS, elapsed);
+		elapsed = get_tick_count() - time;
+		delay = EXPECTED_FRAME_TIME - elapsed;
+		if(delay > 0) {
+			sys_sleep(delay);
+		}
+	}
+
+	return result;
+}
+
+void exit_world(void) {
+	assert(_gWorld);
+
+	_gWorld->running = FALSE;
 }
 
 bl run_world_script(const Str _sptFile) {

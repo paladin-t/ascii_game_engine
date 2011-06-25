@@ -30,6 +30,7 @@
 #include "script/my_basic/my_basic.h"
 #include "script/agescriptapi.h"
 #include "common/agetype.h"
+#include "common/agestringtable.h"
 #include "common/ageallocator.h"
 #include "common/ageutil.h"
 #include "common/agelist.h"
@@ -47,8 +48,8 @@
 
 typedef struct {
 	Canvas* canvas;
-	ht_node_t* messageDispatcher;
 	mb_interpreter_t* script;
+	bl running;
 } World;
 
 AGE_API u32 get_ver(void);
@@ -56,9 +57,12 @@ AGE_API const Str get_ver_string(void);
 
 AGE_API World* create_world(void);
 AGE_API World* get_world(void);
-AGE_API void destroy_world(World* _wld);
+AGE_API void destroy_world(void);
 
 AGE_API bl config_world(const Str _cfgFile);
+
+AGE_API s32 run_world(void);
+AGE_API void exit_world(void);
 
 AGE_API bl run_world_script(const Str _sptFile);
 AGE_API bl run_new_script(const Str _sptFile);
