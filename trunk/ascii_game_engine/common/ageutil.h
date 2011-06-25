@@ -36,6 +36,8 @@
 u32 get_tick_count(void);
 void sys_sleep(s32 _time);
 
-s32 freadln(FILE* fp, Str* buf);
+s32 freadln(FILE* _fp, Str* _buf);
+
+Str copy_string(const Str _str);
 
 #endif /* __AGE_UTIL_H__ */

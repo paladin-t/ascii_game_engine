@@ -23,54 +23,45 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "ageallocator.h"
-#include "ageutil.h"
+#include "../common/ageallocator.h"
+#include "../common/ageutil.h"
+#include "../render/agerenderer.h"
+#include "agecontroller.h"
 
-#pragma comment(lib, "winmm.lib")
+void set_controller_canvas(Ptr _obj, ControlProc _proc) {
+	Canvas* cvs = (Canvas*)_obj;
 
-u32 get_tick_count(void) {
-	return timeGetTime();
+	assert(cvs);
+
+	cvs->control = _proc;
 }
 
-void sys_sleep(s32 _time) {
-	Sleep(_time);
-}
+ControlProc get_controller_canvas(Ptr _obj) {
+	ControlProc result = 0;
+	Canvas* cvs = (Canvas*)_obj;
 
-s32 freadln(FILE* _fp, Str* _buf) {
-	s32 result = 0;
-	s8 ch = 0;
-	long ft = 0;
+	assert(cvs);
 
-	assert(_fp && _buf);
-
-	ch = (s8)fgetc(_fp);
-	while(ch != EOF && ch != '\r' && ch != '\n') {
-		if(ch != EOF) {
-			(*_buf)[result++] = ch;
-		}
-		ch = (s8)fgetc(_fp);
-	}
-	(*_buf)[result] = '\0';
-
-	if(ch != EOF) {
-		ft = ftell(_fp);
-		ch = (s8)fgetc(_fp);
-		if(ch != '\n') {
-			fseek(_fp, ft, 0);
-		}
-	}
+	result = cvs->control;
 
 	return result;
 }
 
-Str copy_string(const Str _str) {
-	Str result = 0;
-	s32 l = (s32)strlen(_str);
+void set_controller_sprite(Ptr _obj, ControlProc _proc) {
+	Sprite* spr = (Sprite*)_obj;
 
-	assert(_str);
+	assert(spr);
 
-	result = (Str)age_malloc(l + 1);
-	strcpy(result, _str);
+	spr->control = _proc;
+}
+
+ControlProc get_controller_sprite(Ptr _obj) {
+	ControlProc result = 0;
+	Sprite* spr = (Sprite*)_obj;
+
+	assert(spr);
+
+	result = spr->control;
 
 	return result;
 }

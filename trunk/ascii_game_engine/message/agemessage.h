@@ -42,8 +42,6 @@ typedef enum {
 
 typedef s32 (* MessageProc)(Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
-typedef s32 (* ControlProc)(Ptr _obj, const Str _name, u32 _lparam, u32 _wparam, Ptr _extra);
-
 typedef struct {
 	MessageProc fastTable[MESSAGE_TABLE_SIZE];
 	ht_node_t* procMap;
