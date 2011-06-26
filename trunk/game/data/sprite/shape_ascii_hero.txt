@@ -1,6 +1,7 @@
 count: 5
 width: 5
 height: 3
+rate: 12.5
 
      
      

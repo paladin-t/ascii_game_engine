@@ -33,11 +33,11 @@
 #	define _countof(_a) (sizeof(_a) / sizeof(_a[0]))
 #endif
 
-u32 get_tick_count(void);
-void sys_sleep(s32 _time);
+AGE_INTERNAL u32 get_tick_count(void);
+AGE_INTERNAL void sys_sleep(s32 _time);
 
-s32 freadln(FILE* _fp, Str* _buf);
+AGE_INTERNAL s32 freadln(FILE* _fp, Str* _buf);
 
-Str copy_string(const Str _str);
+AGE_INTERNAL Str copy_string(const Str _str);
 
 #endif /* __AGE_UTIL_H__ */

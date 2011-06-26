@@ -48,26 +48,26 @@ typedef struct ht_node_t {
 	ls_node_t** array;
 } ht_node_t;
 
-u32 ht_hash_string(Ptr ht, Ptr d);
-u32 ht_hash_int(Ptr ht, Ptr d);
-u32 ht_hash_real(Ptr ht, Ptr d);
-u32 ht_hash_ptr(Ptr ht, Ptr d);
+AGE_INTERNAL u32 ht_hash_string(Ptr ht, Ptr d);
+AGE_INTERNAL u32 ht_hash_int(Ptr ht, Ptr d);
+AGE_INTERNAL u32 ht_hash_real(Ptr ht, Ptr d);
+AGE_INTERNAL u32 ht_hash_ptr(Ptr ht, Ptr d);
 
-s32 ht_cmp_string(Ptr d1, Ptr d2);
-s32 ht_cmp_int(Ptr d1, Ptr d2);
-s32 ht_cmp_real(Ptr d1, Ptr d2);
-s32 ht_cmp_ptr(Ptr d1, Ptr d2);
+AGE_INTERNAL s32 ht_cmp_string(Ptr d1, Ptr d2);
+AGE_INTERNAL s32 ht_cmp_int(Ptr d1, Ptr d2);
+AGE_INTERNAL s32 ht_cmp_real(Ptr d1, Ptr d2);
+AGE_INTERNAL s32 ht_cmp_ptr(Ptr d1, Ptr d2);
 
-ht_node_t* ht_create(u32 size, ht_compare cmp, ht_hash hs, ls_operation freeextra);
-ls_node_t* ht_find(ht_node_t* ht, Ptr key);
-u32 ht_count(ht_node_t* ht);
-u32 ht_get(ht_node_t* ht, Ptr key, Ptr* value);
-u32 ht_set(ht_node_t* ht, Ptr key, Ptr value);
-u32 ht_set_or_insert(ht_node_t* ht, Ptr key, Ptr value);
-u32 ht_remove(ht_node_t* ht, Ptr key);
-u32 ht_foreach(ht_node_t* ht, ht_operation op);
-bl ht_empty(ht_node_t* ht);
-void ht_clear(ht_node_t* ht);
-void ht_destroy(ht_node_t* ht);
+AGE_INTERNAL ht_node_t* ht_create(u32 size, ht_compare cmp, ht_hash hs, ls_operation freeextra);
+AGE_INTERNAL ls_node_t* ht_find(ht_node_t* ht, Ptr key);
+AGE_INTERNAL u32 ht_count(ht_node_t* ht);
+AGE_INTERNAL u32 ht_get(ht_node_t* ht, Ptr key, Ptr* value);
+AGE_INTERNAL u32 ht_set(ht_node_t* ht, Ptr key, Ptr value);
+AGE_INTERNAL u32 ht_set_or_insert(ht_node_t* ht, Ptr key, Ptr value);
+AGE_INTERNAL u32 ht_remove(ht_node_t* ht, Ptr key);
+AGE_INTERNAL u32 ht_foreach(ht_node_t* ht, ht_operation op);
+AGE_INTERNAL bl ht_empty(ht_node_t* ht);
+AGE_INTERNAL void ht_clear(ht_node_t* ht);
+AGE_INTERNAL void ht_destroy(ht_node_t* ht);
 
 #endif /* __AGE_HASH_TABLE_H__ */

@@ -45,26 +45,26 @@ typedef struct ls_node_t {
 	Ptr extra;
 } ls_node_t;
 
-s32 ls_cmp_data(Ptr node, Ptr info);
-s32 ls_cmp_extra(Ptr node, Ptr info);
+AGE_INTERNAL s32 ls_cmp_data(Ptr node, Ptr info);
+AGE_INTERNAL s32 ls_cmp_extra(Ptr node, Ptr info);
 
-ls_node_t* ls_create_node(Ptr data);
-ls_node_t* ls_create(void);
-ls_node_t* ls_front(ls_node_t* node);
-ls_node_t* ls_back(ls_node_t* node);
-ls_node_t* ls_at(ls_node_t* list, s32 pos);
-ls_node_t* ls_pushback(ls_node_t* list, Ptr data);
-ls_node_t* ls_pushfront(ls_node_t* list, Ptr data);
-ls_node_t* ls_insert(ls_node_t* list, s32 pos, Ptr data);
-Ptr ls_popback(ls_node_t* list);
-Ptr ls_popfront(ls_node_t* list);
-u32 ls_remove(ls_node_t* list, s32 pos);
-u32 ls_try_remove(ls_node_t* list, Ptr info, ls_compare cmp);
-u32 ls_count(ls_node_t* list);
-u32 ls_foreach(ls_node_t* list, ls_operation op);
-bl ls_empty(ls_node_t* list);
-void ls_clear(ls_node_t* list);
-void ls_destroy(ls_node_t* list);
-s32 ls_free_extra(Ptr data, Ptr extra);
+AGE_INTERNAL ls_node_t* ls_create_node(Ptr data);
+AGE_INTERNAL ls_node_t* ls_create(void);
+AGE_INTERNAL ls_node_t* ls_front(ls_node_t* node);
+AGE_INTERNAL ls_node_t* ls_back(ls_node_t* node);
+AGE_INTERNAL ls_node_t* ls_at(ls_node_t* list, s32 pos);
+AGE_INTERNAL ls_node_t* ls_pushback(ls_node_t* list, Ptr data);
+AGE_INTERNAL ls_node_t* ls_pushfront(ls_node_t* list, Ptr data);
+AGE_INTERNAL ls_node_t* ls_insert(ls_node_t* list, s32 pos, Ptr data);
+AGE_INTERNAL Ptr ls_popback(ls_node_t* list);
+AGE_INTERNAL Ptr ls_popfront(ls_node_t* list);
+AGE_INTERNAL u32 ls_remove(ls_node_t* list, s32 pos);
+AGE_INTERNAL u32 ls_try_remove(ls_node_t* list, Ptr info, ls_compare cmp);
+AGE_INTERNAL u32 ls_count(ls_node_t* list);
+AGE_INTERNAL u32 ls_foreach(ls_node_t* list, ls_operation op);
+AGE_INTERNAL bl ls_empty(ls_node_t* list);
+AGE_INTERNAL void ls_clear(ls_node_t* list);
+AGE_INTERNAL void ls_destroy(ls_node_t* list);
+AGE_INTERNAL s32 ls_free_extra(Ptr data, Ptr extra);
 
 #endif /* __AGE_LIST_H__ */

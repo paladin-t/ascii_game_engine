@@ -1,5 +1,7 @@
 BEEP
 
+SET_FRAME_RATE(40)
+
 KC_UP = 0
 KC_DOWN = 1
 KC_LEFT = 2

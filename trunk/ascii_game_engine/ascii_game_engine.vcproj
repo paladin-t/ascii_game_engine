@@ -250,7 +250,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="renderer"
+			Name="render"
 			>
 			<File
 				RelativePath=".\render\agerenderer.c"

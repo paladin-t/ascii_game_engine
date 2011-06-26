@@ -44,6 +44,7 @@ static bl _register_apis(mb_interpreter_t* s) {
 
 	mb_register_func(s, "BEEP", age_api_beep);
 	mb_register_func(s, "REG_KEY", age_api_reg_key_code);
+	mb_register_func(s, "SET_FRAME_RATE", age_api_set_frame_rate);
 
 	return result;
 }

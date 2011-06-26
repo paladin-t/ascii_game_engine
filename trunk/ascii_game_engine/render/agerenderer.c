@@ -81,6 +81,55 @@ static s32 _post_render_sprite(Ptr _data, Ptr _extra) {
 	return result;
 }
 
+static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile) {
+	bl result = TRUE;
+	FILE* fp = 0;
+	s8 buf[AGE_STR_LEN];
+	Str str = 0;
+	Str bs = buf;
+	s32 c = 0;
+	s32 w = 0;
+	s32 h = 0;
+	f32 r = 1.0f;
+	fp = fopen(_shapeFile, "rb+");
+	if(fp != 0) {
+		/* frame count */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_COUNT);
+		c = atoi(str);
+		/* frame width */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_WIDTH);
+		w = atoi(str);
+		/* frame height */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_HEIGHT);
+		h = atoi(str);
+		/* frame rate */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_RATE);
+		r = (f32)atof(str);
+		/* close */
+		fclose(fp);
+	} else {
+		result = FALSE;
+	}
+
+	return result;
+}
+
+static bl _create_sprite_brush(Canvas* _cvs, Sprite* _spr, const Str _brushFile) {
+	bl result = TRUE;
+
+	return result;
+}
+
+static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFile) {
+	bl result = TRUE;
+
+	return result;
+}
+
 Canvas* create_canvas(const Str _name) {
 	int count = CANVAS_WIDTH * CANVAS_HEIGHT;
 	Str name = copy_string(_name);
@@ -101,6 +150,18 @@ void destroy_canvas(Canvas* _cvs) {
 	AGE_FREE(_cvs->pixels);
 	AGE_FREE(_cvs->name);
 	AGE_FREE(_cvs);
+}
+
+void set_frame_rate(Canvas* _cvs, s32 _rate) {
+	assert(_cvs && _rate > 0);
+
+	_cvs->frameRate = _rate;
+}
+
+s32 get_frame_rate(Canvas* _cvs) {
+	assert(_cvs);
+
+	return _cvs->frameRate;
 }
 
 void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
@@ -135,13 +196,6 @@ Sprite* get_sprite_by_name(Canvas* _cvs, const Str _name) {
 
 Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile) {
 	Sprite* result = 0;
-	FILE* fp = 0;
-	s8 buf[AGE_STR_LEN];
-	Str str = 0;
-	Str bs = buf;
-	s32 c = 0;
-	s32 w = 0;
-	s32 h = 0;
 	ht_node_t* sprites = 0;
 
 	assert(_cvs);
@@ -151,28 +205,12 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 		result->name = copy_string(_name);
 		result->owner = (struct Canvas*)_cvs;
 
-		/* shape */
-		fp = fopen(_shapeFile, "rb+");
-		if(fp != 0) {
-			/* frame count */
-			freadln(fp, &bs);
-			str = buf + strlen(ST_SPRITE_FRAME_COUNT);
-			c = atoi(str);
-			/* frame width */
-			freadln(fp, &bs);
-			str = buf + strlen(ST_SPRITE_FRAME_WIDTH);
-			w = atoi(str);
-			/* frame height */
-			freadln(fp, &bs);
-			str = buf + strlen(ST_SPRITE_FRAME_HEIGHT);
-			h = atoi(str);
-			/* close */
-			fclose(fp);
+		_create_sprite_shape(_cvs, result, _shapeFile);
+		_create_sprite_brush(_cvs, result, _shapeFile);
+		_create_sprite_palete(_cvs, result, _shapeFile);
 
-			/* add to canvas */
-			sprites = _cvs->sprites;
-			ht_set_or_insert(sprites, _name, result);
-		}
+		sprites = _cvs->sprites;
+		ht_set_or_insert(sprites, _name, result);
 	}
 
 	return result;
