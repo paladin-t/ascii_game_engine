@@ -25,6 +25,8 @@
 
 #include "../common/ageutil.h"
 #include "../input/ageinput.h"
+#include "../render/agerenderer.h"
+#include "../age.h"
 #include "agescriptapi.h"
 
 int age_api_beep(mb_interpreter_t* s, void** l) {
@@ -52,6 +54,21 @@ int age_api_reg_key_code(mb_interpreter_t* s, void** l) {
 	mb_attempt_close_bracket(s, l);
 
 	register_key_map(_ply, _idx, _cod);
+
+	return result;
+}
+
+int age_api_set_frame_rate(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	s32 _rate = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_int(s, l, &_rate);
+	mb_attempt_close_bracket(s, l);
+
+	set_frame_rate(AGE_CVS, _rate);
 
 	return result;
 }
