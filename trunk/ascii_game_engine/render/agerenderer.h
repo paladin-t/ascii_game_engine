@@ -61,7 +61,7 @@ typedef struct {
 	Frame* frames;
 	s32 frameCount;
 	s32 currentFrame;
-	s32 frameRate;
+	f32 frameRate;
 	MessageMap messageMap;
 	ControlProc control;
 } Sprite;

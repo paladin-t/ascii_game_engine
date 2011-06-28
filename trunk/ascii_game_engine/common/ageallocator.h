@@ -35,11 +35,14 @@ AGE_API void age_free(Ptr _ptr);
 #ifndef AGE_MALLOC
 #	define AGE_MALLOC(_type) ((_type*)age_malloc(sizeof(_type)))
 #endif
-#ifndef AGE_MALLOC_ARR
-#	define AGE_MALLOC_ARR(_type, _count) ((_type*)age_malloc(sizeof(_type) * _count))
+#ifndef AGE_MALLOC_N
+#	define AGE_MALLOC_N(_type, _count) ((_type*)age_malloc(sizeof(_type) * _count))
 #endif
 #ifndef AGE_FREE
 #	define AGE_FREE(_ptr) { age_free(_ptr); (_ptr) = 0; }
+#endif
+#ifndef AGE_FREE_N
+#	define AGE_FREE_N(_ptr) { age_free(_ptr); (_ptr) = 0; }
 #endif
 
 #endif /* __AGE_ALLOCATOR_H__ */

@@ -37,6 +37,7 @@ AGE_INTERNAL u32 get_tick_count(void);
 AGE_INTERNAL void sys_sleep(s32 _time);
 
 AGE_INTERNAL s32 freadln(FILE* _fp, Str* _buf);
+AGE_INTERNAL s32 fskipln(FILE* _fp);
 
 AGE_INTERNAL Str copy_string(const Str _str);
 
