@@ -35,8 +35,13 @@ static const Color COLOR_MAP[] = {
 
 static s32 _destroy_sprite(Ptr _data, Ptr _extra) {
 	s32 result = 0;
+	s32 k = 0;
 
 	Sprite* spr = (Sprite*)_data;
+	for(k = 0; k < spr->frameCount; ++k) {
+		AGE_FREE_N(spr->frames[k].tex);
+	}
+	AGE_FREE_N(spr->frames);
 	destroy_sprite((Canvas*)spr->owner, spr);
 
 	return result;
@@ -91,6 +96,9 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 	s32 w = 0;
 	s32 h = 0;
 	f32 r = 1.0f;
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
 	fp = fopen(_shapeFile, "rb+");
 	if(fp != 0) {
 		/* frame count */
@@ -109,6 +117,24 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 		freadln(fp, &bs);
 		str = buf + strlen(ST_SPRITE_FRAME_RATE);
 		r = (f32)atof(str);
+		fskipln(fp);
+		/* assignment */
+		_spr->frameCount = c;
+		_spr->frameSize.w = w;
+		_spr->frameSize.h = h;
+		_spr->frameRate = r;
+		/* frames */
+		_spr->frames = AGE_MALLOC_N(Frame, c);
+		for(k = 0; k < c; ++k) {
+			_spr->frames[k].tex = AGE_MALLOC_N(Pixel, w * h);
+			for(j = 0; j < h; ++j) {
+				freadln(fp, &bs);
+				for(i = 0; i < w; ++i) {
+					_spr->frames[k].tex[i + j * w].shape = bs[i];
+				}
+			}
+			fskipln(fp);
+		}
 		/* close */
 		fclose(fp);
 	} else {
@@ -138,7 +164,7 @@ Canvas* create_canvas(const Str _name) {
 	result->name = name;
 	result->size.w = CANVAS_WIDTH;
 	result->size.h = CANVAS_HEIGHT;
-	result->pixels = AGE_MALLOC_ARR(Pixel, count);
+	result->pixels = AGE_MALLOC_N(Pixel, count);
 	result->sprites = ht_create(0, ht_cmp_string, ht_hash_string, 0);
 
 	return result;
@@ -147,7 +173,7 @@ Canvas* create_canvas(const Str _name) {
 void destroy_canvas(Canvas* _cvs) {
 	destroy_all_sprites(_cvs);
 	ht_destroy(_cvs->sprites);
-	AGE_FREE(_cvs->pixels);
+	AGE_FREE_N(_cvs->pixels);
 	AGE_FREE(_cvs->name);
 	AGE_FREE(_cvs);
 }

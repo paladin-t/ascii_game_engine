@@ -63,6 +63,15 @@ s32 freadln(FILE* _fp, Str* _buf) {
 	return result;
 }
 
+s32 fskipln(FILE* _fp) {
+	s32 result = 0;
+	s8 buf[AGE_STR_LEN];
+	Str str = buf;
+	result = freadln(_fp, &str);
+
+	return result;
+}
+
 Str copy_string(const Str _str) {
 	Str result = 0;
 	s32 l = (s32)strlen(_str);
