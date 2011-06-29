@@ -40,12 +40,21 @@ struct Sprite;
 struct Canvas;
 
 typedef struct {
+	/* common */
 	s8 shape;
-	s8 brush;
 	Color color;
-	s32 zorder;
-	struct Frame* ownerFrames[MAX_CACHED_FRAME_COUNT];
-	s32 frameCount;
+	union {
+		/* sprite frame */
+		struct {
+			s8 brush;
+			s32 zorder;
+		};
+		/* canvas frame buffer */
+		struct {
+			struct Frame* ownerFrames[MAX_CACHED_FRAME_COUNT];
+			s32 frameCount;
+		};
+	};
 } Pixel;
 
 typedef struct {
@@ -96,6 +105,7 @@ AGE_API Sprite* get_sprite_by_name(Canvas* _cvs, const Str _name);
 AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
 AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
 AGE_API void destroy_all_sprites(Canvas* _cvs);
+AGE_API void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 AGE_API void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 AGE_API void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 

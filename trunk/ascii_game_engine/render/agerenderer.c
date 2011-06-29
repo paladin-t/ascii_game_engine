@@ -52,6 +52,7 @@ static s32 _update_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	Canvas* cvs = (Canvas*)spr->owner;
+	update_sprite(cvs, spr, cvs->context.lastElapsedTime);
 	if(spr->control) {
 		spr->control(
 			spr,
@@ -146,12 +147,92 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 
 static bl _create_sprite_brush(Canvas* _cvs, Sprite* _spr, const Str _brushFile) {
 	bl result = TRUE;
+	FILE* fp = 0;
+	s8 buf[AGE_STR_LEN];
+	Str str = 0;
+	Str bs = buf;
+	s32 c = 0;
+	s32 w = 0;
+	s32 h = 0;
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
+	fp = fopen(_brushFile, "rb+");
+	if(fp != 0) {
+		/* frame count */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_COUNT);
+		c = atoi(str);
+		/* frame width */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_WIDTH);
+		w = atoi(str);
+		/* frame height */
+		freadln(fp, &bs);
+		str = buf + strlen(ST_SPRITE_FRAME_HEIGHT);
+		h = atoi(str);
+		fskipln(fp);
+		/* checking */
+		assert(_spr->frameCount == c);
+		assert(_spr->frameSize.w == w);
+		assert(_spr->frameSize.h == h);
+		/* frames */
+		for(k = 0; k < c; ++k) {
+			for(j = 0; j < h; ++j) {
+				freadln(fp, &bs);
+				for(i = 0; i < w; ++i) {
+					_spr->frames[k].tex[i + j * w].brush = bs[i];
+				}
+			}
+			fskipln(fp);
+		}
+		/* close */
+		fclose(fp);
+	} else {
+		result = FALSE;
+	}
 
 	return result;
 }
 
 static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFile) {
 	bl result = TRUE;
+	FILE* fp = 0;
+	s8 buf[AGE_STR_LEN];
+	Str str = 0;
+	Str bs = buf;
+	s32 c = 0;
+	Color palete[256];
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
+	s32 b = 0;
+	memset(palete, 0, sizeof(palete));
+	fp = fopen(_paleteFile, "rb+");
+	if(fp != 0) {
+		while(!feof(fp)) {
+			freadln(fp, &bs);
+			if(strlen(bs) == 0) {
+				break;
+			}
+			str = buf + strlen("x: ");
+			c = atoi(str);
+			palete[(s32)buf[0]] = (Color)c;
+		}
+		/* close */
+		fclose(fp);
+		/* paint */
+		for(k = 0; k < _spr->frameCount; ++k) {
+			for(j = 0; j < _spr->frameSize.h; ++j) {
+				for(i = 0; i < _spr->frameSize.w; ++i) {
+					b = (s32)_spr->frames[k].tex[i + j * _spr->frameSize.w].brush;
+					_spr->frames[k].tex[i + j * _spr->frameSize.w].color = palete[b];
+				}
+			}
+		}
+	} else {
+		result = FALSE;
+	}
 
 	return result;
 }
@@ -232,8 +313,8 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 		result->owner = (struct Canvas*)_cvs;
 
 		_create_sprite_shape(_cvs, result, _shapeFile);
-		_create_sprite_brush(_cvs, result, _shapeFile);
-		_create_sprite_palete(_cvs, result, _shapeFile);
+		_create_sprite_brush(_cvs, result, _brushFile);
+		_create_sprite_palete(_cvs, result, _paleteFile);
 
 		sprites = _cvs->sprites;
 		ht_set_or_insert(sprites, _name, result);
@@ -256,7 +337,25 @@ void destroy_all_sprites(Canvas* _cvs) {
 	ht_clear(_cvs->sprites);
 }
 
+void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+}
+
 void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
+	s32 x = 0;
+	s32 y = 0;
+	s32 s = 0;
+
+	k = _spr->currentFrame;
+	for(j = 0; j < _spr->frameSize.h; ++j) {
+		y = _spr->position.y + j;
+		for(i = 0; i < _spr->frameSize.w; ++i) {
+			x = _spr->position.x + i;
+			s = (s32)_spr->frames[k].tex[i + j * _spr->frameSize.w].shape;
+		}
+	}
 }
 
 void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
