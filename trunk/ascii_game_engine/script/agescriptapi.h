@@ -30,10 +30,19 @@
 #include "../common/agetype.h"
 #include "my_basic/my_basic.h"
 
+/**
+ * @brief my-basic api: pronounce a beep
+ */
 AGE_INTERNAL int age_api_beep(mb_interpreter_t* s, void** l);
 
+/**
+ * @brief my-basic api: register a key code mapping item
+ */
 AGE_INTERNAL int age_api_reg_key_code(mb_interpreter_t* s, void** l);
 
+/**
+ * @brief my-basic api: set the frame rate of a canvas
+ */
 AGE_INTERNAL int age_api_set_frame_rate(mb_interpreter_t* s, void** l);
 
 #endif /* __AGE_SCRIPT_API_H__ */

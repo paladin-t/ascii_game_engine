@@ -52,12 +52,12 @@ typedef void* Ptr;
 
 typedef unsigned int Color;
 
-typedef struct {
+typedef struct Point {
 	s32 x;
 	s32 y;
 } Point;
 
-typedef struct {
+typedef struct Size {
 	s32 w;
 	s32 h;
 } Size;

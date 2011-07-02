@@ -29,7 +29,18 @@
 #include "../ageconfig.h"
 #include "../common/agetype.h"
 
+/**
+ * @brief malloc a piece of space
+ *
+ * @param[in] _size  - bytes count to be malloced
+ * @return - pointer to the malloced space
+ */
 AGE_API Ptr age_malloc(s32 _size);
+/**
+ * @brief free a piece of space
+ *
+ * @param[in] _ptr  - pointer to the malloced space
+ */
 AGE_API void age_free(Ptr _ptr);
 
 #ifndef AGE_MALLOC

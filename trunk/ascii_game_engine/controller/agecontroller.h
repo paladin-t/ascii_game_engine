@@ -31,12 +31,47 @@
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
 
+/**
+ * @brief object controlling functor
+ *
+ * @param[in] _obj         - object to be controlled
+ * @param[in] _name        - object name
+ * @param[in] _elapsedTime - elapsed time since last frame
+ * @param[in] _lparam      - first param
+ * @param[in] _wparam      - second param
+ * @param[in] _extra       - extra data
+ * @return - execution status
+ */
 typedef s32 (* ControlProc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
+/**
+ * @brief set a controller of a canvas
+ *
+ * @param[in] _obj  - canvas object
+ * @param[in] _proc - controller
+ */
 AGE_API void set_controller_canvas(Ptr _obj, ControlProc _proc);
+/**
+ * @brief get a controller of a canvas
+ *
+ * @param[in] _obj  - canvas object
+ * @return controller
+ */
 AGE_API ControlProc get_controller_canvas(Ptr _obj);
 
+/**
+ * @brief set a controller of a sprite
+ *
+ * @param[in] _obj  - sprite object
+ * @param[in] _proc - controller
+ */
 AGE_API void set_controller_sprite(Ptr _obj, ControlProc _proc);
+/**
+ * @brief get a controller of a sprite
+ *
+ * @param[in] _obj  - sprite object
+ * @return controller
+ */
 AGE_API ControlProc get_controller_sprite(Ptr _obj);
 
 #endif /* __AGE_CONTROLLER_H__ */
