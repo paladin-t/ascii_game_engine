@@ -47,25 +47,77 @@
 #	define AGE_CVS get_world()->canvas
 #endif
 
-typedef struct {
-	Canvas* canvas;
-	mb_interpreter_t* script;
-	bl running;
+/**
+ * @brief world object
+ */
+typedef struct World {
+	Canvas* canvas;            /**< canvas object */
+	mb_interpreter_t* script;  /**< global script object */
+	bl running;                /**< whether the world is running, set to FALSE to exit the game */
 } World;
 
+/**
+ * @brief get the version of current ascii game engine
+ *
+ * @return - version in integer format
+ */
 AGE_API u32 get_ver(void);
+/**
+ * @brief get the version of current ascii game engine
+ *
+ * @return - version in string format
+ */
 AGE_API const Str get_ver_string(void);
 
+/**
+ * @brief create the game world
+ *
+ * @return - the created world
+ */
 AGE_API World* create_world(void);
+/**
+ * @brief get the created singleton game world
+ *
+ * @return - the created singleton world
+ */
 AGE_API World* get_world(void);
+/**
+ * @brief destroy a created singleton game world
+ */
 AGE_API void destroy_world(void);
 
+/**
+ * @brief run a script to config the game world
+ *
+ * @param[in] _cfgFile  - configuration script file name
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
 AGE_API bl config_world(const Str _cfgFile);
 
+/**
+ * @brief run the world for one frame
+ *
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
 AGE_API s32 run_world(void);
+/**
+ * @brief request to exit the game world
+ */
 AGE_API void exit_world(void);
 
+/**
+ * @brief run a script in the world context
+ *
+ * @param[in] _sptFile  - script file name
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
 AGE_API bl run_world_script(const Str _sptFile);
+/**
+ * @brief run a script in a new context
+ *
+ * @param[in] _sptFile  - script file name
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
 AGE_API bl run_new_script(const Str _sptFile);
 
 #endif /* __AGE_H__ */

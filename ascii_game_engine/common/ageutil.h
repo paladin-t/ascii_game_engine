@@ -33,12 +33,41 @@
 #	define _countof(_a) (sizeof(_a) / sizeof(_a[0]))
 #endif
 
+/**
+ * @brief get the system tick count
+ *
+ * @return - the system tick count, in millisecond
+ */
 AGE_INTERNAL u32 get_tick_count(void);
+/**
+ * @brief sleep for a while
+ *
+ * @return - time to sleep, in millisecond
+ */
 AGE_INTERNAL void sys_sleep(s32 _time);
 
+/**
+ * @brief read a line from a file to a string buffer
+ *
+ * @param[in] _fp    - file pointer
+ * @param[out] _buf  - buffer to be filled
+ * @return - read characters count
+ */
 AGE_INTERNAL s32 freadln(FILE* _fp, Str* _buf);
+/**
+ * @brief skip a line from a file
+ *
+ * @param[in] _fp    - file pointer
+ * @return - skipped characters count
+ */
 AGE_INTERNAL s32 fskipln(FILE* _fp);
 
+/**
+ * @brief create a new string and copy the given content to it
+ *
+ * @param[in] _str - source string
+ * @return - new created string, need to be freed manually
+ */
 AGE_INTERNAL Str copy_string(const Str _str);
 
 #endif /* __AGE_UTIL_H__ */

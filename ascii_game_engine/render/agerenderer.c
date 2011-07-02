@@ -52,7 +52,11 @@ static s32 _update_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	Canvas* cvs = (Canvas*)spr->owner;
-	update_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	if(spr->update) {
+		spr->update(cvs, spr, cvs->context.lastElapsedTime);
+	} else {
+		update_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	}
 	if(spr->control) {
 		spr->control(
 			spr,
@@ -72,7 +76,11 @@ static s32 _fire_render_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	Canvas* cvs = (Canvas*)spr->owner;
-	fire_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	if(spr->fireRender) {
+		spr->fireRender(cvs, spr, cvs->context.lastElapsedTime);
+	} else {
+		fire_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	}
 
 	return result;
 }
@@ -82,7 +90,11 @@ static s32 _post_render_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	Canvas* cvs = (Canvas*)spr->owner;
-	post_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	if(spr->postRender) {
+		spr->postRender(cvs, spr, cvs->context.lastElapsedTime);
+	} else {
+		post_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	}
 
 	return result;
 }
@@ -310,7 +322,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 	if(!get_sprite_by_name(_cvs, _name)) {
 		result = AGE_MALLOC(Sprite);
 		result->name = copy_string(_name);
-		result->owner = (struct Canvas*)_cvs;
+		result->owner = _cvs;
 
 		_create_sprite_shape(_cvs, result, _shapeFile);
 		_create_sprite_brush(_cvs, result, _brushFile);
@@ -338,6 +350,7 @@ void destroy_all_sprites(Canvas* _cvs) {
 }
 
 void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	// TODO
 }
 
 void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
@@ -347,18 +360,42 @@ void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	s32 x = 0;
 	s32 y = 0;
 	s32 s = 0;
+	Pixel* pixel = 0;
 
 	k = _spr->currentFrame;
 	for(j = 0; j < _spr->frameSize.h; ++j) {
 		y = _spr->position.y + j;
 		for(i = 0; i < _spr->frameSize.w; ++i) {
+			pixel = &_spr->frames[k].tex[i + j * _spr->frameSize.w];
 			x = _spr->position.x + i;
-			s = (s32)_spr->frames[k].tex[i + j * _spr->frameSize.w].shape;
+			s = (s32)pixel->shape;
+			if(s) {
+				// TODO
+			}
 		}
 	}
 }
 
 void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
+	s32 x = 0;
+	s32 y = 0;
+	s32 s = 0;
+	Pixel* pixel = 0;
+
+	k = _spr->currentFrame;
+	for(j = 0; j < _spr->frameSize.h; ++j) {
+		y = _spr->position.y + j;
+		for(i = 0; i < _spr->frameSize.w; ++i) {
+			pixel = &_spr->frames[k].tex[i + j * _spr->frameSize.w];
+			x = _spr->position.x + i;
+			s = (s32)pixel->shape;
+			if(s) {
+			}
+		}
+	}
 }
 
 void set_cursor_visible(bl _vis) {
@@ -377,9 +414,12 @@ void goto_xy(s32 _x, s32 _y) {
 	SetConsoleCursorPosition(hOut, pos);
 }
 
-void set_color(Color _col) {
+void set_color(Canvas* _cvs, Color _col) {
 	HANDLE hConsole;
-	assert(_col >= 0 && _col < _countof(COLOR_MAP));
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, COLOR_MAP[_col]);
+	if(_col != _cvs->context.lastColor) {
+		assert(_col >= 0 && _col < _countof(COLOR_MAP));
+		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, COLOR_MAP[_col]);
+		_cvs->context.lastColor = _col;
+	}
 }
