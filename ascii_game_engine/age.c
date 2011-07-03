@@ -80,8 +80,11 @@ World* create_world(void) {
 
 	assert(!_gWorld);
 
+	open_input();
 	result = AGE_MALLOC(World);
+	result->input = create_input_context();
 	result->canvas = create_canvas(ST_DEFAULT_CANVAS_NAME);
+	set_cursor_visible(FALSE);
 
 	mb_init();
 	_open_script(&result->script);
@@ -96,15 +99,20 @@ World* get_world(void) {
 }
 
 void destroy_world(void) {
-	assert(_gWorld);
+	if(!_gWorld) {
+		return;
+	}
 
 	_close_script(&_gWorld->script);
 	mb_dispose();
 
 	destroy_canvas(_gWorld->canvas);
+	destroy_input_context(_gWorld->input);
 	AGE_FREE(_gWorld);
 
 	_gWorld = 0;
+
+	close_input();
 }
 
 bl config_world(const Str _cfgFile) {
@@ -121,7 +129,8 @@ bl config_world(const Str _cfgFile) {
 
 s32 run_world(void) {
 	s32 result = 0;
-	s32 time = 0;
+	s32 now = 0;
+	s32 old = get_tick_count();
 	s32 elapsed = 0;
 	s32 delay = 0;
 
@@ -129,11 +138,12 @@ s32 run_world(void) {
 
 	_gWorld->running = TRUE;
 	while(_gWorld->running) {
-		time = get_tick_count();
+		now = get_tick_count();
+		elapsed = now - old;
+		old = now;
 		update_canvas(AGE_CVS, elapsed);
 		render_canvas(AGE_CVS, elapsed);
-		elapsed = get_tick_count() - time;
-		delay = EXPECTED_FRAME_TIME - elapsed;
+		delay = EXPECTED_FRAME_TIME - (get_tick_count() - old);
 		if(delay > 0) {
 			sys_sleep(delay);
 		}
