@@ -44,13 +44,14 @@ struct Canvas;
  */
 typedef struct Pixel {
 	/* common */
-	s8 shape;     /**< shape data */
-	Color color;  /**< color value */
+	struct Frame* parent; /**< parent frame object */
+	s8 shape;             /**< shape data */
+	Color color;          /**< color value */
+	s32 zorder;           /**< z-order of this pixel */
 	union {
 		/* for sprite frame */
 		struct {
-			s8 brush;   /**< brush data, used with palete to paint a pixel */
-			s32 zorder; /**< z-order of this pixel */
+			s8 brush;     /**< brush data, used with palete to paint a pixel */
 		};
 		/* for canvas frame buffer */
 		struct {
@@ -61,12 +62,50 @@ typedef struct Pixel {
 } Pixel;
 
 /**
+ *
+ */
+static const s32 DEFAULT_Z_ORDER = 0x0FFFFFFF;
+
+/**
+ * @brief color used for erase a pixel
+ */
+static const Color ERASE_PIXEL_COLOR = -1;
+/**
+ * @brief shape used for erase a pixel
+ */
+static const s8 ERASE_PIXEL_SHAPE = ' ';
+
+/**
  * @brief frame structure
  */
 typedef struct Frame {
 	struct Sprite* parent; /**< parent sprite object */
 	Pixel* tex;            /**< pixels */
 } Frame;
+
+/**
+ * @brief sprite playing event callback functor
+ *
+ * @param[in] _cvs      - canvas object
+ * @param[in] _spr      - sprite object
+ * @param[in] _begin    - begin frame name of this animation
+ * @param[in] _end      - end frame name of this animation
+ * @param[in] _currName - current frame name
+ * @param[in] _currIdx  - current frame index
+ */
+typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, const Str _currName, s32 _currIdx);
+
+/**
+ * @brief time line structure
+ */
+typedef struct TimeLine {
+	Frame* frames;                      /**< all frames */
+	ht_node_t* namedFrames;             /**< named frame information */
+	Str begin;                          /**< begin frame */
+	Str end;                            /**< end frame */
+	bl loop;                            /**< whether loop between begin and end frame */
+	SpritePlayingCallbackFunc callback; /**< sprite playing event callback functor */
+} TimeLine;
 
 /**
  * @brief sprite updating functor
@@ -89,14 +128,16 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @brief sprite structure
  */
 typedef struct Sprite {
-	Str name;                     /**< name */
 	struct Canvas* owner;         /**< owner canvas object */
+	Str name;                     /**< name */
 	Point position;               /**< position */
+	Point oldPosition;            /**< old position */
 	Size frameSize;               /**< size of each frame */
-	Frame* frames;                /**< frames data */
+	TimeLine timeLine;            /**< time line data */
 	s32 frameCount;               /**< frames count */
 	s32 currentFrame;             /**< current frame index */
 	f32 frameRate;                /**< frame rate information */
+	s32 frameTick;                /**< frame updating time tick count */
 	MessageMap messageMap;        /**< message processing map */
 	ControlProc control;          /**< controlling functor */
 	SpriteUpdateFunc update;      /**< updating functor */
@@ -123,7 +164,7 @@ typedef struct Canvas {
 	Size size;              /**< canvas size */
 	Pixel* pixels;          /**< frame buffer */
 	ht_node_t* sprites;     /**< alive sprite objects */
-	s32 frameRate;          /**< canvas frame rate */
+	s32 frameRate;          /**< canvas frame rate, in millisecond */
 	RunningContext context; /**< running context */
 	ControlProc control;    /**< canvas controlling functor*/
 } Canvas;
@@ -204,6 +245,50 @@ AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
  * @param[in] _cvs - canvas object
  */
 AGE_API void destroy_all_sprites(Canvas* _cvs);
+
+/**
+ * @brief set position of a sprite
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @param[in] _x   - x
+ * @param[in] _y   - y
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_position_sprite(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y);
+/**
+ * @brief get position of a sprite
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @param[out] _x  - pointer to output x
+ * @param[out] _y  - pointer to output y
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl get_position_sprite(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y);
+
+/**
+ * @brief play an animation of a time line
+ *
+ * @param[in] _cvs   - canvas object
+ * @param[in] _spr   - sprite object
+ * @param[in] _begin - begin frame name of this animation
+ * @param[in] _end   - end frame name of this animation
+ * @param[in] _loop  - whether loop this animation
+ * @param[in] _cb    - playing event callback functor
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, SpritePlayingCallbackFunc _cb);
+/**
+ * @brief stop an animation of a time line
+ *
+ * @param[in] _cvs    - canvas object
+ * @param[in] _spr    - sprite object
+ * @param[in] _stopAt - stop animation at which frame, pass -1 to stop at current frame
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt);
+
 /**
  * @brief sprite updating
  *

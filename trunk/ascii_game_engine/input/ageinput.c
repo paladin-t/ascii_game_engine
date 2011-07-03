@@ -24,7 +24,12 @@
 */
 
 #include "../common/ageutil.h"
+#include "../common/ageallocator.h"
 #include "ageinput.h"
+
+typedef struct InputContext {
+	bl keys[256];
+} InputContext;
 
 static s32 KEY_MAP[MAX_PLAYER_COUNT][KC_COUNT];
 
@@ -42,6 +47,30 @@ bl close_input(void) {
 	return result;
 }
 
+Ptr create_input_context(void) {
+	InputContext* result = AGE_MALLOC(InputContext);
+
+	return result;
+}
+
+void destroy_input_context(Ptr _ctx) {
+	AGE_FREE(_ctx);
+}
+
+void update_input_context(Ptr _ctx) {
+	InputContext* ctx = (InputContext*)_ctx;
+	s32 key = 0;
+
+	memset(ctx->keys, 0, sizeof(ctx->keys));
+	while(kbhit()) {
+		key = getch();
+		if(224 == key) {
+			key = getch();
+		}
+		ctx->keys[key] = TRUE;
+	}
+}
+
 bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode) {
 	bl result = TRUE;
 
@@ -52,19 +81,14 @@ bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode) {
 	return result;
 }
 
-bl is_key_down(s32 _player, KeyIndex _keyIdx) {
+bl is_key_down(Ptr _ctx, s32 _player, KeyIndex _keyIdx) {
 	bl result = FALSE;
-	int key = 0;
+	s32 key = 0;
+	InputContext* ctx = (InputContext*)_ctx;
 
 	assert(_player >= 0 && _player < MAX_PLAYER_COUNT && _keyIdx >= 0 && _keyIdx < KC_COUNT);
 
-	if(kbhit()) {
-		key = getch();
-		if(224 == key) {
-			key = getch();
-		}
-		result = KEY_MAP[_player][_keyIdx] == key;
-	}
+	result = ctx->keys[KEY_MAP[_player][_keyIdx]] != 0;
 
 	return result;
 }

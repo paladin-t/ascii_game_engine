@@ -59,6 +59,26 @@ AGE_API bl open_input(void);
 AGE_API bl close_input(void);
 
 /**
+ * @brief create an input context
+ *
+ * @return - created input context
+ */
+AGE_API Ptr create_input_context(void);
+/**
+ * @brief destroy an input context
+ *
+ * @param[in] _ctx - input context to be destroyd
+ */
+AGE_API void destroy_input_context(Ptr _ctx);
+
+/**
+ * @brief update an input context
+ *
+ * @param[in] _ctx - input context to be updated
+ */
+AGE_API void update_input_context(Ptr _ctx);
+
+/**
  * @brief register a key code as an index in the map
  *
  * @param[in] _player  - player index
@@ -71,10 +91,11 @@ AGE_API bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode);
 /**
  * @brief determine whether the given index key of a player is down
  *
+ * @param[in] _ctx - input context to be detected
  * @param[in] _player  - player index
  * @param[in] _keyIdx  - key index
  * @return - return TRUE if down
  */
-AGE_API bl is_key_down(s32 _player, KeyIndex _keyIdx);
+AGE_API bl is_key_down(Ptr _ctx, s32 _player, KeyIndex _keyIdx);
 
 #endif /* __AGE_INPUT_H__ */

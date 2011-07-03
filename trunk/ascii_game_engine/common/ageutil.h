@@ -34,6 +34,11 @@
 #endif
 
 /**
+ * @brief pronounce a beep
+ */
+AGE_INTERNAL void sys_beep(void);
+
+/**
  * @brief get the system tick count
  *
  * @return - the system tick count, in millisecond
@@ -69,5 +74,16 @@ AGE_INTERNAL s32 fskipln(FILE* _fp);
  * @return - new created string, need to be freed manually
  */
 AGE_INTERNAL Str copy_string(const Str _str);
+
+/**
+ * @brief compare two pointer
+ *
+ * @param[in] _left  - first pointer
+ * @param[in] _right - second pointer
+ * @return - 0 if _left equals to _right,
+ *           1 if _left is greater than _right,
+ *           -1 if _left is less than _right;
+ */
+AGE_INTERNAL s32 age_cmp_ptr(const Ptr _left, const Ptr _right);
 
 #endif /* __AGE_UTIL_H__ */

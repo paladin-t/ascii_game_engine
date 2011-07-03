@@ -28,6 +28,10 @@
 
 #pragma comment(lib, "winmm.lib")
 
+void sys_beep(void) {
+	putchar('\a');
+}
+
 u32 get_tick_count(void) {
 	return timeGetTime();
 }
@@ -80,6 +84,17 @@ Str copy_string(const Str _str) {
 
 	result = (Str)age_malloc(l + 1);
 	strcpy(result, _str);
+
+	return result;
+}
+
+s32 age_cmp_ptr(const Ptr _left, const Ptr _right) {
+	s32 result = 0;
+	if(_left > _right) {
+		result = 1;
+	} else if(_left < _right) {
+		result = -1;
+	}
 
 	return result;
 }

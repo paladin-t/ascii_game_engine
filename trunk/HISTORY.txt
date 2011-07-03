@@ -1,3 +1,7 @@
+Jul. 3 2011
+Rendering.
+Basic animating.
+
 Jun. 26 2011
 Canvas, Sprite etc.
 Controller interface.

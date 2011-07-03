@@ -46,11 +46,15 @@
 #ifndef AGE_CVS
 #	define AGE_CVS get_world()->canvas
 #endif
+#ifndef AGE_IPT
+#	define AGE_IPT get_world()->input
+#endif
 
 /**
  * @brief world object
  */
 typedef struct World {
+	Ptr input;                 /**< input context */
 	Canvas* canvas;            /**< canvas object */
 	mb_interpreter_t* script;  /**< global script object */
 	bl running;                /**< whether the world is running, set to FALSE to exit the game */
