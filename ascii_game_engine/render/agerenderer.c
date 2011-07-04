@@ -35,14 +35,19 @@ static const Color COLOR_MAP[] = {
 
 static s32 _destroy_sprite(Ptr _data, Ptr _extra) {
 	s32 result = 0;
-	s32 k = 0;
 
 	Sprite* spr = (Sprite*)_data;
-	for(k = 0; k < spr->frameCount; ++k) {
-		AGE_FREE_N(spr->timeLine.frames[k].tex);
-	}
-	AGE_FREE_N(spr->timeLine.frames);
 	destroy_sprite((Canvas*)spr->owner, spr);
+
+	return result;
+}
+
+static s32 _destroy_string(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+	s32 k = 0;
+
+	Str fname = (Str)_extra;
+	AGE_FREE(fname);
 
 	return result;
 }
@@ -112,6 +117,8 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 	s32 i = 0;
 	s32 j = 0;
 	s32 k = 0;
+	Str fname = 0;
+	union { Ptr ptr; s32 sint; } u;
 	fp = fopen(_shapeFile, "rb+");
 	if(fp != 0) {
 		/* frame count */
@@ -132,7 +139,7 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 		r = (f32)atof(str);
 		fskipln(fp);
 		/* assignment */
-		_spr->frameCount = c;
+		_spr->timeLine.frameCount = c;
 		_spr->frameSize.w = w;
 		_spr->frameSize.h = h;
 		_spr->frameRate = r;
@@ -142,6 +149,12 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 			_spr->timeLine.frames[k].tex = AGE_MALLOC_N(Pixel, w * h);
 			for(j = 0; j < h; ++j) {
 				freadln(fp, &bs);
+				if(bs[0] == NAMED_FRAME_PREFIX) {
+					fname = copy_substring(bs, 1, 0);
+					u.sint = k;
+					ht_set_or_insert(_spr->timeLine.namedFrames, fname, u.ptr);
+					freadln(fp, &bs);
+				}
 				for(i = 0; i < w; ++i) {
 					_spr->timeLine.frames[k].tex[i + j * w].parent = &_spr->timeLine.frames[k];
 					_spr->timeLine.frames[k].tex[i + j * w].shape = bs[i];
@@ -186,7 +199,7 @@ static bl _create_sprite_brush(Canvas* _cvs, Sprite* _spr, const Str _brushFile)
 		h = atoi(str);
 		fskipln(fp);
 		/* checking */
-		assert(_spr->frameCount == c);
+		assert(_spr->timeLine.frameCount == c);
 		assert(_spr->frameSize.w == w);
 		assert(_spr->frameSize.h == h);
 		/* frames */
@@ -235,7 +248,7 @@ static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFil
 		/* close */
 		fclose(fp);
 		/* paint */
-		for(k = 0; k < _spr->frameCount; ++k) {
+		for(k = 0; k < _spr->timeLine.frameCount; ++k) {
 			for(j = 0; j < _spr->frameSize.h; ++j) {
 				for(i = 0; i < _spr->frameSize.w; ++i) {
 					b = (s32)_spr->timeLine.frames[k].tex[i + j * _spr->frameSize.w].brush;
@@ -346,7 +359,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 		result = AGE_MALLOC(Sprite);
 		result->name = copy_string(_name);
 		result->owner = _cvs;
-		result->timeLine.namedFrames = ht_create(0, ht_cmp_string, ht_hash_string, 0);
+		result->timeLine.namedFrames = ht_create(0, ht_cmp_string, ht_hash_string, _destroy_string);
 
 		_create_sprite_shape(_cvs, result, _shapeFile);
 		_create_sprite_brush(_cvs, result, _brushFile);
@@ -362,10 +375,22 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 }
 
 void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
+	s32 k = 0;
+
 	assert(_cvs);
 
 	destroy_message_map_sprite(_spr);
+	for(k = 0; k < _spr->timeLine.frameCount; ++k) {
+		AGE_FREE_N(_spr->timeLine.frames[k].tex);
+	}
+	AGE_FREE_N(_spr->timeLine.frames);
 	ht_destroy(_spr->timeLine.namedFrames);
+	if(_spr->timeLine.begin) {
+		AGE_FREE(_spr->timeLine.begin);
+	}
+	if(_spr->timeLine.end) {
+		AGE_FREE(_spr->timeLine.end);
+	}
 	AGE_FREE(_spr->name);
 	AGE_FREE(_spr);
 }
@@ -402,7 +427,16 @@ bl get_position_sprite(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y) {
 bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, SpritePlayingCallbackFunc _cb) {
 	bl result = TRUE;
 
-	// TODO
+	if(_spr->timeLine.begin) {
+		AGE_FREE(_spr->timeLine.begin);
+	}
+	if(_spr->timeLine.end) {
+		AGE_FREE(_spr->timeLine.end);
+	}
+	_spr->timeLine.begin = copy_string(_begin);
+	_spr->timeLine.end = copy_string(_end);
+	_spr->timeLine.loop = _loop;
+	_spr->timeLine.callback = _cb;
 
 	return result;
 }
@@ -426,7 +460,7 @@ void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 		if(_spr->timeLine.begin && _spr->timeLine.end) {
 			// TODO
 		} else {
-			if(_spr->currentFrame >= _spr->frameCount) {
+			if(_spr->currentFrame >= _spr->timeLine.frameCount) {
 				_spr->currentFrame = 0;
 			}
 		}

@@ -88,6 +88,25 @@ Str copy_string(const Str _str) {
 	return result;
 }
 
+Str copy_substring(const Str _str, s32 _start, s32 _count) {
+	Str result = 0;
+	s32 l = (s32)strlen(_str);
+	s32 i = 0;
+
+	assert(_str);
+
+	if(!_count) {
+		_count = l - _start;
+	}
+	result = (Str)age_malloc(l + 1);
+	for(i = 0; i < l && i < _count; ++i) {
+		result[i] = _str[_start + i];
+	}
+	result[i] = '\0';
+
+	return result;
+}
+
 s32 age_cmp_ptr(const Ptr _left, const Ptr _right) {
 	s32 result = 0;
 	if(_left > _right) {
