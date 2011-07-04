@@ -540,14 +540,23 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 			pixelf = &_spr->timeLine.frames[k].tex[i + j * _spr->frameSize.w];
 			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
 			s = (s32)pixelf->shape;
-			if(s && pixelf->zorder <= pixelc->zorder
-				&& pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
-				pixelc->shape = (s8)s;
-				pixelc->color = pixelf->color;
-				pixelc->zorder = pixelf->zorder;
-				pixelc->ownerFrames[
-					pixelc->frameCount++
-				] = pixelf->parent;
+			if(s != ERASE_PIXEL_SHAPE) {
+				if(pixelf->zorder <= pixelc->zorder) {
+					pixelc->shape = (s8)s;
+					pixelc->color = pixelf->color;
+					pixelc->zorder = pixelf->zorder;
+				}
+				if(pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
+					pixelc->ownerFrames[
+						pixelc->frameCount++
+					] = pixelf->parent;
+				}
+			} else if(pixelf->brush != ERASE_PIXEL_SHAPE) {
+				if(pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
+					pixelc->ownerFrames[
+						pixelc->frameCount++
+					] = pixelf->parent;
+				}
 			}
 		}
 	}

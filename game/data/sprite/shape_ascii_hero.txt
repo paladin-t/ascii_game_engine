@@ -6,21 +6,21 @@ rate: 6
 @normal
      
      
-  o  
+ coc 
 
      
      
-  O  
+ cOc 
 
      
   O  
-     
+ ccc 
 
      
      
-  O  
+ cOc 
 
 @end_normal
      
      
-  o  
+ coc 
