@@ -74,6 +74,15 @@ AGE_INTERNAL s32 fskipln(FILE* _fp);
  * @return - new created string, need to be freed manually
  */
 AGE_INTERNAL Str copy_string(const Str _str);
+/**
+ * @brief create a new string and copy a count of the given content to it
+ *
+ * @param[in] _str   - source string
+ * @param[in] _start - start offset
+ * @param[in] _count - size to be copied, set to 0 if copy to end
+ * @return - new created string, need to be freed manually
+ */
+AGE_INTERNAL Str copy_substring(const Str _str, s32 _start, s32 _count);
 
 /**
  * @brief compare two pointer

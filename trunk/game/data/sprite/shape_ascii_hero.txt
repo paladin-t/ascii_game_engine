@@ -3,6 +3,7 @@ width: 5
 height: 3
 rate: 6
 
+@normal
      
      
   o  
@@ -19,6 +20,7 @@ rate: 6
      
   O  
 
+@end_normal
      
      
   o  

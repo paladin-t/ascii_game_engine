@@ -34,6 +34,7 @@
 #include "../controller/agecontroller.h"
 
 #define MAX_CACHED_FRAME_COUNT 16
+#define NAMED_FRAME_PREFIX '@'
 
 struct Frame;
 struct Sprite;
@@ -99,6 +100,7 @@ typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _
  * @brief time line structure
  */
 typedef struct TimeLine {
+	s32 frameCount;                     /**< frames count */
 	Frame* frames;                      /**< all frames */
 	ht_node_t* namedFrames;             /**< named frame information */
 	Str begin;                          /**< begin frame */
@@ -134,7 +136,6 @@ typedef struct Sprite {
 	Point oldPosition;            /**< old position */
 	Size frameSize;               /**< size of each frame */
 	TimeLine timeLine;            /**< time line data */
-	s32 frameCount;               /**< frames count */
 	s32 currentFrame;             /**< current frame index */
 	f32 frameRate;                /**< frame rate information */
 	s32 frameTick;                /**< frame updating time tick count */
