@@ -69,14 +69,14 @@ typedef struct MessageMap {
  * @param[in] _obj - sprite object
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl create_message_map_sprite(Ptr _obj);
+AGE_API bl create_sprite_message_map(Ptr _obj);
 /**
  * @brief destroy a message map of a sprite
  *
  * @param[in] _obj - sprite object
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl destroy_message_map_sprite(Ptr _obj);
+AGE_API bl destroy_sprite_message_map(Ptr _obj);
 
 /**
  * @brief register a message processing functor to a sprite object
@@ -85,7 +85,7 @@ AGE_API bl destroy_message_map_sprite(Ptr _obj);
  * @param[in] _msg  - message type to be registered
  * @param[in] _proc - processing functor
  */
-AGE_API void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc);
+AGE_API void register_sprite_message_proc(Ptr _obj, u32 _msg, MessageProc _proc);
 /**
  * @brief get a registered message processing functor of a sprite object
  *
@@ -93,14 +93,14 @@ AGE_API void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc)
  * @param[in] _msg  - message type to be registered
  * @return - processing functor
  */
-AGE_API MessageProc get_message_proc_sprite(Ptr _obj, u32 _msg);
+AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
 /**
  * @brief unregister a message processing functor of a sprite object
  *
  * @param[in] _obj  - sprite object
  * @param[in] _msg  - message type to be registered
  */
-AGE_API void unregister_message_proc_sprite(Ptr _obj, u32 _msg);
+AGE_API void unregister_sprite_message_proc(Ptr _obj, u32 _msg);
 
 /**
  * @brief send a message to a sprite object

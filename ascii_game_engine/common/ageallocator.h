@@ -30,6 +30,20 @@
 #include "../common/agetype.h"
 
 /**
+ * @brief memory allocator functor
+ *
+ * @param[in] _size - size to be allocated in bytes
+ * @return - allocated memory
+ */
+typedef Ptr (* Creator)(s32 _size);
+/**
+ * @brief memory deallocator functor
+ *
+ * @param[in] _ptr - pointer of a piece of memory to be deallocated
+ */
+typedef void (* Destroyer)(Ptr _ptr);
+
+/**
  * @brief malloc a piece of space
  *
  * @param[in] _size  - bytes count to be malloced

@@ -43,7 +43,7 @@ AGE_INTERNAL void sys_beep(void);
  *
  * @return - the system tick count, in millisecond
  */
-AGE_INTERNAL u32 get_tick_count(void);
+AGE_INTERNAL u32 sys_tick_count(void);
 /**
  * @brief sleep for a while
  *

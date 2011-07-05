@@ -305,7 +305,7 @@ void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	_cvs->context.lastWParam = 0;
 	_cvs->context.lastExtra = 0;
 
-	ctrl = get_controller_canvas(_cvs);
+	ctrl = get_canvas_controller(_cvs);
 	if(ctrl) {
 		ctrl(_cvs, _cvs->name, _elapsedTime, 0, 0, 0);
 	}
@@ -365,7 +365,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 		_create_sprite_brush(_cvs, result, _brushFile);
 		_create_sprite_palete(_cvs, result, _paleteFile);
 
-		create_message_map_sprite(result);
+		create_sprite_message_map(result);
 
 		sprites = _cvs->sprites;
 		ht_set_or_insert(sprites, _name, result);
@@ -379,17 +379,17 @@ void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
 
 	assert(_cvs);
 
-	destroy_message_map_sprite(_spr);
+	destroy_sprite_message_map(_spr);
 	for(k = 0; k < _spr->timeLine.frameCount; ++k) {
 		AGE_FREE_N(_spr->timeLine.frames[k].tex);
 	}
 	AGE_FREE_N(_spr->timeLine.frames);
 	ht_destroy(_spr->timeLine.namedFrames);
-	if(_spr->timeLine.begin) {
-		AGE_FREE(_spr->timeLine.begin);
+	if(_spr->timeLine.beginName) {
+		AGE_FREE(_spr->timeLine.beginName);
 	}
-	if(_spr->timeLine.end) {
-		AGE_FREE(_spr->timeLine.end);
+	if(_spr->timeLine.endName) {
+		AGE_FREE(_spr->timeLine.endName);
 	}
 	AGE_FREE(_spr->name);
 	AGE_FREE(_spr);
@@ -402,7 +402,7 @@ void destroy_all_sprites(Canvas* _cvs) {
 	ht_clear(_cvs->sprites);
 }
 
-bl set_position_sprite(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y) {
+bl set_sprite_position(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y) {
 	bl result = TRUE;
 
 	_spr->position.x = _x;
@@ -411,7 +411,7 @@ bl set_position_sprite(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y) {
 	return result;
 }
 
-bl get_position_sprite(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y) {
+bl get_sprite_position(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y) {
 	bl result = TRUE;
 
 	if(_x) {
@@ -424,19 +424,36 @@ bl get_position_sprite(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y) {
 	return result;
 }
 
+s32 get_named_frame_index(Canvas* _cvs, Sprite* _spr, const Str _name) {
+	s32 result = INVALID_FRAME_INDEX;
+	ls_node_t* n = 0;
+	union { Ptr ptr; s32 sint; } u;
+
+	n = ht_find(_spr->timeLine.namedFrames, _name);
+	if(n) {
+		u.ptr = n->data;
+		result = u.sint;
+	}
+
+	return result;
+}
+
 bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, SpritePlayingCallbackFunc _cb) {
 	bl result = TRUE;
 
-	if(_spr->timeLine.begin) {
-		AGE_FREE(_spr->timeLine.begin);
+	if(_spr->timeLine.beginName) {
+		AGE_FREE(_spr->timeLine.beginName);
 	}
-	if(_spr->timeLine.end) {
-		AGE_FREE(_spr->timeLine.end);
+	if(_spr->timeLine.endName) {
+		AGE_FREE(_spr->timeLine.endName);
 	}
-	_spr->timeLine.begin = copy_string(_begin);
-	_spr->timeLine.end = copy_string(_end);
+	_spr->timeLine.beginName = copy_string(_begin);
+	_spr->timeLine.endName = copy_string(_end);
+	_spr->timeLine.beginIndex = get_named_frame_index(_cvs, _spr, _begin);
+	_spr->timeLine.endIndex = get_named_frame_index(_cvs, _spr, _end);
 	_spr->timeLine.loop = _loop;
 	_spr->timeLine.callback = _cb;
+	_spr->timeLine.currentFrame = _spr->timeLine.beginIndex;
 
 	return result;
 }
@@ -444,7 +461,21 @@ bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl 
 bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt) {
 	bl result = TRUE;
 
-	// TODO
+	if((_stopAt == INVALID_FRAME_INDEX) || (_stopAt >= 0 && _stopAt < _spr->timeLine.frameCount)) {
+		if(_stopAt != INVALID_FRAME_INDEX) {
+			_spr->timeLine.currentFrame = _stopAt;
+		}
+		if(_spr->timeLine.beginName) {
+			AGE_FREE(_spr->timeLine.beginName);
+		}
+		if(_spr->timeLine.endName) {
+			AGE_FREE(_spr->timeLine.endName);
+		}
+		_spr->timeLine.beginIndex = INVALID_FRAME_INDEX;
+		_spr->timeLine.endIndex = INVALID_FRAME_INDEX;
+	} else {
+		result = FALSE;
+	}
 
 	return result;
 }
@@ -456,12 +487,12 @@ void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	_spr->frameTick += _elapsedTime;
 	if(_spr->frameTick >= tickableTime) {
 		_spr->frameTick -= tickableTime;
-		++_spr->currentFrame;
-		if(_spr->timeLine.begin && _spr->timeLine.end) {
+		++_spr->timeLine.currentFrame;
+		if(_spr->timeLine.beginName && _spr->timeLine.endName) {
 			// TODO
 		} else {
-			if(_spr->currentFrame >= _spr->timeLine.frameCount) {
-				_spr->currentFrame = 0;
+			if(_spr->timeLine.currentFrame >= _spr->timeLine.frameCount) {
+				_spr->timeLine.currentFrame = 0;
 			}
 		}
 	}
@@ -475,11 +506,11 @@ void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	s32 y = 0;
 	s32 s = 0;
 	s32 itf = 0;
-	s32 found = -1;
+	s32 found = INVALID_FRAME_INDEX;
 	Pixel* pixelf = 0;
 	Pixel* pixelc = 0;
 
-	k = _spr->currentFrame;
+	k = _spr->timeLine.lastFrame;
 	for(j = 0; j < _spr->frameSize.h; ++j) {
 		y = _spr->oldPosition.y + j;
 		if(y < 0 || y >= _cvs->size.h) {
@@ -497,14 +528,14 @@ void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 				pixelc->shape = 0;
 				pixelc->color = ERASE_PIXEL_COLOR;
 				pixelc->zorder = DEFAULT_Z_ORDER;
-				found = -1;
+				found = INVALID_FRAME_INDEX;
 				for(itf = 0; itf < pixelc->frameCount; ++itf) {
 					if(pixelc->ownerFrames[itf] == pixelf->parent) {
 						found = itf;
 						break;
 					}
 				}
-				if(found != -1) {
+				if(found != INVALID_FRAME_INDEX) {
 					pixelc->ownerFrames[found] =
 						pixelc->ownerFrames[
 							--pixelc->frameCount
@@ -526,7 +557,8 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	Pixel* pixelf = 0;
 	Pixel* pixelc = 0;
 
-	k = _spr->currentFrame;
+	_spr->timeLine.lastFrame = _spr->timeLine.currentFrame;
+	k = _spr->timeLine.currentFrame;
 	for(j = 0; j < _spr->frameSize.h; ++j) {
 		y = _spr->position.y + j;
 		if(y < 0 || y >= _cvs->size.h) {

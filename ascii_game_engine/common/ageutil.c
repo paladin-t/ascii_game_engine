@@ -32,7 +32,7 @@ void sys_beep(void) {
 	putchar('\a');
 }
 
-u32 get_tick_count(void) {
+u32 sys_tick_count(void) {
 	return timeGetTime();
 }
 

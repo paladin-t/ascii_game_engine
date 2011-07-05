@@ -130,7 +130,7 @@ bl config_world(const Str _cfgFile) {
 s32 run_world(void) {
 	s32 result = 0;
 	s32 now = 0;
-	s32 old = get_tick_count();
+	s32 old = sys_tick_count();
 	s32 elapsed = 0;
 	s32 delay = 0;
 
@@ -138,12 +138,12 @@ s32 run_world(void) {
 
 	_gWorld->running = TRUE;
 	while(_gWorld->running) {
-		now = get_tick_count();
+		now = sys_tick_count();
 		elapsed = now - old;
 		old = now;
 		update_canvas(AGE_CVS, elapsed);
 		render_canvas(AGE_CVS, elapsed);
-		delay = EXPECTED_FRAME_TIME - (get_tick_count() - old);
+		delay = EXPECTED_FRAME_TIME - (sys_tick_count() - old);
 		if(delay > 0) {
 			sys_sleep(delay);
 		}

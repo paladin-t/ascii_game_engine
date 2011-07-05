@@ -284,6 +284,14 @@
 				RelativePath=".\controller\agecontroller.h"
 				>
 			</File>
+			<File
+				RelativePath=".\controller\ageexploder.c"
+				>
+			</File>
+			<File
+				RelativePath=".\controller\ageexploder.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\age.c"

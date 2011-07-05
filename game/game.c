@@ -51,7 +51,7 @@ static void _on_exit(void) {
 static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	Point pos = { 0, 0 };
-	get_position_sprite(AGE_CVS, game.player, &pos.x, &pos.y);
+	get_sprite_position(AGE_CVS, game.player, &pos.x, &pos.y);
 
 	update_input_context(AGE_IPT);
 
@@ -60,17 +60,17 @@ static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _
 	}
 	if(is_key_down(AGE_IPT, 0, KC_UP)) {
 		--pos.y;
-		set_position_sprite(AGE_CVS, game.player, pos.x, pos.y);
+		set_sprite_position(AGE_CVS, game.player, pos.x, pos.y);
 	} else if(is_key_down(AGE_IPT, 0, KC_DOWN)) {
 		++pos.y;
-		set_position_sprite(AGE_CVS, game.player, pos.x, pos.y);
+		set_sprite_position(AGE_CVS, game.player, pos.x, pos.y);
 	}
 	if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
 		--pos.x;
-		set_position_sprite(AGE_CVS, game.player, pos.x, pos.y);
+		set_sprite_position(AGE_CVS, game.player, pos.x, pos.y);
 	} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
 		++pos.x;
-		set_position_sprite(AGE_CVS, game.player, pos.x, pos.y);
+		set_sprite_position(AGE_CVS, game.player, pos.x, pos.y);
 	}
 
 	return result;
@@ -85,7 +85,7 @@ s32 main(s32 argc, Str argv[]) {
 	create_world();
 	config_world("data/config.bas");
 	/* set canvas controller */
-	set_controller_canvas(AGE_CVS, _canvasControlProc);
+	set_canvas_controller(AGE_CVS, _canvasControlProc);
 	/* create objects and connect them with controllers */
 	game.player = create_sprite(
 		AGE_CVS,
