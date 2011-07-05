@@ -28,13 +28,38 @@
 
 #include "../ageconfig.h"
 #include "../common/agetype.h"
+#include "../common/ageallocator.h"
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
 #include "../message/agemessage.h"
 #include "../controller/agecontroller.h"
 
 #define MAX_CACHED_FRAME_COUNT 16
-#define NAMED_FRAME_PREFIX '@'
+
+/**
+ * @brief named frame prefix, for data string parsing
+ */
+static const s8 NAMED_FRAME_PREFIX = '@';
+
+/**
+ * @brief default z-order
+ */
+static const s32 DEFAULT_Z_ORDER = 0x0FFFFFFF;
+
+/**
+ * @brief color used for erase a pixel
+ */
+static const Color ERASE_PIXEL_COLOR = -1;
+
+/**
+ * @brief shape used for erase a pixel
+ */
+static const s8 ERASE_PIXEL_SHAPE = ' ';
+
+/**
+ * @brief invalid frame index
+ */
+static const s32 INVALID_FRAME_INDEX = -1;
 
 struct Frame;
 struct Sprite;
@@ -63,20 +88,6 @@ typedef struct Pixel {
 } Pixel;
 
 /**
- *
- */
-static const s32 DEFAULT_Z_ORDER = 0x0FFFFFFF;
-
-/**
- * @brief color used for erase a pixel
- */
-static const Color ERASE_PIXEL_COLOR = -1;
-/**
- * @brief shape used for erase a pixel
- */
-static const s8 ERASE_PIXEL_SHAPE = ' ';
-
-/**
  * @brief frame structure
  */
 typedef struct Frame {
@@ -100,14 +111,26 @@ typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _
  * @brief time line structure
  */
 typedef struct TimeLine {
-	s32 frameCount;                     /**< frames count */
 	Frame* frames;                      /**< all frames */
+	s32 frameCount;                     /**< frames count */
+	s32 currentFrame;                   /**< current frame index */
+	s32 lastFrame;                      /**< last frame index */
 	ht_node_t* namedFrames;             /**< named frame information */
-	Str begin;                          /**< begin frame */
-	Str end;                            /**< end frame */
+	Str beginName;                      /**< begin frame name */
+	Str endName;                        /**< end frame name */
+	s32 beginIndex;                     /**< begin frame index */
+	s32 endIndex;                       /**< end frame index */
 	bl loop;                            /**< whether loop between begin and end frame */
 	SpritePlayingCallbackFunc callback; /**< sprite playing event callback functor */
 } TimeLine;
+
+/**
+ * @brief customized animation structure
+ */
+typedef struct CustomAnimation {
+	Ptr context;       /**< animation context */
+	Destroyer destroy; /**< destroyer functor */
+} CustomAnimation;
 
 /**
  * @brief sprite updating functor
@@ -130,20 +153,20 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @brief sprite structure
  */
 typedef struct Sprite {
-	struct Canvas* owner;         /**< owner canvas object */
-	Str name;                     /**< name */
-	Point position;               /**< position */
-	Point oldPosition;            /**< old position */
-	Size frameSize;               /**< size of each frame */
-	TimeLine timeLine;            /**< time line data */
-	s32 currentFrame;             /**< current frame index */
-	f32 frameRate;                /**< frame rate information */
-	s32 frameTick;                /**< frame updating time tick count */
-	MessageMap messageMap;        /**< message processing map */
-	ControlProc control;          /**< controlling functor */
-	SpriteUpdateFunc update;      /**< updating functor */
-	SpriteRenderFunc fireRender;  /**< fire rendering functor */
-	SpriteRenderFunc postRender;  /**< post rendering functor */
+	struct Canvas* owner;            /**< owner canvas object */
+	Str name;                        /**< name */
+	Point position;                  /**< position */
+	Point oldPosition;               /**< old position */
+	Size frameSize;                  /**< size of each frame */
+	TimeLine timeLine;               /**< time line data */
+	CustomAnimation customAnimation; /**< customized animation data */
+	f32 frameRate;                   /**< frame rate information */
+	s32 frameTick;                   /**< frame updating time tick count */
+	MessageMap messageMap;           /**< message processing map */
+	ControlProc control;             /**< controlling functor */
+	SpriteUpdateFunc update;         /**< updating functor */
+	SpriteRenderFunc fireRender;     /**< fire rendering functor */
+	SpriteRenderFunc postRender;     /**< post rendering functor */
 } Sprite;
 
 /**
@@ -256,7 +279,7 @@ AGE_API void destroy_all_sprites(Canvas* _cvs);
  * @param[in] _y   - y
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl set_position_sprite(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y);
+AGE_API bl set_sprite_position(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y);
 /**
  * @brief get position of a sprite
  *
@@ -266,8 +289,17 @@ AGE_API bl set_position_sprite(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y);
  * @param[out] _y  - pointer to output y
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl get_position_sprite(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y);
+AGE_API bl get_sprite_position(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y);
 
+/**
+ * @brief get the index of a given named frame
+ *
+ * @param[in] _cvs  - canvas object
+ * @param[in] _spr  - sprite object
+ * @param[in] _name - frame name
+ * @return - found index, INVALID_FRAME_INDEX if not found
+ */
+AGE_API s32 get_named_frame_index(Canvas* _cvs, Sprite* _spr, const Str _name);
 /**
  * @brief play an animation of a time line
  *
@@ -285,7 +317,7 @@ AGE_API bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _
  *
  * @param[in] _cvs    - canvas object
  * @param[in] _spr    - sprite object
- * @param[in] _stopAt - stop animation at which frame, pass -1 to stop at current frame
+ * @param[in] _stopAt - stop animation at which frame, pass INVALID_FRAME_INDEX to stop at current frame
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt);

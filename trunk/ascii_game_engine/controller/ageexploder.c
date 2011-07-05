@@ -26,42 +26,16 @@
 #include "../common/ageallocator.h"
 #include "../common/ageutil.h"
 #include "../render/agerenderer.h"
-#include "agecontroller.h"
+#include "ageexploder.h"
 
-void set_canvas_controller(Ptr _obj, ControlProc _proc) {
-	Canvas* cvs = (Canvas*)_obj;
-
-	assert(cvs);
-
-	cvs->control = _proc;
+void update_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	// TODO
 }
 
-ControlProc get_canvas_controller(Ptr _obj) {
-	ControlProc result = 0;
-	Canvas* cvs = (Canvas*)_obj;
-
-	assert(cvs);
-
-	result = cvs->control;
-
-	return result;
+void fire_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	// TODO
 }
 
-void set_sprite_controller(Ptr _obj, ControlProc _proc) {
-	Sprite* spr = (Sprite*)_obj;
-
-	assert(spr);
-
-	spr->control = _proc;
-}
-
-ControlProc get_sprite_controller(Ptr _obj) {
-	ControlProc result = 0;
-	Sprite* spr = (Sprite*)_obj;
-
-	assert(spr);
-
-	result = spr->control;
-
-	return result;
+void post_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	// TODO
 }

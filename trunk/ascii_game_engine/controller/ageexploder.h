@@ -23,8 +23,8 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_CONTROLLER_H__
-#define __AGE_CONTROLLER_H__
+#ifndef __AGE_EXPLODER_H__
+#define __AGE_EXPLODER_H__
 
 #include "../ageconfig.h"
 #include "../common/agetype.h"
@@ -32,46 +32,28 @@
 #include "../common/agehashtable.h"
 
 /**
- * @brief object controlling functor
+ * @brief sprite explosion updating
  *
- * @param[in] _obj         - object to be controlled
- * @param[in] _name        - object name
+ * @param[in] _cvs         - canvas object
+ * @param[in] _spr         - sprite object
  * @param[in] _elapsedTime - elapsed time since last frame
- * @param[in] _lparam      - first param
- * @param[in] _wparam      - second param
- * @param[in] _extra       - extra data
- * @return - execution status
  */
-typedef s32 (* ControlProc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
+AGE_API void update_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+/**
+ * @brief fire sprite explosion rendering
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _spr         - sprite object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+AGE_API void fire_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+/**
+ * @brief post sprite explosion rendering
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _spr         - sprite object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+AGE_API void post_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
-/**
- * @brief set a controller of a canvas
- *
- * @param[in] _obj  - canvas object
- * @param[in] _proc - controller
- */
-AGE_API void set_canvas_controller(Ptr _obj, ControlProc _proc);
-/**
- * @brief get a controller of a canvas
- *
- * @param[in] _obj  - canvas object
- * @return controller
- */
-AGE_API ControlProc get_canvas_controller(Ptr _obj);
-
-/**
- * @brief set a controller of a sprite
- *
- * @param[in] _obj  - sprite object
- * @param[in] _proc - controller
- */
-AGE_API void set_sprite_controller(Ptr _obj, ControlProc _proc);
-/**
- * @brief get a controller of a sprite
- *
- * @param[in] _obj  - sprite object
- * @return controller
- */
-AGE_API ControlProc get_sprite_controller(Ptr _obj);
-
-#endif /* __AGE_CONTROLLER_H__ */
+#endif /* __AGE_EXPLODER_H__ */

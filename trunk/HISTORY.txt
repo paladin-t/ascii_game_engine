@@ -1,3 +1,6 @@
+Jul. 5 2011
+Basic animation on named frames.
+
 Jul. 3 2011
 Rendering.
 Basic animating.

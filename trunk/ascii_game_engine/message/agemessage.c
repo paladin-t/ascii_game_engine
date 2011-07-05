@@ -28,7 +28,7 @@
 #include "../render/agerenderer.h"
 #include "agemessage.h"
 
-bl create_message_map_sprite(Ptr _obj) {
+bl create_sprite_message_map(Ptr _obj) {
 	bl result = TRUE;
 	Sprite* spr = (Sprite*)_obj;
 
@@ -43,7 +43,7 @@ bl create_message_map_sprite(Ptr _obj) {
 	return result;
 }
 
-bl destroy_message_map_sprite(Ptr _obj) {
+bl destroy_sprite_message_map(Ptr _obj) {
 	bl result = TRUE;
 	Sprite* spr = (Sprite*)_obj;
 
@@ -59,7 +59,7 @@ bl destroy_message_map_sprite(Ptr _obj) {
 	return result;
 }
 
-void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc) {
+void register_sprite_message_proc(Ptr _obj, u32 _msg, MessageProc _proc) {
 	Sprite* spr = (Sprite*)_obj;
 	ht_node_t* pm = 0;
 	union { Ptr ptr; u32 uint; } u;
@@ -75,7 +75,7 @@ void register_message_proc_sprite(Ptr _obj, u32 _msg, MessageProc _proc) {
 	}
 }
 
-MessageProc get_message_proc_sprite(Ptr _obj, u32 _msg) {
+MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
 	MessageProc result = 0;
 	Sprite* spr = (Sprite*)_obj;
 	ht_node_t* pm = 0;
@@ -94,7 +94,7 @@ MessageProc get_message_proc_sprite(Ptr _obj, u32 _msg) {
 	return result;
 }
 
-void unregister_message_proc_sprite(Ptr _obj, u32 _msg) {
+void unregister_sprite_message_proc(Ptr _obj, u32 _msg) {
 	Sprite* spr = (Sprite*)_obj;
 	ht_node_t* pm = 0;
 	union { Ptr ptr; u32 uint; } u;
@@ -114,7 +114,7 @@ s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u3
 	s32 result = 0;
 	MessageProc proc = 0;
 	
-	proc = get_message_proc_sprite(_receiver, _msg);
+	proc = get_sprite_message_proc(_receiver, _msg);
 	if(proc) {
 		proc(_sender, _msg, _lparam, _wparam, _extra);
 	}
