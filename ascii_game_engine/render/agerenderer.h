@@ -98,14 +98,13 @@ typedef struct Frame {
 /**
  * @brief sprite playing event callback functor
  *
- * @param[in] _cvs      - canvas object
- * @param[in] _spr      - sprite object
- * @param[in] _begin    - begin frame name of this animation
- * @param[in] _end      - end frame name of this animation
- * @param[in] _currName - current frame name
- * @param[in] _currIdx  - current frame index
+ * @param[in] _cvs     - canvas object
+ * @param[in] _spr     - sprite object
+ * @param[in] _begin   - begin frame name of this animation
+ * @param[in] _end     - end frame name of this animation
+ * @param[in] _currIdx - current frame index
  */
-typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, const Str _currName, s32 _currIdx);
+typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
 
 /**
  * @brief time line structure
@@ -163,8 +162,8 @@ typedef struct Sprite {
 	f32 frameRate;                   /**< frame rate information */
 	s32 frameTick;                   /**< frame updating time tick count */
 	MessageMap messageMap;           /**< message processing map */
-	ControlProc control;             /**< controlling functor */
-	SpriteUpdateFunc update;         /**< updating functor */
+	ControlProc control;             /**< controlling functor, for motion controlling */
+	SpriteUpdateFunc update;         /**< updating functor, for animation controlling */
 	SpriteRenderFunc fireRender;     /**< fire rendering functor */
 	SpriteRenderFunc postRender;     /**< post rendering functor */
 } Sprite;

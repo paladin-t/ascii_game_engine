@@ -1,3 +1,6 @@
+Jul. 6 2011
+Named frame.
+
 Jul. 5 2011
 Basic animation on named frames.
 
