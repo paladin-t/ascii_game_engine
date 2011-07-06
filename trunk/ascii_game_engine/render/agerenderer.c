@@ -489,7 +489,14 @@ void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 		_spr->frameTick -= tickableTime;
 		++_spr->timeLine.currentFrame;
 		if(_spr->timeLine.beginName && _spr->timeLine.endName) {
-			// TODO
+			if(_spr->timeLine.currentFrame >= _spr->timeLine.endIndex) {
+				if(_spr->timeLine.callback) {
+					_spr->timeLine.callback(_cvs, _spr, _spr->timeLine.beginName, _spr->timeLine.endName, _spr->timeLine.currentFrame);
+				}
+				if(_spr->timeLine.loop) {
+					_spr->timeLine.currentFrame = _spr->timeLine.beginIndex;
+				}
+			}
 		} else {
 			if(_spr->timeLine.currentFrame >= _spr->timeLine.frameCount) {
 				_spr->timeLine.currentFrame = 0;
