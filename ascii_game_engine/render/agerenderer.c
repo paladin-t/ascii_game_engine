@@ -601,6 +601,18 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	}
 }
 
+u32 get_sprite_physics_mode(Canvas* _cvs, Sprite* _spr) {
+	u32 result = PHYSICS_MODE_NULL;
+
+	result = _spr->physicsMode;
+
+	return result;
+}
+
+void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode) {
+	_spr->physicsMode = _mode;
+}
+
 void set_cursor_visible(bl _vis) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cci;

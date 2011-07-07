@@ -61,6 +61,21 @@ static const s8 ERASE_PIXEL_SHAPE = ' ';
  */
 static const s32 INVALID_FRAME_INDEX = -1;
 
+/**
+ * @brief empty physics mode
+ */
+static const u32 PHYSICS_MODE_NULL = 0;
+
+/**
+ * @brief obstacle physics mode
+ */
+static const u32 PHYSICS_MODE_OBSTACLE = (1 << 0);
+
+/**
+ * @brief checker physics mode
+ */
+static const u32 PHYSICS_MODE_CHECKER = (1 << 1);
+
 struct Frame;
 struct Sprite;
 struct Canvas;
@@ -103,8 +118,9 @@ typedef struct Frame {
  * @param[in] _begin   - begin frame name of this animation
  * @param[in] _end     - end frame name of this animation
  * @param[in] _currIdx - current frame index
+ * @return - execution status
  */
-typedef void (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
+typedef s32 (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
 
 /**
  * @brief time line structure
@@ -161,6 +177,7 @@ typedef struct Sprite {
 	CustomAnimation customAnimation; /**< customized animation data */
 	f32 frameRate;                   /**< frame rate information */
 	s32 frameTick;                   /**< frame updating time tick count */
+	u32 physicsMode;                 /**< physics mode */
 	MessageMap messageMap;           /**< message processing map */
 	ControlProc control;             /**< controlling functor, for motion controlling */
 	SpriteUpdateFunc update;         /**< updating functor, for animation controlling */
@@ -345,6 +362,23 @@ AGE_API void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
  * @param[in] _elapsedTime - elapsed time since last frame
  */
 AGE_API void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+
+/**
+ * @brief get the physics mode of a sprite object
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @return - physics mode
+ */
+AGE_API u32 get_sprite_physics_mode(Canvas* _cvs, Sprite* _spr);
+/**
+ * @brief set the physics mode of a sprite object
+ *
+ * @param[in] _cvs  - canvas object
+ * @param[in] _spr  - sprite object
+ * @param[in] _mode - physics mode
+ */
+AGE_API void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode);
 
 /**
  * @brief set whether the console cursor is visible
