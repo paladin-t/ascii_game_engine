@@ -148,6 +148,16 @@ typedef struct CustomAnimation {
 } CustomAnimation;
 
 /**
+ * @brief sprite collision callback functor
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @param[in] _px  - x position of collided pixel in sprite
+ * @param[in] _py  - y position of collided pixel in sprite
+ */
+typedef void (* SpriteCollisionCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py);
+
+/**
  * @brief sprite updating functor
  *
  * @param[in] _cvs         - canvas object
@@ -168,21 +178,22 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @brief sprite structure
  */
 typedef struct Sprite {
-	struct Canvas* owner;            /**< owner canvas object */
-	Str name;                        /**< name */
-	Point position;                  /**< position */
-	Point oldPosition;               /**< old position */
-	Size frameSize;                  /**< size of each frame */
-	TimeLine timeLine;               /**< time line data */
-	CustomAnimation customAnimation; /**< customized animation data */
-	f32 frameRate;                   /**< frame rate information */
-	s32 frameTick;                   /**< frame updating time tick count */
-	u32 physicsMode;                 /**< physics mode */
-	MessageMap messageMap;           /**< message processing map */
-	ControlProc control;             /**< controlling functor, for motion controlling */
-	SpriteUpdateFunc update;         /**< updating functor, for animation controlling */
-	SpriteRenderFunc fireRender;     /**< fire rendering functor */
-	SpriteRenderFunc postRender;     /**< post rendering functor */
+	struct Canvas* owner;                 /**< owner canvas object */
+	Str name;                             /**< name */
+	Point position;                       /**< position */
+	Point oldPosition;                    /**< old position */
+	Size frameSize;                       /**< size of each frame */
+	TimeLine timeLine;                    /**< time line data */
+	CustomAnimation customAnimation;      /**< customized animation data */
+	f32 frameRate;                        /**< frame rate information */
+	s32 frameTick;                        /**< frame updating time tick count */
+	u32 physicsMode;                      /**< physics mode */
+	SpriteCollisionCallbackFunc collided; /**< collided physics callback */
+	MessageMap messageMap;                /**< message processing map */
+	ControlProc control;                  /**< controlling functor, for motion controlling */
+	SpriteUpdateFunc update;              /**< updating functor, for animation controlling */
+	SpriteRenderFunc fireRender;          /**< fire rendering functor */
+	SpriteRenderFunc postRender;          /**< post rendering functor */
 } Sprite;
 
 /**
