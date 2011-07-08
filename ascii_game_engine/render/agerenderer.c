@@ -146,6 +146,7 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 		/* frames */
 		_spr->timeLine.frames = AGE_MALLOC_N(Frame, c);
 		for(k = 0; k < c; ++k) {
+			_spr->timeLine.frames[k].parent = _spr;
 			_spr->timeLine.frames[k].tex = AGE_MALLOC_N(Pixel, w * h);
 			for(j = 0; j < h; ++j) {
 				freadln(fp, &bs);
@@ -258,6 +259,37 @@ static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFil
 		}
 	} else {
 		result = FALSE;
+	}
+
+	return result;
+}
+
+static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32 _py) {
+	bl result = FALSE;
+	Sprite* _sprf = 0;
+	u32 _pm = PHYSICS_MODE_NULL;
+
+	assert(_pixelc && _pixelf);
+
+	_sprf = _pixelf->parent->parent;
+	_pm = get_sprite_physics_mode(_sprf->owner, _sprf);
+
+	/* check */
+	if((_pm | PHYSICS_MODE_CHECKER) != PHYSICS_MODE_NULL) {
+		if(_pixelc->frameCount != 0) {
+			if(_sprf->collided) {
+				_sprf->collided(_sprf->owner, _sprf, _px, _py);
+			}
+		}
+	}
+	/* fill */
+	if((_pm | PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
+		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
+			_pixelc->ownerFrames[
+				_pixelc->frameCount++
+			] = _pixelf->parent;
+			result = TRUE;
+		}
 	}
 
 	return result;
@@ -585,17 +617,9 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 					pixelc->color = pixelf->color;
 					pixelc->zorder = pixelf->zorder;
 				}
-				if(pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
-					pixelc->ownerFrames[
-						pixelc->frameCount++
-					] = pixelf->parent;
-				}
+				_try_fill_pixel_collision(pixelc, pixelf, i, j);
 			} else if(pixelf->brush != ERASE_PIXEL_SHAPE) {
-				if(pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
-					pixelc->ownerFrames[
-						pixelc->frameCount++
-					] = pixelf->parent;
-				}
+				_try_fill_pixel_collision(pixelc, pixelf, i, j);
 			}
 		}
 	}
