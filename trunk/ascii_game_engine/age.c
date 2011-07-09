@@ -45,6 +45,11 @@ static bl _register_apis(mb_interpreter_t* s) {
 	mb_register_func(s, "BEEP", age_api_beep);
 	mb_register_func(s, "REG_KEY", age_api_reg_key_code);
 	mb_register_func(s, "SET_FRAME_RATE", age_api_set_frame_rate);
+	mb_register_func(s, "CREATE_SPRITE", age_api_create_sprite);
+	mb_register_func(s, "DESTROY_SPRITE", age_api_destroy_sprite);
+	mb_register_func(s, "DESTROY_ALL_SPRITES", age_api_destroy_all_sprites);
+	mb_register_func(s, "PLAY_SPRITE", age_api_play_sprite);
+	mb_register_func(s, "STOP_SPRITE", age_api_stop_sprite);
 
 	return result;
 }

@@ -60,15 +60,114 @@ int age_api_reg_key_code(mb_interpreter_t* s, void** l) {
 
 int age_api_set_frame_rate(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;
-	s32 _rate = 0;
+	s32 rate = 0;
 
 	assert(s && l);
 
 	mb_attempt_open_bracket(s, l);
-	mb_pop_int(s, l, &_rate);
+	mb_pop_int(s, l, &rate);
 	mb_attempt_close_bracket(s, l);
 
-	set_frame_rate(AGE_CVS, _rate);
+	set_frame_rate(AGE_CVS, rate);
+
+	return result;
+}
+
+int age_api_create_sprite(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Str shapeFile = 0;
+	Str brushFile = 0;
+	Str paleteFile = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_string(s, l, &shapeFile);
+	mb_pop_string(s, l, &brushFile);
+	mb_pop_string(s, l, &paleteFile);
+	mb_attempt_close_bracket(s, l);
+
+	create_sprite(AGE_CVS, name, shapeFile, brushFile, paleteFile);
+
+	return result;
+}
+
+int age_api_destroy_sprite(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Sprite* spr = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		destroy_sprite(AGE_CVS, spr);
+	}
+
+	return result;
+}
+
+int age_api_destroy_all_sprites(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_attempt_close_bracket(s, l);
+
+	destroy_all_sprites(AGE_CVS);
+
+	return result;
+}
+
+int age_api_play_sprite(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Str begin = 0;
+	Str end = 0;
+	s32 loop = 0;
+	Sprite* spr = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_string(s, l, &begin);
+	mb_pop_string(s, l, &end);
+	mb_pop_int(s, l, &loop);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		play_sprite(AGE_CVS, spr, begin, end, loop != 0, 0);
+	}
+
+	return result;
+}
+
+int age_api_stop_sprite(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	s32 stopAt = 0;
+	Sprite* spr = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &stopAt);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		stop_sprite(AGE_CVS, spr, stopAt);
+	}
 
 	return result;
 }
