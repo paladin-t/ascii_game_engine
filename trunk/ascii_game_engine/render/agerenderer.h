@@ -76,6 +76,13 @@ static const u32 PHYSICS_MODE_OBSTACLE = (1 << 0);
  */
 static const u32 PHYSICS_MODE_CHECKER = (1 << 1);
 
+/**
+ * @brief font structure
+ */
+typedef struct Font {
+	Color color; /**< font color */
+} Font;
+
 struct Frame;
 struct Sprite;
 struct Canvas;
@@ -390,6 +397,17 @@ AGE_API u32 get_sprite_physics_mode(Canvas* _cvs, Sprite* _spr);
  * @param[in] _mode - physics mode
  */
 AGE_API void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode);
+
+/**
+ * @brief draw a string on a canvas
+ *
+ * @param[in] _cvs  - canvas object
+ * @param[in] _font - drawing font
+ * @param[in] _x    - x position to draw
+ * @param[in] _y    - y position to draw
+ * @param[in] _text - text to draw
+ */
+AGE_API void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...);
 
 /**
  * @brief set whether the console cursor is visible

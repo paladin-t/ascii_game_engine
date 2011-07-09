@@ -28,16 +28,35 @@
 
 #pragma comment(lib, "winmm.lib")
 
-void sys_beep(void) {
+static u32 _rand_w = 0;
+static u32 _rand_z = 0;
+
+void age_beep(void) {
 	putchar('\a');
 }
 
-u32 sys_tick_count(void) {
+u32 age_tick_count(void) {
 	return timeGetTime();
 }
 
-void sys_sleep(s32 _time) {
+void age_sleep(s32 _time) {
 	Sleep(_time);
+}
+
+s32 age_rand(s32 _min, s32 _max) {
+	s32 result = 0;
+	union { s32 sint; u32 uint; } u;
+	if(_rand_w == 0 && _rand_z == 0) {
+		_rand_w = age_tick_count();
+		_rand_z = (_rand_w << 16) | (_rand_w >> 16);
+	}
+	_rand_z = 36969 * (_rand_z & 65535) + (_rand_z >> 16);
+    _rand_w = 18000 * (_rand_w & 65535) + (_rand_w >> 16);
+	u.uint = (_rand_z << 16) + _rand_w;
+	result = u.uint % (_max - _min);
+	result += _min;
+
+	return result;
 }
 
 s32 freadln(FILE* _fp, Str* _buf) {

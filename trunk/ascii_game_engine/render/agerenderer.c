@@ -637,6 +637,20 @@ void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode) {
 	_spr->physicsMode = _mode;
 }
 
+void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...) {
+	s8 buf[AGE_STR_LEN];
+	Str pbuf = buf;
+	va_list argptr;
+	goto_xy(_x, _y);
+	if(_font) {
+		set_color(_cvs, _font->color);
+	}
+	va_start(argptr, _text);
+	vsprintf(pbuf, _text, argptr);
+	va_end(argptr);
+	printf(buf);
+}
+
 void set_cursor_visible(bl _vis) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cci;
