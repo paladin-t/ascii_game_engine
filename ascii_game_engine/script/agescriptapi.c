@@ -34,7 +34,7 @@ int age_api_beep(mb_interpreter_t* s, void** l) {
 
 	assert(s && l);
 
-	sys_beep();
+	age_beep();
 
 	return result;
 }

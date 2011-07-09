@@ -36,20 +36,29 @@
 /**
  * @brief pronounce a beep
  */
-AGE_INTERNAL void sys_beep(void);
+AGE_API void age_beep(void);
 
 /**
  * @brief get the system tick count
  *
  * @return - the system tick count, in millisecond
  */
-AGE_INTERNAL u32 sys_tick_count(void);
+AGE_API u32 age_tick_count(void);
 /**
  * @brief sleep for a while
  *
  * @return - time to sleep, in millisecond
  */
-AGE_INTERNAL void sys_sleep(s32 _time);
+AGE_API void age_sleep(s32 _time);
+
+/**
+ * @brief get a random number in a range
+ *
+ * @param[in] _min - minimum
+ * @param[in] _max - maximum
+ * @return - a random number
+ */
+AGE_API s32 age_rand(s32 _min, s32 _max);
 
 /**
  * @brief read a line from a file to a string buffer
