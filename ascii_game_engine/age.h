@@ -35,10 +35,12 @@
 #include "common/ageutil.h"
 #include "common/agelist.h"
 #include "common/agehashtable.h"
+#include "common/agebitset.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
 #include "message/agemessage.h"
 #include "controller/agecontroller.h"
+#include "bitfsm/agebitfsm.h"
 
 #ifndef AGE_WLD
 #	define AGE_WLD get_world()

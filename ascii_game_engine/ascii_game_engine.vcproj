@@ -181,6 +181,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\common\agebitset.c"
+				>
+			</File>
+			<File
+				RelativePath=".\common\agebitset.h"
+				>
+			</File>
+			<File
 				RelativePath=".\common\agehashtable.c"
 				>
 			</File>
@@ -290,6 +298,18 @@
 			</File>
 			<File
 				RelativePath=".\controller\ageexploder.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="bitfsm"
+			>
+			<File
+				RelativePath=".\bitfsm\agebitfsm.c"
+				>
+			</File>
+			<File
+				RelativePath=".\bitfsm\agebitfsm.h"
 				>
 			</File>
 		</Filter>
