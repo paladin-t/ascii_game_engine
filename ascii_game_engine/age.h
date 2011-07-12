@@ -36,6 +36,7 @@
 #include "common/agelist.h"
 #include "common/agehashtable.h"
 #include "common/agebitset.h"
+#include "audio/ageaudio.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
 #include "message/agemessage.h"

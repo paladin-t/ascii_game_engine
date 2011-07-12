@@ -23,31 +23,8 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_BITSET_H__
-#define __AGE_BITSET_H__
+#include "ageaudio.h"
 
-#include "../ageconfig.h"
-#include "../common/agetype.h"
-#include "../common/ageallocator.h"
-
-typedef struct Bitset {
-	s32 bitCount;
-	s32 dwordCount;
-	s32 byteCount;
-	u32* raw;
-} Bitset;
-
-AGE_INTERNAL Bitset* bs_create(s32 _size);
-AGE_INTERNAL void bs_destroy(Bitset* _bs);
-AGE_INTERNAL void bs_clear(Bitset* _bs);
-AGE_INTERNAL void bs_set_bit(Bitset* _bs, s32 _pos, bl _val);
-AGE_INTERNAL void bs_set_all_bits(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL bl bs_get_bit(Bitset* _bs, s32 _pos);
-AGE_INTERNAL bl bs_empty(Bitset* _bs);
-AGE_INTERNAL bl bs_equals(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL void bs_logic_and(Bitset* _bs, Bitset* _other, Bitset* _result);
-AGE_INTERNAL void bs_logic_or(Bitset* _bs, Bitset* _other, Bitset* _result);
-AGE_INTERNAL bl bs_arithmetic_and(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL bl bs_arithmetic_or(Bitset* _bs, Bitset* _other);
-
-#endif /* __AGE_BITSET_H__ */
+void age_play(const Str _cmd) {
+	// TODO
+}
