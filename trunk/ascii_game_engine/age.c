@@ -48,6 +48,9 @@ static bl _register_apis(mb_interpreter_t* s) {
 	mb_register_func(s, "CREATE_SPRITE", age_api_create_sprite);
 	mb_register_func(s, "DESTROY_SPRITE", age_api_destroy_sprite);
 	mb_register_func(s, "DESTROY_ALL_SPRITES", age_api_destroy_all_sprites);
+	mb_register_func(s, "SET_SPRITE_POS", age_api_set_sprite_position);
+	mb_register_func(s, "GET_SPRITE_POS_X", age_api_get_sprite_position_x);
+	mb_register_func(s, "GET_SPRITE_POS_Y", age_api_get_sprite_position_y);
 	mb_register_func(s, "PLAY_SPRITE", age_api_play_sprite);
 	mb_register_func(s, "STOP_SPRITE", age_api_stop_sprite);
 

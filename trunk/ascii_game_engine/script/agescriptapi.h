@@ -61,6 +61,21 @@ AGE_INTERNAL int age_api_destroy_sprite(mb_interpreter_t* s, void** l);
 AGE_INTERNAL int age_api_destroy_all_sprites(mb_interpreter_t* s, void** l);
 
 /**
+ * @brief basic api: set the position of a sprite object
+ */
+AGE_INTERNAL int age_api_set_sprite_position(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief basic api: get the x position of a sprite object
+ */
+AGE_INTERNAL int age_api_get_sprite_position_x(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief basic api: get the y position of a sprite object
+ */
+AGE_INTERNAL int age_api_get_sprite_position_y(mb_interpreter_t* s, void** l);
+
+/**
  * @brief basic api: play an animation of a time line
  */
 AGE_INTERNAL int age_api_play_sprite(mb_interpreter_t* s, void** l);

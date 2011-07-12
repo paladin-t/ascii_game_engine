@@ -23,9 +23,9 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __C_BIT_FSM_H__
-#define __C_BIT_FSM_H__
+#ifndef __AGE_BITFSM_H__
+#define __AGE_BITFSM_H__
 
 #include "../common/agebitset.h"
 
-#endif /* __C_BIT_FSM_H__ */
+#endif /* __AGE_BITFSM_H__ */

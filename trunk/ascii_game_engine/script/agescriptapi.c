@@ -126,6 +126,71 @@ int age_api_destroy_all_sprites(mb_interpreter_t* s, void** l) {
 	return result;
 }
 
+int age_api_set_sprite_position(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Sprite* spr = 0;
+	s32 x = 0;
+	s32 y = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &x);
+	mb_pop_int(s, l, &y);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		set_sprite_position(AGE_CVS, spr, x, y);
+	}
+
+	return result;
+}
+
+int age_api_get_sprite_position_x(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Sprite* spr = 0;
+	s32 p = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		get_sprite_position(AGE_CVS, spr, &p, 0);
+		mb_push_int(s, l, p);
+	}
+
+	return result;
+}
+
+int age_api_get_sprite_position_y(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Sprite* spr = 0;
+	s32 p = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, name);
+	if(spr) {
+		get_sprite_position(AGE_CVS, spr, 0, &p);
+		mb_push_int(s, l, p);
+	}
+
+	return result;
+}
+
 int age_api_play_sprite(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;
 	Str name = 0;

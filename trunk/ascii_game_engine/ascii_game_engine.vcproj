@@ -313,6 +313,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="audio"
+			>
+			<File
+				RelativePath=".\audio\ageaudio.c"
+				>
+			</File>
+			<File
+				RelativePath=".\audio\ageaudio.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\age.c"
 			>
