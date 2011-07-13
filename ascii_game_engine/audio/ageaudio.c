@@ -25,6 +25,20 @@
 
 #include "ageaudio.h"
 
-void age_play(const Str _cmd) {
+SoundContext* create_sound_context(void) {
+	SoundContext* result = AGE_MALLOC(SoundContext);
+
+	return result;
+}
+
+void destroy_sound_context(SoundContext* _cnt) {
+	AGE_FREE(_cnt);
+}
+
+void age_audio_update(SoundContext* _cnt, s32 _elapsedTime) {
+	// TODO
+}
+
+void age_play(const Str _seq) {
 	// TODO
 }
