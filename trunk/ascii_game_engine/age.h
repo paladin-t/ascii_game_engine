@@ -57,6 +57,7 @@
  * @brief world object
  */
 typedef struct World {
+	SoundContext* audio;       /**< audio system context */
 	Ptr input;                 /**< input context */
 	Canvas* canvas;            /**< canvas object */
 	mb_interpreter_t* script;  /**< global script object */

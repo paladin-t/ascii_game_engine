@@ -90,6 +90,7 @@ World* create_world(void) {
 
 	open_input();
 	result = AGE_MALLOC(World);
+	result->audio = create_sound_context();
 	result->input = create_input_context();
 	result->canvas = create_canvas(ST_DEFAULT_CANVAS_NAME);
 	set_cursor_visible(FALSE);
@@ -116,6 +117,7 @@ void destroy_world(void) {
 
 	destroy_canvas(_gWorld->canvas);
 	destroy_input_context(_gWorld->input);
+	destroy_sound_context(_gWorld->audio);
 	AGE_FREE(_gWorld);
 
 	_gWorld = 0;
