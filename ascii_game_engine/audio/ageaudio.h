@@ -37,7 +37,18 @@ typedef struct SoundContext {
 	Str sequence; /**< sound command sequence */
 	s32 position; /**< playing position */
 	s32 time;     /**< audio updated time count */
+	Ptr bgm;      /**< bgm thread information */
+	Ptr sfx;      /**< sfx thread information */
 } SoundContext;
+
+/**
+ * @brief sound types
+ */
+typedef enum SoundType {
+	ST_BGM,   /**< background */
+	ST_SFX,   /**< effect */
+	ST_COUNT, /**< type count */
+} SoundType;
 
 /**
  * @brief create a sound system context
@@ -58,13 +69,22 @@ AGE_API void destroy_sound_context(SoundContext* _cnt);
  * @param[in] _cnt         - sound system context
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-AGE_API void age_audio_update(SoundContext* _cnt, s32 _elapsedTime);
+AGE_API void age_sound_update(SoundContext* _cnt, s32 _elapsedTime);
 
 /**
  * @brief play a sound sequence
  *
- * @param[in] _seq - sequenced sound commands
+ * @param[in] _cnt  - sound system context
+ * @param[in] _seq  - sequenced sound commands
+ * @param[in] _type - type to be operated
  */
-AGE_API void age_play(const Str _seq);
+AGE_API void age_play_sound(SoundContext* _cnt, const Str _seq, SoundType _type);
+/**
+ * @brief stop a sound sequence
+ *
+ * @param[in] _cnt  - sound system context
+ * @param[in] _type - type to be operated
+ */
+AGE_API void age_stop_sound(SoundContext* _cnt, SoundType _type);
 
 #endif /* __AGE_AUDIO_H__ */
