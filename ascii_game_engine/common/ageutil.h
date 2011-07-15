@@ -102,6 +102,6 @@ AGE_INTERNAL Str copy_substring(const Str _str, s32 _start, s32 _count);
  *           1 if _left is greater than _right,
  *           -1 if _left is less than _right;
  */
-AGE_INTERNAL s32 age_cmp_ptr(const Ptr _left, const Ptr _right);
+AGE_INTERNAL s32 cmp_ptr(const Ptr _left, const Ptr _right);
 
 #endif /* __AGE_UTIL_H__ */
