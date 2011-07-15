@@ -52,6 +52,9 @@
 #ifndef AGE_IPT
 #	define AGE_IPT get_world()->input
 #endif
+#ifndef AGE_SND
+#	define AGE_SND get_world()->audio
+#endif
 
 /**
  * @brief world object
