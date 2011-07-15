@@ -69,7 +69,7 @@ AGE_API void destroy_sound_context(SoundContext* _cnt);
  * @param[in] _cnt         - sound system context
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-AGE_API void age_sound_update(SoundContext* _cnt, s32 _elapsedTime);
+AGE_API void update_sound(SoundContext* _cnt, s32 _elapsedTime);
 
 /**
  * @brief play a sound sequence
@@ -78,13 +78,13 @@ AGE_API void age_sound_update(SoundContext* _cnt, s32 _elapsedTime);
  * @param[in] _seq  - sequenced sound commands
  * @param[in] _type - type to be operated
  */
-AGE_API void age_play_sound(SoundContext* _cnt, const Str _seq, SoundType _type);
+AGE_API void play_sound(SoundContext* _cnt, const Str _seq, SoundType _type);
 /**
  * @brief stop a sound sequence
  *
  * @param[in] _cnt  - sound system context
  * @param[in] _type - type to be operated
  */
-AGE_API void age_stop_sound(SoundContext* _cnt, SoundType _type);
+AGE_API void stop_sound(SoundContext* _cnt, SoundType _type);
 
 #endif /* __AGE_AUDIO_H__ */

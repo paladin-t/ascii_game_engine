@@ -133,13 +133,13 @@ void destroy_sound_context(SoundContext* _cnt) {
 	AGE_FREE(_cnt);
 }
 
-void age_sound_update(SoundContext* _cnt, s32 _elapsedTime) {
+void update_sound(SoundContext* _cnt, s32 _elapsedTime) {
 	/* do nothing */
 }
 
-void age_play_sound(SoundContext* _cnt, const Str _seq, SoundType _type) {
+void play_sound(SoundContext* _cnt, const Str _seq, SoundType _type) {
 	ThreadInfo* thread = 0;
-	age_stop_sound(_cnt, _type);
+	stop_sound(_cnt, _type);
 	if(_type == ST_BGM) {
 		thread = (ThreadInfo*)(_cnt->bgm);
 	} else if(_type == ST_SFX) {
@@ -152,7 +152,7 @@ void age_play_sound(SoundContext* _cnt, const Str _seq, SoundType _type) {
 	Sleep(1);
 }
 
-void age_stop_sound(SoundContext* _cnt, SoundType _type) {
+void stop_sound(SoundContext* _cnt, SoundType _type) {
 	ThreadInfo* thread = 0;
 	if(_type == ST_BGM) {
 		thread = (ThreadInfo*)(_cnt->bgm);

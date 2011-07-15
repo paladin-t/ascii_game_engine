@@ -126,7 +126,7 @@ Str copy_substring(const Str _str, s32 _start, s32 _count) {
 	return result;
 }
 
-s32 age_cmp_ptr(const Ptr _left, const Ptr _right) {
+s32 cmp_ptr(const Ptr _left, const Ptr _right) {
 	s32 result = 0;
 	if(_left > _right) {
 		result = 1;
