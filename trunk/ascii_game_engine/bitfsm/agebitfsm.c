@@ -24,3 +24,22 @@
 */
 
 #include "agebitfsm.h"
+
+bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _status, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand) {
+	Fsm* result = 0;
+
+	result = AGE_MALLOC(Fsm);
+	// TODO
+
+	return result;
+}
+
+void destroy_bitfsm(Fsm* _fsm) {
+	// TODO
+	AGE_FREE(_fsm);
+}
