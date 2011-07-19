@@ -27,5 +27,104 @@
 #define __AGE_BITFSM_H__
 
 #include "../common/agebitset.h"
+#include "../common/agelist.h"
+
+/**
+ * @brief status structure in bitfsm
+ */
+typedef struct FsmStatus {
+	Bitset* status; /**< internal status data */
+	s32 index;      /**< index of this status */
+} FsmStatus;
+
+/**
+ * @brief step structure in bitfsm
+ */
+typedef struct FsmStep {
+	Bitset* condition; /**< status transition condition */
+	s32 next;          /**< next status */
+	bl exact;          /**< detect the condition exactly */
+} FsmStep;
+
+/**
+ * @brief rule step structure
+ */
+typedef struct FsmRuleStep {
+	s32 index;        /**< rule step index */
+	ls_node_t* steps; /**< steps in this piece of rule */
+	Ptr tag;          /**< tagged rule step data */
+} FsmRuleStep;
+
+/**
+ * @brief object to index convertion functor
+ *
+ * @param _obj - object
+ * @return - converted index
+ */
+typedef s32 (* ObjToIndexFunc)(Ptr _obj);
+/**
+ * @brief object to command convertion functor
+ *
+ * @param _obj - object
+ * @return - converted command
+ */
+typedef s32 (* ObjToCommandFunc)(Ptr _obj);
+
+/**
+ * @brief stepping callback handler using integer
+ *
+ * @param[in] _src - source step
+ * @param[in] _tgt - target step
+ */
+typedef void (* IntStepHendlerFunc)(s32 _src, s32 _tgt);
+/**
+ * @brief stepping callback handler using object data
+ *
+ * @param[in] _src - source step
+ * @param[in] _tgt - target step
+ */
+typedef void (* ObjStepHandlerFunc)(Ptr _src, Ptr _tgt);
+
+/**
+ * @brief fsm structure
+ */
+typedef struct Fsm {
+	FsmStatus* current;            /**< current status */
+	FsmRuleStep* ruleSteps;        /**< transition rules */
+	s32 ruleStepsCount;            /**< transition rules count */
+	s32 terminalIndex;             /**< terminal index of this fsm */
+	ObjToIndexFunc objToIndex;     /**< object to index convertion functor */
+	ObjToCommandFunc objToCommand; /**< object to command convertion functor */
+	IntStepHendlerFunc intHandler; /**< stepping callback handler using integer */
+	ObjStepHandlerFunc objHandler; /**< stepping callback handler using object data */
+} Fsm;
+
+/**
+ * @brief try to walk a step
+ *
+ * @param[in] _ruleStep - rule step object to be operated
+ * @param[in] _curr     - current fsm status
+ * @param[in] _status   - transition status data as a command
+ * @param[in] _exact    - check transition rules exactly
+ * @return - whether the transition is taken or not
+ */
+AGE_API bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _status, bl _exact);
+
+/**
+ * @brief create a bitfsm object
+ *
+ * @param[in] _statusCount  - status count
+ * @param[in] _commandCount - transition command count
+ * @param[in] _objToIndex   - object to index convertion functor
+ * @param[in] _objToCommand - object to command convertion functor
+ * @return - created bitfsm object
+ */
+AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand);
+/**
+ * @brief destroy a bitfsm object
+ *
+ * @param[in] _fsm - bitfsm object to be destroyed
+ */
+AGE_API void destroy_bitfsm(Fsm* _fsm);
 
 #endif /* __AGE_BITFSM_H__ */
