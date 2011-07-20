@@ -202,15 +202,31 @@
 				Name="sprite"
 				>
 				<File
-					RelativePath=".\data\sprite\brush_ascii_hero.txt"
+					RelativePath=".\data\sprite\ascii_hero_brush.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\data\sprite\palete_ascii_hero.txt"
+					RelativePath=".\data\sprite\ascii_hero_palete.txt"
 					>
 				</File>
 				<File
-					RelativePath=".\data\sprite\shape_ascii_hero.txt"
+					RelativePath=".\data\sprite\ascii_hero_shape.txt"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ui"
+				>
+				<File
+					RelativePath=".\data\ui\logo_brush.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\logo_palete.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\logo_shape.txt"
 					>
 				</File>
 			</Filter>
