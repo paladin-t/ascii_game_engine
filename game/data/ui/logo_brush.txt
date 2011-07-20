@@ -1,0 +1,16 @@
+clunt: 1
+width: 45
+heilht: 12
+
+   ll      lllll   lllll   lllllll   lllllll 
+  l  l   l lllll  lllllll lll   lll lll   lll
+ l ll l l lllll  l l         l l       l l   
+l llll l llll  l l l         l l       l l   
+l  ll  l  llll l l llllll  lll lll   lll lll 
+lll  lll lllllll  lllllll lllllllll lllllllll
+    l     l  lllllll  llllllll    lllll      
+   l l   l l l  lllll l llll  l  l lll l     
+   l lllll l l llll   l lllll l l l   l l    
+   l  lll  l l  lll]  l  lll l  l l   l l    
+   l l   l l l lllll  l l   l l l lllll l    
+   lll   lll llllllll lll   lll  lllllll  lll

@@ -90,9 +90,9 @@ s32 main(s32 argc, Str argv[]) {
 	game.player = create_sprite(
 		AGE_CVS,
 		"ascii_hero",
-		"data/sprite/shape_ascii_hero.txt",
-		"data/sprite/brush_ascii_hero.txt",
-		"data/sprite/palete_ascii_hero.txt"
+		"data/ui/logo_shape.txt",
+		"data/ui/logo_brush.txt",
+		"data/ui/logo_palete.txt"
 	);
 	/* the main loop, go! */
 	run_world();
