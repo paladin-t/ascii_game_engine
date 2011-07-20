@@ -33,6 +33,12 @@ Ptr age_malloc(s32 _size) {
 	return result;
 }
 
+Ptr age_realloc(Ptr _ori, s32 _size) {
+	Ptr result = realloc(_ori, _size);
+
+	return result;
+}
+
 void age_free(Ptr _ptr) {
 	assert(_ptr);
 

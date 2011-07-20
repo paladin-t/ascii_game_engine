@@ -51,7 +51,8 @@ typedef struct FsmStep {
  */
 typedef struct FsmRuleStep {
 	s32 index;        /**< rule step index */
-	ls_node_t* steps; /**< steps in this piece of rule */
+	FsmStep**  steps; /**< steps in this piece of rule */
+	s32 stepsCount;   /**< count of steps */
 	Ptr tag;          /**< tagged rule step data */
 } FsmRuleStep;
 
@@ -100,6 +101,54 @@ typedef struct Fsm {
 } Fsm;
 
 /**
+ * @brief create a fsm status object
+ *
+ * @param[in] _bitsCount - size of bitset
+ * @return - created fsm status object
+ */
+AGE_API FsmStatus* create_fsm_status(s32 _bitsCount);
+/**
+ * @brief destroy a fsm status object
+ *
+ * @param[in] _obj - fsm status object to be destroyed
+ */
+AGE_API void destroy_fsm_status(FsmStatus* _obj);
+
+/**
+ * @brief create a fsm step object
+ *
+ * @param[in] _bitsCount - size of bitset
+ * @return - created fsm step object
+ */
+AGE_API FsmStep* create_fsm_step(s32 _bitsCount);
+/**
+ * @brief destroy a fsm step object
+ *
+ * @param[in] _obj - fsm step object to be destroyed
+ */
+AGE_API void destroy_fsm_step(FsmStep* _obj);
+
+/**
+ * @brief create a fsm rule step object
+ *
+ * @return - created fsm rule step object
+ */
+AGE_API FsmRuleStep* create_fsm_rule_step(void);
+/**
+ * @brief destroy a fsm rule step object
+ *
+ * @param[in] _obj - fsm rule step object to be destroyed
+ */
+AGE_API void destroy_fsm_rule_step(FsmRuleStep* _obj);
+/**
+ * @brief append a fsm step to a rule step object
+ *
+ * @param[in] _ruleStep - rule step object
+ * @param[in] _step     - step object
+ */
+AGE_API void append_fsm_rule_step(FsmRuleStep* _ruleStep, FsmStep* _step);
+
+/**
  * @brief try to walk a step
  *
  * @param[in] _ruleStep - rule step object to be operated
@@ -117,9 +166,11 @@ AGE_API bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _sta
  * @param[in] _commandCount - transition command count
  * @param[in] _objToIndex   - object to index convertion functor
  * @param[in] _objToCommand - object to command convertion functor
+ * @param[in] _intHandler   - integer stepping event handler
+ * @param[in] _objHandler   - tag stepping event handler
  * @return - created bitfsm object
  */
-AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand);
+AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand, IntStepHendlerFunc _intHandler, ObjStepHandlerFunc _objHandler);
 /**
  * @brief destroy a bitfsm object
  *
