@@ -51,6 +51,14 @@ typedef void (* Destroyer)(Ptr _ptr);
  */
 AGE_API Ptr age_malloc(s32 _size);
 /**
+ * @brief realloc a piece of space
+ *
+ * @param[in] _ori  - original memory
+ * @param[in] _size - new size in byts
+ * @return - pointer to the realloced spece
+ */
+AGE_API Ptr age_realloc(Ptr _ori, s32 _size);
+/**
  * @brief free a piece of space
  *
  * @param[in] _ptr  - pointer to the malloced space
@@ -68,6 +76,9 @@ AGE_API void age_free(Ptr _ptr);
 #endif
 #ifndef AGE_FREE_N
 #	define AGE_FREE_N(_ptr) { age_free(_ptr); (_ptr) = 0; }
+#endif
+#ifndef AGE_REALLOC
+#	define AGE_REALLOC(_type, _ptr, _size) ((_type*)age_realloc(_ptr, _size))
 #endif
 
 #endif /* __AGE_ALLOCATOR_H__ */
