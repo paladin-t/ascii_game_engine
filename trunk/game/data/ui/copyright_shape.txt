@@ -1,0 +1,6 @@
+count: 1
+width: 25
+height: 1
+rate: 1
+
+Copyright 2011 Tony's Toy

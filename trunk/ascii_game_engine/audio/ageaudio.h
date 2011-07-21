@@ -77,8 +77,9 @@ AGE_API void update_sound(SoundContext* _cnt, s32 _elapsedTime);
  * @param[in] _cnt  - sound system context
  * @param[in] _seq  - sequenced sound commands
  * @param[in] _type - type to be operated
+ * @param[in] _loop - loop this sound or not
  */
-AGE_API void play_sound(SoundContext* _cnt, const Str _seq, SoundType _type);
+AGE_API void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _loop);
 /**
  * @brief stop a sound sequence
  *
