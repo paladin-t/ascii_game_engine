@@ -38,7 +38,8 @@ typedef struct ThreadInfo {
 	DWORD threadId;
 	HANDLE threadHandle;
 	CRITICAL_SECTION lock;
-	int level;
+	s32 level;
+	bl loop;
 } ThreadInfo;
 
 static void _lock(Ptr _info) {
@@ -56,13 +57,17 @@ static bl _is_note(s8 _ch) {
 }
 
 static void _age_beep(s32 _level, s8 _note) {
-	if(_note < 'C') {
-		_note -= 'A';
-		_note += 5;
+	if(_note == 'P') {
+		age_sleep(100);
 	} else {
-		_note -= 'C';
+		if(_note < 'C') {
+			_note -= 'A';
+			_note += 5;
+		} else {
+			_note -= 'C';
+		}
+		Beep(_FREQ[_level][_note], 100);
 	}
-	Beep(_FREQ[_level][_note], 100);
 }
 
 #define __PLAY_ONE_NOTE(__c) \
@@ -87,7 +92,8 @@ static s32 WINAPI sound_proc(Ptr param) {
 		return result;
 	}
 
-	while(cnt->position <= len) {
+_again:
+	while(cnt->position < len) {
 		ch = cnt->sequence[cnt->position++];
 		if(ch == '>') {
 			__PLAY_ONE_NOTE('\0');
@@ -103,6 +109,11 @@ static s32 WINAPI sound_proc(Ptr param) {
 			__PLAY_ONE_NOTE(ch);
 		}
 		last = ch;
+		age_sleep(80);
+	}
+	if(info->loop) {
+		cnt->position = 0;
+		goto _again;
 	}
 
 	return result;
@@ -123,6 +134,8 @@ SoundContext* create_sound_context(void) {
 }
 
 void destroy_sound_context(SoundContext* _cnt) {
+	stop_sound(_cnt, ST_BGM);
+	stop_sound(_cnt, ST_SFX);
 	DeleteCriticalSection(&((ThreadInfo*)(_cnt->bgm))->lock);
 	DeleteCriticalSection(&((ThreadInfo*)(_cnt->sfx))->lock);
 	AGE_FREE(_cnt->bgm);
@@ -137,7 +150,7 @@ void update_sound(SoundContext* _cnt, s32 _elapsedTime) {
 	/* do nothing */
 }
 
-void play_sound(SoundContext* _cnt, const Str _seq, SoundType _type) {
+void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _loop) {
 	ThreadInfo* thread = 0;
 	stop_sound(_cnt, _type);
 	if(_type == ST_BGM) {
@@ -148,7 +161,9 @@ void play_sound(SoundContext* _cnt, const Str _seq, SoundType _type) {
 		assert("Unknown sound type");
 	}
 	_cnt->sequence = copy_string(_seq);
+	thread->loop = _loop;
 	thread->threadHandle = CreateThread(0, 0, sound_proc, _cnt, 0, &thread->threadId);
+	SetThreadPriority(thread->threadHandle, THREAD_PRIORITY_HIGHEST);
 	Sleep(1);
 }
 

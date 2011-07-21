@@ -305,6 +305,7 @@ Canvas* create_canvas(const Str _name) {
 	result->size.h = CANVAS_HEIGHT;
 	result->pixels = AGE_MALLOC_N(Pixel, count);
 	result->sprites = ht_create(0, ht_cmp_string, ht_hash_string, 0);
+	result->context.lastColor = ERASE_PIXEL_COLOR;
 
 	return result;
 }
@@ -432,6 +433,47 @@ void destroy_all_sprites(Canvas* _cvs) {
 
 	ht_foreach(_cvs->sprites, _destroy_sprite);
 	ht_clear(_cvs->sprites);
+}
+
+Color get_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y) {
+	Color result = ERASE_PIXEL_COLOR;
+	Frame* frame = 0;
+
+	assert(_cvs && _spr);
+
+	if(_frame < 0 || _frame > _spr->timeLine.frameCount - 1) {
+		goto _exit;
+	}
+	frame = &_spr->timeLine.frames[_frame];
+
+	if(_x < 0 || _x > _spr->frameSize.w - 1 || _y < 0 || _y > _spr->frameSize.h - 1) {
+		goto _exit;
+	}
+
+	result = frame->tex[_x + _y * _spr->frameSize.w].color;
+
+_exit:
+	return result;
+}
+
+void set_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y, Color _col) {
+	Frame* frame = 0;
+
+	assert(_cvs && _spr);
+
+	if(_frame < 0 || _frame > _spr->timeLine.frameCount - 1) {
+		goto _exit;
+	}
+	frame = &_spr->timeLine.frames[_frame];
+
+	if(_x < 0 || _x > _spr->frameSize.w - 1 || _y < 0 || _y > _spr->frameSize.h - 1) {
+		goto _exit;
+	}
+
+	frame->tex[_x + _y * _spr->frameSize.w].color = _col;
+
+_exit:
+	return;
 }
 
 bl set_sprite_position(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y) {
@@ -649,6 +691,16 @@ void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...
 	vsprintf(pbuf, _text, argptr);
 	va_end(argptr);
 	printf(buf);
+}
+
+Color get_mapped_color(s32 _index) {
+	Color result = ERASE_PIXEL_COLOR;
+
+	assert(_index >= 0 && _index < sizeof(COLOR_MAP));
+
+	result = COLOR_MAP[_index];
+
+	return result;
 }
 
 void set_cursor_visible(bl _vis) {

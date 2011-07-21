@@ -213,10 +213,34 @@
 					RelativePath=".\data\sprite\ascii_hero_shape.txt"
 					>
 				</File>
+				<File
+					RelativePath=".\data\sprite\blink_star_brush.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\blink_star_palete.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\blink_star_shape.txt"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="ui"
 				>
+				<File
+					RelativePath=".\data\ui\copyright_brush.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\copyright_palete.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\copyright_shape.txt"
+					>
+				</File>
 				<File
 					RelativePath=".\data\ui\logo_brush.txt"
 					>
@@ -233,6 +257,18 @@
 		</Filter>
 		<File
 			RelativePath=".\game.c"
+			>
+		</File>
+		<File
+			RelativePath=".\game.h"
+			>
+		</File>
+		<File
+			RelativePath=".\state.c"
+			>
+		</File>
+		<File
+			RelativePath=".\state.h"
 			>
 		</File>
 	</Files>

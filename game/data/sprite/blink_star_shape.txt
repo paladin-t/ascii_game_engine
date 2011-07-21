@@ -1,0 +1,22 @@
+count: 7
+width: 1
+height: 1
+rate: 6
+
+@show
+ 
+
++
+
++
+
++
+
+@end_show
+ 
+
+@hide
+ 
+
+@end_hide
+ 

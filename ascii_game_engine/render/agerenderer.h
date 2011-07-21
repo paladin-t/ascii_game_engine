@@ -305,6 +305,29 @@ AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
 AGE_API void destroy_all_sprites(Canvas* _cvs);
 
 /**
+ * @brief get the color of a pixel in a sprite
+ *
+ * @param[in] _cvs   - canvas object
+ * @param[in] _spr   - sprite object
+ * @param[in] _frame - frame index
+ * @param[in] _x     - x offset of a pixel
+ * @param[in] _y     - y offset of a pixel
+ * @return - color of the appointed pixel
+ */
+AGE_API Color get_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y);
+/**
+ * @brief set the color of a pixel in a sprite
+ *
+ * @param[in] _cvs   - canvas object
+ * @param[in] _spr   - sprite object
+ * @param[in] _frame - frame index
+ * @param[in] _x     - x offset of a pixel
+ * @param[in] _y     - y offset of a pixel
+ * @param[in] _col   - color of the appointed pixel
+ */
+AGE_API void set_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y, Color _col);
+
+/**
  * @brief set position of a sprite
  *
  * @param[in] _cvs - canvas object
@@ -409,6 +432,13 @@ AGE_API void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode);
  */
 AGE_API void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...);
 
+/**
+ * @brief get a mapped color value
+ *
+ * @param[in] _index - color index
+ * @return - mapped color value
+ */
+AGE_API Color get_mapped_color(s32 _index);
 /**
  * @brief set whether the console cursor is visible
  *
