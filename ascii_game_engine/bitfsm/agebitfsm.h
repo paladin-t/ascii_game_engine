@@ -178,4 +178,235 @@ AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _
  */
 AGE_API void destroy_bitfsm(Fsm* _fsm);
 
+/**
+ * @brief reset a bitfsm to initialized status
+ *
+ * @param[in] _fsm - bitfsm object
+ */
+AGE_API void reset_bitfsm(Fsm* _fsm);
+/**
+ * @brief clear all data of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ */
+AGE_API void clear_bitfsm(Fsm* _fsm);
+/**
+ * @brief set the current step of a bitfsm by index
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - current step index
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_bitfsm_current_step_index(Fsm* _fsm, s32 _index);
+/**
+ * @brief set the current step of a bitfsm by tag
+ *
+ * @param[in] _fsm - bitfsm object
+ * @param[in] _obj - current step tag
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_bitfsm_current_step_tag(Fsm* _fsm, Ptr _obj);
+/**
+ * @brief set the terminal step of a bitfsm by index
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - terminal step index
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_bitfsm_terminal_step_index(Fsm* _fsm, s32 _index);
+/**
+ * @brief set the terminal step of a bitfsm by tag
+ *
+ * @param[in] _fsm - bitfsm object
+ * @param[in] _obj - terminal step tag
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_bitfsm_terminal_step_tag(Fsm* _fsm, Ptr _obj);
+/**
+ * @brief set the step handler(s) of a bitfsm
+ *
+ * @param[in] _fsm    - bitfsm object
+ * @param[in] _intHdl - integer handler functor
+ * @param[in] _objHdl - tag handler functor
+ */
+AGE_API void set_bitfsm_step_handler(Fsm* _fsm, IntStepHendlerFunc _intHdl, ObjStepHandlerFunc _objHdl);
+/**
+ * @brief register a index to type rule of a rule step of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - index of a rule step
+ * @param[in] _tag   - tag of a rule step
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl register_bitfsm_rule_step_index_to_tag(Fsm* _fsm, s32 _index, Ptr _tag);
+/**
+ * @brief register a rule step of a bitfsm by tag
+ *
+ * @param[in] _fsm - bitfsm object
+ * @param[in] _obj - tag of a rule step
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl register_bitfsm_rule_step_tag(Fsm* _fsm, Ptr _obj);
+/**
+ * @brief add a rule step of a bitfsm by index
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - index of a rule step
+ * @param[in] _cond  - transition condition
+ * @param[in] _next  - next bitfsm status of this rule
+ * @param[in] _exact - take this transition exactly
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl add_bitfsm_rule_step_by_index(Fsm* _fsm, s32 _index, Bitset* _cond, s32 _next, bl _exact);
+/**
+ * @brief add a rule step of a bitfsm by tag
+ *
+ * @param[in] _fsm      - bitfsm object
+ * @param[in] _indexObj - tag of a rule step
+ * @param[in] _cond     - transition condition
+ * @param[in] _next     - next bitfsm status of this rule
+ * @param[in] _exact    - take this transition exactly
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl add_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond, Ptr _next, bl _exact);
+/**
+ * @brief add a rule step of a bitfsm by tag and conditon parameters
+ *
+ * @param[in] _fsm      - bitfsm object
+ * @param[in] _indexObj - tag of a rule step
+ * @param[in] _cond     - transition condition parameters
+ * @param[in] _next     - next bitfsm status of this rule
+ * @param[in] _exact    - take this transition exactly
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl add_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond, Ptr _next, bl _exact);
+/**
+ * @brief remove a rule step of a bitfsm by index
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - index of the rule step to be removed
+ * @param[in] _cond  - condition of the rule step to be removed
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl remove_bitfsm_rule_step_by_index(Fsm* _fsm, s32 _index, Bitset* _cond);
+/**
+ * @brief remove a rule step of a bitfsm by tag
+ *
+ * @param[in] _fsm      - bitfsm object
+ * @param[in] _indexObj - tag of the rule step to be removed
+ * @param[in] _cond     - condition of the rule step to be removed
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl remove_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond);
+/**
+ * @brief remove a rule step of a bitfsm by tag and condition parameters
+ *
+ * @param[in] _fsm      - bitfsm object
+ * @param[in] _indexObj - tag of the rule step to be removed
+ * @param[in] _cond     - condition parameters of the rule step to be removed
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl remove_bitfsm_rule_step_ty_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond);
+/**
+ * @brief clear a rule step of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - index of a rule step to be removed
+ */
+AGE_API void clear_bitfsm_rule_step(Fsm* _fsm, s32 _index);
+/**
+ * @brief clear all rule steps of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ */
+AGE_API void clear_bitfsm_all_rule_steps(Fsm* _fsm);
+/**
+ * @brief get the current step index of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ * @return - the current step index
+ */
+AGE_API s32 get_bitfsm_current_step(Fsm* _fsm);
+/**
+ * @brief get the current status of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ * @return - the current status
+ */
+AGE_API Bitset* get_bitfsm_current_status(Fsm* _fsm);
+/**
+ * @brief walk one step on a bitfsm with an integer as command
+ *
+ * @param[in] _fsm    - bitfsm object
+ * @param[in] _status - status command index
+ * @param[in] _exact  - treat this command exactly
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl walk_bitfsm_with_int(Fsm* _fsm, s32 _status, bl _exact);
+/**
+ * @brief walk one step on a bitfsm with a tag as command
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _obj   - status command tag
+ * @param[in] _exact - treat this command exactly
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl walk_bitfsm_with_tag(Fsm* _fsm, Ptr _obj, bl _exact);
+/**
+ * @brief detect whether a bitfsm is at it's terminated status
+ *
+ * @param[in] _fsm - bitfsm object
+ * @return - return TRUE if terminated, or FALSE if not
+ */
+AGE_API bl terminated_bitfsm(Fsm* _fsm);
+/**
+ * @brief get status count of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ * @return - status count
+ */
+AGE_API s32 get_bitfsm_status_count(Fsm* _fsm);
+/**
+ * @brief get a tag of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - the desired tag index
+ * @return - tag data
+ */
+AGE_API Ptr get_bitfsm_status_tag(Fsm* _fsm, s32 _index);
+/**
+ * @brief get transition command count of a bitfsm
+ *
+ * @param[in] _fsm - bitfsm object
+ * @return - transiton command count
+ */
+AGE_API s32 get_bitfsm_command_count(Fsm* _fsm);
+/**
+ * @brief get a transition condition of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - the desired condition index
+ * @param[in] _step  - the desired step index
+ * @return - transiton condition
+ */
+AGE_API Bitset* get_bitfsm_step_command_condition(Fsm* _fsm, s32 _index, s32 _step);
+/**
+ * @brief get a next step index of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - the desired index
+ * @param[in] _step  - the desired step index
+ * @return - a next step index
+ */
+AGE_API s32 get_bitfsm_step_command_next(Fsm* _fsm, s32 _index, s32 _step);
+/**
+ * @brief get whether a condition transition rule is exactly mode of a bitfsm
+ *
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - the desired conditon index
+ * @param[in] _step  - the desired step index
+ * @return - return TRUE if exactly, or FALSE if not
+ */
+AGE_API bl get_bitfsm_step_exact(Fsm* _fsm, s32 _index, s32 _step);
+
 #endif /* __AGE_BITFSM_H__ */

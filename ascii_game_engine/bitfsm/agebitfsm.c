@@ -82,7 +82,27 @@ void append_fsm_rule_step(FsmRuleStep* _ruleStep, FsmStep* _step) {
 }
 
 bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _status, bl _exact) {
-	// TODO
+	Bitset* _s = 0;
+	s32 i = 0;
+	FsmStep* _ck = 0;
+
+	if(_ruleStep->index == -1) {
+		return FALSE;
+	}
+
+	_s = bs_create(_status->bitCount);
+	bs_arithmetic_or(_curr->status, _status, _s);
+	for(i = 0; i < _ruleStep->stepsCount; ++i) {
+		_ck = _ruleStep->steps[i];
+		if((_ck->exact && bs_equals(_ck->condition, _s)) || (!_ck->exact && (bs_logic_and(_ck->condition, _s)))) {
+			_curr->index = _ck->next;
+			bs_set_all_bits(_curr->status, _exact ? _status : _s);
+
+			return TRUE;
+		}
+	}
+	bs_destroy(_s);
+
 	return FALSE;
 }
 
@@ -104,4 +124,142 @@ void destroy_bitfsm(Fsm* _fsm) {
 	destroy_fsm_rule_step(_fsm->ruleSteps);
 	destroy_fsm_status(_fsm->current);
 	AGE_FREE(_fsm);
+}
+
+void reset_bitfsm(Fsm* _fsm) {
+	bs_clear(_fsm->current->status);
+	_fsm->current->index = -1;
+	_fsm->terminalIndex = -1;
+}
+
+void clear_bitfsm(Fsm* _fsm) {
+	reset_bitfsm(_fsm);
+	clear_bitfsm_all_rule_steps(_fsm);
+}
+
+bl set_bitfsm_current_step_index(Fsm* _fsm, s32 _index) {
+	// TODO
+	return FALSE;
+}
+
+bl set_bitfsm_current_step_tag(Fsm* _fsm, Ptr _obj) {
+	// TODO
+	return FALSE;
+}
+
+bl set_bitfsm_terminal_step_index(Fsm* _fsm, s32 _index) {
+	// TODO
+	return FALSE;
+}
+
+bl set_bitfsm_terminal_step_tag(Fsm* _fsm, Ptr _obj) {
+	// TODO
+	return FALSE;
+}
+
+void set_bitfsm_step_handler(Fsm* _fsm, IntStepHendlerFunc _intHdl, ObjStepHandlerFunc _objHdl) {
+	// TODO
+}
+
+bl register_bitfsm_rule_step_index_to_tag(Fsm* _fsm, s32 _index, Ptr _tag) {
+	// TODO
+	return FALSE;
+}
+
+bl register_bitfsm_rule_step_tag(Fsm* _fsm, Ptr _obj) {
+	// TODO
+	return FALSE;
+}
+
+bl add_bitfsm_rule_step_by_index(Fsm* _fsm, s32 _index, Bitset* _cond, s32 _next, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+bl add_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond, Ptr _next, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+bl add_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond, Ptr _next, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+bl remove_bitfsm_rule_step_by_index(Fsm* _fsm, s32 _index, Bitset* _cond) {
+	// TODO
+	return FALSE;
+}
+
+bl remove_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond) {
+	// TODO
+	return FALSE;
+}
+
+bl remove_bitfsm_rule_step_ty_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond) {
+	// TODO
+	return FALSE;
+}
+
+void clear_bitfsm_rule_step(Fsm* _fsm, s32 _index) {
+	// TODO
+}
+
+void clear_bitfsm_all_rule_steps(Fsm* _fsm) {
+	// TODO
+}
+
+s32 get_bitfsm_current_step(Fsm* _fsm) {
+	// TODO
+	return 0;
+}
+
+Bitset* get_bitfsm_current_status(Fsm* _fsm) {
+	// TODO
+	return 0;
+}
+
+bl walk_bitfsm_with_int(Fsm* _fsm, s32 _status, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+bl walk_bitfsm_with_tag(Fsm* _fsm, Ptr _obj, bl _exact) {
+	// TODO
+	return FALSE;
+}
+
+bl terminated_bitfsm(Fsm* _fsm) {
+	// TODO
+	return FALSE;
+}
+
+s32 get_bitfsm_status_count(Fsm* _fsm) {
+	// TODO
+	return 0;
+}
+
+Ptr get_bitfsm_status_tag(Fsm* _fsm, s32 _index) {
+	// TODO
+	return 0;
+}
+
+s32 get_bitfsm_command_count(Fsm* _fsm) {
+	// TODO
+	return 0;
+}
+
+Bitset* get_bitfsm_step_command_condition(Fsm* _fsm, s32 _index, s32 _step) {
+	// TODO
+	return 0;
+}
+
+s32 get_bitfsm_step_command_next(Fsm* _fsm, s32 _index, s32 _step) {
+	// TODO
+	return 0;
+}
+
+bl get_bitfsm_step_exact(Fsm* _fsm, s32 _index, s32 _step) {
+	// TODO
+	return FALSE;
 }
