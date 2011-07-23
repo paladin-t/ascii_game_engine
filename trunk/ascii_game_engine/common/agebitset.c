@@ -107,7 +107,7 @@ bl bs_equals(Bitset* _bs, Bitset* _other) {
 	}
 }
 
-void bs_logic_and(Bitset* _bs, Bitset* _other, Bitset* _result) {
+void bs_arithmetic_and(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	s32 i = 0;
 
 	assert(_bs && _other && _result);
@@ -119,7 +119,7 @@ void bs_logic_and(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	}
 }
 
-void bs_logic_or(Bitset* _bs, Bitset* _other, Bitset* _result) {
+void bs_arithmetic_or(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	s32 i = 0;
 
 	assert(_bs && _other && _result);
@@ -131,7 +131,7 @@ void bs_logic_or(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	}
 }
 
-bl bs_arithmetic_and(Bitset* _bs, Bitset* _other) {
+bl bs_logic_and(Bitset* _bs, Bitset* _other) {
 	s32 i = 0;
 
 	assert(_bs && _other);
@@ -149,7 +149,7 @@ bl bs_arithmetic_and(Bitset* _bs, Bitset* _other) {
 	}
 }
 
-bl bs_arithmetic_or(Bitset* _bs, Bitset* _other) {
+bl bs_logic_or(Bitset* _bs, Bitset* _other) {
 	s32 i = 0;
 
 	assert(_bs && _other);
