@@ -98,6 +98,7 @@ typedef struct Fsm {
 	ObjToCommandFunc objToCommand; /**< object to command convertion functor */
 	IntStepHendlerFunc intHandler; /**< stepping callback handler using integer */
 	ObjStepHandlerFunc objHandler; /**< stepping callback handler using object data */
+	Destroyer tagDestructor;       /**< tag destructor functor */
 } Fsm;
 
 /**
@@ -131,9 +132,10 @@ AGE_API void destroy_fsm_step(FsmStep* _obj);
 /**
  * @brief create a fsm rule step object
  *
+ * @param[in] _count - count of rule steps to be allocated
  * @return - created fsm rule step object
  */
-AGE_API FsmRuleStep* create_fsm_rule_step(void);
+AGE_API FsmRuleStep* create_fsm_rule_step(s32 _count);
 /**
  * @brief destroy a fsm rule step object
  *
@@ -147,6 +149,12 @@ AGE_API void destroy_fsm_rule_step(FsmRuleStep* _obj);
  * @param[in] _step     - step object
  */
 AGE_API void append_fsm_rule_step(FsmRuleStep* _ruleStep, FsmStep* _step);
+/**
+ * @brief remove a fsm step from a rule step object
+ *
+ * @param[in] _index - the index of a rule step to be removed
+ */
+AGE_API void remove_fsm_rule_step(FsmRuleStep* _ruleStep, s32 _index);
 
 /**
  * @brief try to walk a step
@@ -162,15 +170,16 @@ AGE_API bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _sta
 /**
  * @brief create a bitfsm object
  *
- * @param[in] _statusCount  - status count
- * @param[in] _commandCount - transition command count
- * @param[in] _objToIndex   - object to index convertion functor
- * @param[in] _objToCommand - object to command convertion functor
- * @param[in] _intHandler   - integer stepping event handler
- * @param[in] _objHandler   - tag stepping event handler
+ * @param[in] _statusCount   - status count
+ * @param[in] _commandCount  - transition command count
+ * @param[in] _objToIndex    - object to index convertion functor
+ * @param[in] _objToCommand  - object to command convertion functor
+ * @param[in] _intHandler    - integer stepping event handler
+ * @param[in] _objHandler    - tag stepping event handler
+ * @param[in] _tagDestructor - tag destructor functor
  * @return - created bitfsm object
  */
-AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand, IntStepHendlerFunc _intHandler, ObjStepHandlerFunc _objHandler);
+AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand, IntStepHendlerFunc _intHandler, ObjStepHandlerFunc _objHandler, Destroyer _tagDestructor);
 /**
  * @brief destroy a bitfsm object
  *
@@ -268,7 +277,7 @@ AGE_API bl add_bitfsm_rule_step_by_index(Fsm* _fsm, s32 _index, Bitset* _cond, s
  * @param[in] _exact    - take this transition exactly
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl add_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond, Ptr _next, bl _exact);
+AGE_API bl add_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond, Ptr _nextObj, bl _exact);
 /**
  * @brief add a rule step of a bitfsm by tag and conditon parameters
  *
@@ -279,7 +288,7 @@ AGE_API bl add_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond, 
  * @param[in] _exact    - take this transition exactly
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl add_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond, Ptr _next, bl _exact);
+AGE_API bl add_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond, Ptr _nextObj, bl _exact);
 /**
  * @brief remove a rule step of a bitfsm by index
  *
@@ -377,10 +386,11 @@ AGE_API Ptr get_bitfsm_status_tag(Fsm* _fsm, s32 _index);
 /**
  * @brief get transition command count of a bitfsm
  *
- * @param[in] _fsm - bitfsm object
+ * @param[in] _fsm   - bitfsm object
+ * @param[in] _index - the desired command index
  * @return - transiton command count
  */
-AGE_API s32 get_bitfsm_command_count(Fsm* _fsm);
+AGE_API s32 get_bitfsm_command_count(Fsm* _fsm, s32 _index);
 /**
  * @brief get a transition condition of a bitfsm
  *
