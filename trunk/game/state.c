@@ -28,19 +28,35 @@
 
 #define _S_DEFAULT 0
 #define _S_WAITING 1
+#define _S_MENU 2
 
 #define _RAISING_RAIT 128
 
+static const Str _MENU_TEXT[] = {
+	"    P L A Y    ",
+	"    R A N K    ",
+	"S E T T I N G S",
+	"   A B O U T   ",
+	"    E X I T    "
+};
+
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
-	s32 _x = 16;
+	s32 _x = 17;
 	static s32 state = _S_DEFAULT;
+
+	static Font _f1, _f2;
 
 	s32 i = 0; s32 j = 0;
 
 	static s32 _y = CANVAS_HEIGHT + 3;
 	static s32 _time = _RAISING_RAIT;
 	_time += _elapsedTime;
+
+	_f1.color = get_mapped_color(8);
+	_f2.color = get_mapped_color(15);
+
+	update_input_context(AGE_IPT);
 
 	switch(state) {
 		case _S_DEFAULT:
@@ -61,11 +77,22 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 			break;
 		case _S_WAITING:
 			{
-				draw_string(AGE_CVS, 0, 27, 16,
-					(_time % 1200 < 600) ?
+				if(is_key_down(AGE_IPT, 0, KC_OK)) {
+					++state;
+				}
+
+				draw_string(AGE_CVS, 0, 28, 16,
+					(_time % 1200 < 600) && (state == _S_WAITING) ?
 						"Press OK key to continue" :
 						"                        "
 				);
+
+				if(state != _S_WAITING) {
+					goto _exit;
+				}
+			}
+		case _S_MENU:
+			{
 				{
 					s32 __w = game()->main->frameSize.w;
 					s32 __h = game()->main->frameSize.h;
@@ -83,9 +110,51 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 						++j;
 					}
 				}
+
+				if(state == _S_MENU) {
+					static s32 __m = 0;
+					for(i = 0; i < _countof(_MENU_TEXT); ++i) {
+						draw_string(AGE_CVS, (i == __m) ? &_f2 : &_f1, 31, 15 + i, "%s %s", (i == __m) ? ">" : " ", _MENU_TEXT[i]);
+					}
+
+					if(is_key_down(AGE_IPT, 0, KC_UP)) {
+						--__m;
+						if(__m < 0) {
+							__m = _countof(_MENU_TEXT) - 1;
+						}
+					} else if(is_key_down(AGE_IPT, 0, KC_DOWN)) {
+						++__m;
+						if(__m >= _countof(_MENU_TEXT)) {
+							__m = 0;
+						}
+					} else if(is_key_down(AGE_IPT, 0, KC_OK)) {
+						if(__m == 0) { /* play */
+							destroy_sprite(AGE_CVS, game()->main);
+							destroy_sprite(AGE_CVS, game()->subsidiary);
+							game()->main = game()->subsidiary = 0;
+							set_canvas_controller(AGE_CVS, state_main);
+							clear_screen(AGE_CVS);
+						} else if(__m == 1) { /* rank */
+							// TODO
+						} else if(__m == 2) { /* settings */
+							// TODO
+						} else if(__m == 3) { /* about */
+							// TODO
+						} else if(__m == 4) { /* exit */
+							exit_world();
+						}
+					}
+				}
 			}
 			break;
 	}
+
+_exit:
+	return result;
+}
+
+s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
 
 	return result;
 }
