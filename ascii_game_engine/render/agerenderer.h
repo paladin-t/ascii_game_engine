@@ -460,4 +460,11 @@ AGE_API void goto_xy(s32 _x, s32 _y);
  */
 AGE_API void set_color(Canvas* _cvs, Color _col);
 
+/**
+ * @brief clear screen
+ *
+ * @param[in] _cvs - canvas object
+ */
+AGE_API void clear_screen(Canvas* _cvs);
+
 #endif /* __AGE_RENDERER_H__ */

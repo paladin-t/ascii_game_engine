@@ -1,3 +1,7 @@
+Jul. 25 2011
+Bitfsm in pure-C
+Logo, main menu
+
 Jul. 9 2011
 Collision detection.
 

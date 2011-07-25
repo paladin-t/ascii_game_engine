@@ -231,7 +231,7 @@ u32 ls_try_remove(ls_node_t* list, Ptr info, ls_compare cmp) {
 
 	assert(list && cmp);
 
-	tmp = list->next;
+	tmp = list;
 	while(tmp) {
 		if(cmp(tmp, info) == 0) {
 			if(tmp->prev) {

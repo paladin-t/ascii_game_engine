@@ -56,9 +56,9 @@ extern "C" {
 /** Macros */
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 9
+#define _VER_REVISION 10
 #define _MB_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _MB_VERSION_STRING "1.0.0009"
+#define _MB_VERSION_STRING "1.0.0010"
 
 /* Helper */
 #ifndef sgn
@@ -916,7 +916,7 @@ unsigned int _ls_try_remove(_ls_node_t* list, void* info, _ls_compare cmp) {
 
 	assert(list && cmp);
 
-	tmp = list->next;
+	tmp = list;
 	while(tmp) {
 		if(cmp(tmp, info) == 0) {
 			if(tmp->prev) {

@@ -409,23 +409,28 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 
 void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
 	s32 k = 0;
+	ls_node_t* spr = 0;
 
 	assert(_cvs);
 
-	destroy_sprite_message_map(_spr);
-	for(k = 0; k < _spr->timeLine.frameCount; ++k) {
-		AGE_FREE_N(_spr->timeLine.frames[k].tex);
+	spr = ht_find(_cvs->sprites, _spr->name);
+	if(spr) {
+		ht_remove(_cvs->sprites, spr->extra);
+		destroy_sprite_message_map(_spr);
+		for(k = 0; k < _spr->timeLine.frameCount; ++k) {
+			AGE_FREE_N(_spr->timeLine.frames[k].tex);
+		}
+		AGE_FREE_N(_spr->timeLine.frames);
+		ht_destroy(_spr->timeLine.namedFrames);
+		if(_spr->timeLine.beginName) {
+			AGE_FREE(_spr->timeLine.beginName);
+		}
+		if(_spr->timeLine.endName) {
+			AGE_FREE(_spr->timeLine.endName);
+		}
+		AGE_FREE(_spr->name);
+		AGE_FREE(_spr);
 	}
-	AGE_FREE_N(_spr->timeLine.frames);
-	ht_destroy(_spr->timeLine.namedFrames);
-	if(_spr->timeLine.beginName) {
-		AGE_FREE(_spr->timeLine.beginName);
-	}
-	if(_spr->timeLine.endName) {
-		AGE_FREE(_spr->timeLine.endName);
-	}
-	AGE_FREE(_spr->name);
-	AGE_FREE(_spr);
 }
 
 void destroy_all_sprites(Canvas* _cvs) {
@@ -686,6 +691,8 @@ void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...
 	goto_xy(_x, _y);
 	if(_font) {
 		set_color(_cvs, _font->color);
+	} else {
+		set_color(_cvs, get_mapped_color(15));
 	}
 	va_start(argptr, _text);
 	vsprintf(pbuf, _text, argptr);
@@ -722,9 +729,32 @@ void goto_xy(s32 _x, s32 _y) {
 void set_color(Canvas* _cvs, Color _col) {
 	HANDLE hConsole;
 	if(_col != _cvs->context.lastColor) {
-		assert(_col >= 0 && _col < _countof(COLOR_MAP));
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(hConsole, COLOR_MAP[_col]);
+		SetConsoleTextAttribute(hConsole, get_mapped_color(_col));
 		_cvs->context.lastColor = _col;
 	}
+}
+
+void clear_screen(Canvas* _cvs) {
+	s32 x = 0;
+	s32 y = 0;
+	Pixel* pixelc = 0;
+
+	for(y = 0; y < _cvs->size.h; ++y) {
+		for(x = 0; x < _cvs->size.w; ++x) {
+			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
+				
+			set_color(_cvs, 0);
+			goto_xy(x, y);
+			putch(ERASE_PIXEL_SHAPE);
+			pixelc->shape = 0;
+			pixelc->brush = ERASE_PIXEL_SHAPE;
+			pixelc->color = 0;
+			pixelc->frameCount = 0;
+			pixelc->parent = 0;
+			pixelc->zorder = DEFAULT_Z_ORDER;
+		}
+	}
+
+	system("cls");
 }
