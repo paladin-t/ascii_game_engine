@@ -33,11 +33,30 @@ static const Color COLOR_MAP[] = {
 	8,   9,   10,  11,  12,  13,  14,  15,
 };
 
+static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
+	s32 k = 0;
+
+	destroy_sprite_message_map(_spr);
+	for(k = 0; k < _spr->timeLine.frameCount; ++k) {
+		AGE_FREE_N(_spr->timeLine.frames[k].tex);
+	}
+	AGE_FREE_N(_spr->timeLine.frames);
+	ht_destroy(_spr->timeLine.namedFrames);
+	if(_spr->timeLine.beginName) {
+		AGE_FREE(_spr->timeLine.beginName);
+	}
+	if(_spr->timeLine.endName) {
+		AGE_FREE(_spr->timeLine.endName);
+	}
+	AGE_FREE(_spr->name);
+	AGE_FREE(_spr);
+}
+
 static s32 _destroy_sprite(Ptr _data, Ptr _extra) {
 	s32 result = 0;
 
 	Sprite* spr = (Sprite*)_data;
-	destroy_sprite((Canvas*)spr->owner, spr);
+	_destroy_sprite_impl(spr->owner, spr);
 
 	return result;
 }
@@ -408,7 +427,6 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 }
 
 void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
-	s32 k = 0;
 	ls_node_t* spr = 0;
 
 	assert(_cvs);
@@ -416,20 +434,7 @@ void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
 	spr = ht_find(_cvs->sprites, _spr->name);
 	if(spr) {
 		ht_remove(_cvs->sprites, spr->extra);
-		destroy_sprite_message_map(_spr);
-		for(k = 0; k < _spr->timeLine.frameCount; ++k) {
-			AGE_FREE_N(_spr->timeLine.frames[k].tex);
-		}
-		AGE_FREE_N(_spr->timeLine.frames);
-		ht_destroy(_spr->timeLine.namedFrames);
-		if(_spr->timeLine.beginName) {
-			AGE_FREE(_spr->timeLine.beginName);
-		}
-		if(_spr->timeLine.endName) {
-			AGE_FREE(_spr->timeLine.endName);
-		}
-		AGE_FREE(_spr->name);
-		AGE_FREE(_spr);
+		_destroy_sprite_impl(_cvs, _spr);
 	}
 }
 
