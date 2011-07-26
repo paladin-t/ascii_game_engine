@@ -40,6 +40,26 @@ static const Str _MENU_TEXT[] = {
 	"    E X I T    "
 };
 
+static void _draw_logo(s32 _time) {
+	s32 i = 0;
+	s32 j = 0;
+	s32 __w = game()->main->frameSize.w;
+	s32 __h = game()->main->frameSize.h;
+	f32 __p = (_time % 3000) / 1000.0f;
+	s32 __c = __w + __h;
+	__c = (s32)(__c * __p);
+	for(j = 0; j < __h; ++j) {
+		for(i = 0; i < __w; ++i) {
+			set_sprite_pixel_color(AGE_CVS, game()->main, 0, i, j, get_mapped_color(8));
+		}
+	}
+	j = 0;
+	for(i = __c; i >= 0; --i) {
+		set_sprite_pixel_color(AGE_CVS, game()->main, 0, i, j, get_mapped_color(15));
+		++j;
+	}
+}
+
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	s32 _x = 17;
@@ -81,40 +101,23 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 					++state;
 				}
 
+				_draw_logo(_time);
+
 				draw_string(AGE_CVS, 0, 28, 16,
 					(_time % 1200 < 600) && (state == _S_WAITING) ?
 						"Press OK key to continue" :
 						"                        "
 				);
-
-				if(state != _S_WAITING) {
-					goto _exit;
-				}
 			}
+			break;
 		case _S_MENU:
 			{
-				{
-					s32 __w = game()->main->frameSize.w;
-					s32 __h = game()->main->frameSize.h;
-					f32 __p = (_time % 3000) / 1000.0f;
-					s32 __c = __w + __h;
-					__c = (s32)(__c * __p);
-					for(j = 0; j < __h; ++j) {
-						for(i = 0; i < __w; ++i) {
-							set_sprite_pixel_color(AGE_CVS, game()->main, 0, i, j, get_mapped_color(8));
-						}
-					}
-					j = 0;
-					for(i = __c; i >= 0; --i) {
-						set_sprite_pixel_color(AGE_CVS, game()->main, 0, i, j, get_mapped_color(15));
-						++j;
-					}
-				}
+				_draw_logo(_time);
 
-				if(state == _S_MENU) {
+				{
 					static s32 __m = 0;
 					for(i = 0; i < _countof(_MENU_TEXT); ++i) {
-						draw_string(AGE_CVS, (i == __m) ? &_f2 : &_f1, 31, 15 + i, "%s %s", (i == __m) ? ">" : " ", _MENU_TEXT[i]);
+						draw_string(AGE_CVS, (i == __m) ? &_f2 : &_f1, 32, 15 + i, "%s %s", (i == __m) ? ">" : " ", _MENU_TEXT[i]);
 					}
 
 					if(is_key_down(AGE_IPT, 0, KC_UP)) {
@@ -132,6 +135,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							destroy_sprite(AGE_CVS, game()->main);
 							destroy_sprite(AGE_CVS, game()->subsidiary);
 							game()->main = game()->subsidiary = 0;
+							stop_sound(AGE_SND, ST_BGM);
 							set_canvas_controller(AGE_CVS, state_main);
 							clear_screen(AGE_CVS);
 						} else if(__m == 1) { /* rank */
@@ -149,7 +153,6 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 			break;
 	}
 
-_exit:
 	return result;
 }
 
