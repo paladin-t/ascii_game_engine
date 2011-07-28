@@ -33,9 +33,10 @@
 #include "common/agestringtable.h"
 #include "common/ageallocator.h"
 #include "common/ageutil.h"
+#include "common/agebitset.h"
 #include "common/agelist.h"
 #include "common/agehashtable.h"
-#include "common/agebitset.h"
+#include "common/ageparamset.h"
 #include "audio/ageaudio.h"
 #include "input/ageinput.h"
 #include "render/agerenderer.h"
@@ -48,6 +49,9 @@
 #endif
 #ifndef AGE_CVS
 #	define AGE_CVS get_world()->canvas
+#endif
+#ifndef AGE_CVS_PAR
+#	define AGE_CVS_PAR get_world()->canvas->params
 #endif
 #ifndef AGE_IPT
 #	define AGE_IPT get_world()->input

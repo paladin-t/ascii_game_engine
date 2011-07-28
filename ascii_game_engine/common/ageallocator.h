@@ -43,10 +43,21 @@ typedef Ptr (* Creator)(s32 _size);
  */
 typedef void (* Destroyer)(Ptr _ptr);
 
+#ifdef _DEBUG
+/**
+ * @brief malloc a piece of space with debug information
+ *
+ * @param[in] _size - bytes count to be malloced
+ * @param[in] _file - caller file name
+ * @param[in] _line - caller line number
+ * @return - pointer to the malloced space
+ */
+AGE_API Ptr age_malloc_dbg(s32 _size, const Str _file, s32 _line);
+#endif
 /**
  * @brief malloc a piece of space
  *
- * @param[in] _size  - bytes count to be malloced
+ * @param[in] _size - bytes count to be malloced
  * @return - pointer to the malloced space
  */
 AGE_API Ptr age_malloc(s32 _size);
@@ -61,12 +72,16 @@ AGE_API Ptr age_realloc(Ptr _ori, s32 _size);
 /**
  * @brief free a piece of space
  *
- * @param[in] _ptr  - pointer to the malloced space
+ * @param[in] _ptr - pointer to the malloced space
  */
 AGE_API void age_free(Ptr _ptr);
 
 #ifndef AGE_MALLOC
-#	define AGE_MALLOC(_type) ((_type*)age_malloc(sizeof(_type)))
+#	ifdef _DEBUG
+#		define AGE_MALLOC(_type) ((_type*)age_malloc_dbg(sizeof(_type), __FILE__, __LINE__))
+#	else
+#		define AGE_MALLOC(_type) ((_type*)age_malloc(sizeof(_type)))
+#	endif
 #endif
 #ifndef AGE_MALLOC_N
 #	define AGE_MALLOC_N(_type, _count) ((_type*)age_malloc(sizeof(_type) * _count))

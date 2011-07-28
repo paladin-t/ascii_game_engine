@@ -320,6 +320,7 @@ Canvas* create_canvas(const Str _name) {
 	Canvas* result = AGE_MALLOC(Canvas);
 
 	result->name = name;
+	result->params = create_paramset();
 	result->size.w = CANVAS_WIDTH;
 	result->size.h = CANVAS_HEIGHT;
 	result->pixels = AGE_MALLOC_N(Pixel, count);
@@ -330,6 +331,7 @@ Canvas* create_canvas(const Str _name) {
 }
 
 void destroy_canvas(Canvas* _cvs) {
+	destroy_paramset(_cvs->params);
 	destroy_all_sprites(_cvs);
 	ht_destroy(_cvs->sprites);
 	AGE_FREE_N(_cvs->pixels);

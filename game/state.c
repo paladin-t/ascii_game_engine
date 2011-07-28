@@ -161,3 +161,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 
 	return result;
 }
+
+s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
