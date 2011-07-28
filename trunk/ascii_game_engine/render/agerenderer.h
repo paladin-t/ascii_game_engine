@@ -31,6 +31,7 @@
 #include "../common/ageallocator.h"
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
+#include "../common/ageparamset.h"
 #include "../message/agemessage.h"
 #include "../controller/agecontroller.h"
 
@@ -219,6 +220,7 @@ typedef struct RunningContext {
  */
 typedef struct Canvas {
 	Str name;               /**< name */
+	AgeParamSet* params;    /**< parameter set */
 	Size size;              /**< canvas size */
 	Pixel* pixels;          /**< frame buffer */
 	ht_node_t* sprites;     /**< alive sprite objects */

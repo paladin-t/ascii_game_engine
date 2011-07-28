@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#include <crtdbg.h>
 
 #ifdef _MSC_VER
 #	ifdef INTE_COMPILE

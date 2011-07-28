@@ -26,6 +26,15 @@
 #include "../common/ageutil.h"
 #include "ageallocator.h"
 
+#ifdef _DEBUG
+Ptr age_malloc_dbg(s32 _size, const Str _file, s32 _line) {
+	Ptr result = _malloc_dbg(_size, _NORMAL_BLOCK, _file, _line);
+	memset(result, 0, _size);
+
+	return result;
+}
+#endif
+
 Ptr age_malloc(s32 _size) {
 	Ptr result = malloc(_size);
 	memset(result, 0, _size);

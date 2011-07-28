@@ -205,6 +205,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\common\ageparamset.c"
+				>
+			</File>
+			<File
+				RelativePath=".\common\ageparamset.h"
+				>
+			</File>
+			<File
 				RelativePath=".\common\agestringtable.h"
 				>
 			</File>
