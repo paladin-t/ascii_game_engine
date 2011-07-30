@@ -125,37 +125,127 @@ bl get_s32_param(AgeParamSet* _ps, const Str _name, s32* _data) {
 
 bl set_u32_param(AgeParamSet* _ps, const Str _name, u32 _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	node = ht_find(_ps, _name);
+	if(node) {
+		par = node->data;
+	} else {
+		par = _create_param(APT_U32);
+		ht_set_or_insert(_ps, copy_string(_name), par);
+	}
+	par->u32 = _data;
+
 	return result;
 }
 
 bl get_u32_param(AgeParamSet* _ps, const Str _name, u32* _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	assert(_data);
+	if(_data) {
+		node = ht_find(_ps, _name);
+		assert(node);
+		if(node) {
+			par = (AgeParam*)(node->data);
+			assert(par->type == APT_U32);
+			if(par->type == APT_U32) {
+				*_data = par->u32;
+			} else {
+				result = FALSE;
+			}
+		} else {
+			result = FALSE;
+		}
+	}
+
 	return result;
 }
 
 bl set_f32_param(AgeParamSet* _ps, const Str _name, f32 _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	node = ht_find(_ps, _name);
+	if(node) {
+		par = node->data;
+	} else {
+		par = _create_param(APT_F32);
+		ht_set_or_insert(_ps, copy_string(_name), par);
+	}
+	par->f32 = _data;
+
 	return result;
 }
 
 bl get_f32_param(AgeParamSet* _ps, const Str _name, f32* _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	assert(_data);
+	if(_data) {
+		node = ht_find(_ps, _name);
+		assert(node);
+		if(node) {
+			par = (AgeParam*)(node->data);
+			assert(par->type == APT_F32);
+			if(par->type == APT_F32) {
+				*_data = par->f32;
+			} else {
+				result = FALSE;
+			}
+		} else {
+			result = FALSE;
+		}
+	}
+
 	return result;
 }
 
 bl set_str_param(AgeParamSet* _ps, const Str _name, Str _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	node = ht_find(_ps, _name);
+	if(node) {
+		par = node->data;
+	} else {
+		par = _create_param(APT_STR);
+		ht_set_or_insert(_ps, copy_string(_name), par);
+	}
+	par->str = copy_string(_data);
+
 	return result;
 }
 
 bl get_str_param(AgeParamSet* _ps, const Str _name, Str* _data) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* node = 0;
+	AgeParam* par = 0;
+
+	assert(_data);
+	if(_data) {
+		node = ht_find(_ps, _name);
+		assert(node);
+		if(node) {
+			par = (AgeParam*)(node->data);
+			assert(par->type == APT_STR);
+			if(par->type == APT_STR) {
+				*_data = par->str;
+			} else {
+				result = FALSE;
+			}
+		} else {
+			result = FALSE;
+		}
+	}
+
 	return result;
 }
 
