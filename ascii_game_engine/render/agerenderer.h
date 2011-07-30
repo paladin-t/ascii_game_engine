@@ -188,6 +188,7 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
 typedef struct Sprite {
 	struct Canvas* owner;                 /**< owner canvas object */
 	Str name;                             /**< name */
+	AgeParamSet* params;                  /**< parameter set */
 	Point position;                       /**< position */
 	Point oldPosition;                    /**< old position */
 	Size frameSize;                       /**< size of each frame */

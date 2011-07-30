@@ -48,6 +48,7 @@ static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 	if(_spr->timeLine.endName) {
 		AGE_FREE(_spr->timeLine.endName);
 	}
+	destroy_paramset(_spr->params);
 	AGE_FREE(_spr->name);
 	AGE_FREE(_spr);
 }
@@ -412,6 +413,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 	if(!get_sprite_by_name(_cvs, _name)) {
 		result = AGE_MALLOC(Sprite);
 		result->name = copy_string(_name);
+		result->params = create_paramset();
 		result->owner = _cvs;
 		result->timeLine.namedFrames = ht_create(0, ht_cmp_string, ht_hash_string, _destroy_string);
 
