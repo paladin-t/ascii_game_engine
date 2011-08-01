@@ -143,7 +143,13 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 						} else if(__m == 2) { /* settings */
 							// TODO
 						} else if(__m == 3) { /* about */
-							// TODO
+							set_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", "info.txt");
+							destroy_sprite(AGE_CVS, game()->main);
+							destroy_sprite(AGE_CVS, game()->subsidiary);
+							game()->main = game()->subsidiary = 0;
+							stop_sound(AGE_SND, ST_BGM);
+							set_canvas_controller(AGE_CVS, state_text_list);
+							clear_screen(AGE_CVS);
 						} else if(__m == 4) { /* exit */
 							exit_world();
 						}
@@ -164,6 +170,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 
 s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
+	Str data = 0;
+
+	get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
 
 	return result;
 }
