@@ -100,6 +100,8 @@ World* create_world(void) {
 
 	_gWorld = result;
 
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+
 	return result;
 }
 

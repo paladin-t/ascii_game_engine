@@ -219,6 +219,9 @@ bl set_str_param(AgeParamSet* _ps, const Str _name, Str _data) {
 		par = _create_param(APT_STR);
 		ht_set_or_insert(_ps, copy_string(_name), par);
 	}
+	if(par->str) {
+		AGE_FREE(par->str);
+	}
 	par->str = copy_string(_data);
 
 	return result;
