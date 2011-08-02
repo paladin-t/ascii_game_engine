@@ -26,20 +26,6 @@
 #include "state.h"
 #include "game.h"
 
-#define _S_DEFAULT 0
-#define _S_WAITING 1
-#define _S_MENU 2
-
-#define _RAISING_RAIT 128
-
-static const Str _MENU_TEXT[] = {
-	"    P L A Y    ",
-	"    R A N K    ",
-	"S E T T I N G S",
-	"   A B O U T   ",
-	"    E X I T    "
-};
-
 static void _draw_logo(s32 _time) {
 	s32 i = 0;
 	s32 j = 0;
@@ -61,6 +47,18 @@ static void _draw_logo(s32 _time) {
 }
 
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_WAITING 1
+#define _S_MENU 2
+#define _RAISING_RAIT 128
+	static const Str _MENU_TEXT[] = {
+		"    P L A Y    ",
+		"    R A N K    ",
+		"S E T T I N G S",
+		"   A B O U T   ",
+		"    E X I T    "
+	};
+
 	s32 result = 0;
 	s32 _x = 17;
 	static s32 state = _S_DEFAULT;
@@ -131,6 +129,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							__m = 0;
 						}
 					} else if(is_key_down(AGE_IPT, 0, KC_OK)) {
+						state = _S_DEFAULT;
 						if(__m == 0) { /* play */
 							destroy_sprite(AGE_CVS, game()->main);
 							destroy_sprite(AGE_CVS, game()->subsidiary);
@@ -143,7 +142,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 						} else if(__m == 2) { /* settings */
 							// TODO
 						} else if(__m == 3) { /* about */
-							set_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", "info.txt");
+							set_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", "data/info.txt");
 							destroy_sprite(AGE_CVS, game()->main);
 							destroy_sprite(AGE_CVS, game()->subsidiary);
 							game()->main = game()->subsidiary = 0;
@@ -160,6 +159,10 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 	}
 
 	return result;
+#undef _S_DEFAULT
+#undef _S_WAITING
+#undef _S_MENU
+#undef _RAISING_RAIT
 }
 
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
@@ -169,10 +172,38 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 }
 
 s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_MAIN 1
+#define _S_BACK 2
 	s32 result = 0;
+	static s32 state = _S_DEFAULT;
+	static Str text = 0;
 	Str data = 0;
 
-	get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
+	update_input_context(AGE_IPT);
+
+	switch(state) {
+		case _S_DEFAULT:
+			get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
+			text = freadall(data);
+			++state;
+			break;
+		case _S_MAIN:
+			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+				++state;
+			}
+			break;
+		case _S_BACK:
+			AGE_FREE(text);
+			state = _S_DEFAULT;
+			init();
+			// TODO
+			set_canvas_controller(AGE_CVS, 0);
+			break;
+	};
 
 	return result;
+#undef _S_DEFAULT
+#undef _S_MAIN
+#undef _S_BACK
 }

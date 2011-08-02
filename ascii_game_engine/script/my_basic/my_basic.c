@@ -56,9 +56,9 @@ extern "C" {
 /** Macros */
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 10
+#define _VER_REVISION 11
 #define _MB_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _MB_VERSION_STRING "1.0.0010"
+#define _MB_VERSION_STRING "1.0.0011"
 
 /* Helper */
 #ifndef sgn
@@ -916,7 +916,7 @@ unsigned int _ls_try_remove(_ls_node_t* list, void* info, _ls_compare cmp) {
 
 	assert(list && cmp);
 
-	tmp = list;
+	tmp = list->next;
 	while(tmp) {
 		if(cmp(tmp, info) == 0) {
 			if(tmp->prev) {
@@ -924,6 +924,9 @@ unsigned int _ls_try_remove(_ls_node_t* list, void* info, _ls_compare cmp) {
 			}
 			if(tmp->next) {
 				tmp->next->prev = tmp->prev;
+			}
+			if(list->prev == tmp) {
+				list->prev = 0;
 			}
 			safe_free(tmp);
 			++result;
@@ -1236,11 +1239,14 @@ unsigned int _ht_set_or_insert(_ht_node_t* ht, void* key, void* value) {
 
 unsigned int _ht_remove(_ht_node_t* ht, void* key) {
 	unsigned int result = 0;
+	unsigned int hash_code = 0;
 	_ls_node_t* bucket = 0;
 
 	assert(ht && key);
 
 	bucket = _ht_find(ht, key);
+	hash_code = ht->hash(ht, key);
+	bucket = ht->array[hash_code];
 	result = _ls_try_remove(bucket, key, _ls_cmp_extra);
 
 	return result;

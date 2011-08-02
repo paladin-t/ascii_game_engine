@@ -47,24 +47,8 @@ static void _on_exit(void) {
 }
 
 static void _on_init(void) {
-	/* set canvas controller */
-	set_canvas_controller(AGE_CVS, state_show_logo);
-	/* create objects and connect them with controllers */
 	memset(game(), 0, sizeof(AsciiHeroGame));
-	game()->main = create_sprite(
-		AGE_CVS,
-		"ascii_hero",
-		"data/ui/logo_shape.txt",
-		"data/ui/logo_brush.txt",
-		"data/ui/logo_palete.txt"
-	);
-	game()->subsidiary = create_sprite(
-		AGE_CVS,
-		"copyright",
-		"data/ui/copyright_shape.txt",
-		"data/ui/copyright_brush.txt",
-		"data/ui/copyright_palete.txt"
-	);
+	init();
 }
 
 static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
@@ -97,6 +81,25 @@ static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _
 
 AsciiHeroGame* game(void) {
 	return &_game;
+}
+
+void init(void) {
+	game()->main = create_sprite(
+		AGE_CVS,
+		"ascii_hero",
+		"data/ui/logo_shape.txt",
+		"data/ui/logo_brush.txt",
+		"data/ui/logo_palete.txt"
+	);
+	game()->subsidiary = create_sprite(
+		AGE_CVS,
+		"copyright",
+		"data/ui/copyright_shape.txt",
+		"data/ui/copyright_brush.txt",
+		"data/ui/copyright_palete.txt"
+	);
+
+	set_canvas_controller(AGE_CVS, state_show_logo);
 }
 
 s32 main(s32 argc, Str argv[]) {

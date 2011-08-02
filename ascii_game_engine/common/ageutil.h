@@ -61,20 +61,34 @@ AGE_API void age_sleep(s32 _time);
 AGE_API s32 age_rand(s32 _min, s32 _max);
 
 /**
+ * @brief get the length of a file
+ *
+ * @param[in] _fp - file pointer
+ * @return - file length in bytes
+ */
+AGE_API s32 flen(FILE* _fp);
+/**
  * @brief read a line from a file to a string buffer
  *
- * @param[in] _fp    - file pointer
- * @param[out] _buf  - buffer to be filled
+ * @param[in] _fp   - file pointer
+ * @param[out] _buf - buffer to be filled
  * @return - read characters count
  */
-AGE_INTERNAL s32 freadln(FILE* _fp, Str* _buf);
+AGE_API s32 freadln(FILE* _fp, Str* _buf);
 /**
  * @brief skip a line from a file
  *
- * @param[in] _fp    - file pointer
+ * @param[in] _fp - file pointer
  * @return - skipped characters count
  */
-AGE_INTERNAL s32 fskipln(FILE* _fp);
+AGE_API s32 fskipln(FILE* _fp);
+/**
+ * @brief read all from a file
+ *
+ * @param[in] _file - file name
+ * @return - content of the file
+ */
+AGE_API Str freadall(const Str _file);
 
 /**
  * @brief create a new string and copy the given content to it
@@ -82,7 +96,7 @@ AGE_INTERNAL s32 fskipln(FILE* _fp);
  * @param[in] _str - source string
  * @return - new created string, need to be freed manually
  */
-AGE_INTERNAL Str copy_string(const Str _str);
+AGE_API Str copy_string(const Str _str);
 /**
  * @brief create a new string and copy a count of the given content to it
  *
@@ -91,7 +105,7 @@ AGE_INTERNAL Str copy_string(const Str _str);
  * @param[in] _count - size to be copied, set to 0 if copy to end
  * @return - new created string, need to be freed manually
  */
-AGE_INTERNAL Str copy_substring(const Str _str, s32 _start, s32 _count);
+AGE_API Str copy_substring(const Str _str, s32 _start, s32 _count);
 
 /**
  * @brief compare two pointer
@@ -102,6 +116,6 @@ AGE_INTERNAL Str copy_substring(const Str _str, s32 _start, s32 _count);
  *           1 if _left is greater than _right,
  *           -1 if _left is less than _right;
  */
-AGE_INTERNAL s32 cmp_ptr(const Ptr _left, const Ptr _right);
+AGE_API s32 cmp_ptr(const Ptr _left, const Ptr _right);
 
 #endif /* __AGE_UTIL_H__ */

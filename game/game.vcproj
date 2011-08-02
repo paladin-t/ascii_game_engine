@@ -198,6 +198,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\data\info.txt"
+				>
+			</File>
 			<Filter
 				Name="sprite"
 				>

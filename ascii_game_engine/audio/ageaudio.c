@@ -176,7 +176,7 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 	} else {
 		assert("Unknown sound type");
 	}
-	if(thread->threadHandle) {
+	if(thread && thread->threadHandle) {
 		TerminateThread(thread->threadHandle, 1);
 		WaitForSingleObject(thread->threadHandle, 10);
 		CloseHandle(thread->threadHandle);
