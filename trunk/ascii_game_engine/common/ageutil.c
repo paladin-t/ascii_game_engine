@@ -59,6 +59,18 @@ s32 age_rand(s32 _min, s32 _max) {
 	return result;
 }
 
+s32 flen(FILE* _fp) {
+	s32 result = 0;
+	s32 curpos = 0;
+
+	curpos = ftell(_fp);
+	fseek(_fp, 0L, SEEK_END);
+	result = ftell(_fp);
+	fseek(_fp, curpos, SEEK_SET);
+
+	return result;
+}
+
 s32 freadln(FILE* _fp, Str* _buf) {
 	s32 result = 0;
 	s8 ch = 0;
@@ -91,6 +103,21 @@ s32 fskipln(FILE* _fp) {
 	s8 buf[AGE_STR_LEN];
 	Str str = buf;
 	result = freadln(_fp, &str);
+
+	return result;
+}
+
+Str freadall(const Str _file) {
+	Str result = 0;
+	FILE* fp = 0;
+	fp = fopen(_file, "rb+");
+	if(fp != 0) {
+		s32 l = flen(fp);
+		result = _age_malloc(s8, l + 1);
+		assert(result);
+		fread(result, 1, l, fp);
+		fclose(fp);
+	}
 
 	return result;
 }

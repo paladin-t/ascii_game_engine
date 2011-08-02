@@ -76,15 +76,18 @@ AGE_API Ptr age_realloc(Ptr _ori, s32 _size);
  */
 AGE_API void age_free(Ptr _ptr);
 
-#ifndef AGE_MALLOC
+#ifndef _age_malloc
 #	ifdef _DEBUG
-#		define AGE_MALLOC(_type) ((_type*)age_malloc_dbg(sizeof(_type), __FILE__, __LINE__))
+#		define _age_malloc(_type, _size) ((_type*)age_malloc_dbg(_size, __FILE__, __LINE__))
 #	else
-#		define AGE_MALLOC(_type) ((_type*)age_malloc(sizeof(_type)))
+#		define _age_malloc(_type, _size) ((_type*)age_malloc(_size))
 #	endif
 #endif
+#ifndef AGE_MALLOC
+#	define AGE_MALLOC(_type) (_age_malloc(_type, sizeof(_type)))
+#endif
 #ifndef AGE_MALLOC_N
-#	define AGE_MALLOC_N(_type, _count) ((_type*)age_malloc(sizeof(_type) * _count))
+#	define AGE_MALLOC_N(_type, _count) (_age_malloc(_type, sizeof(_type) * _count))
 #endif
 #ifndef AGE_FREE
 #	define AGE_FREE(_ptr) { age_free(_ptr); (_ptr) = 0; }

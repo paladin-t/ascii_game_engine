@@ -239,11 +239,14 @@ u32 ht_set_or_insert(ht_node_t* ht, Ptr key, Ptr value) {
 
 u32 ht_remove(ht_node_t* ht, Ptr key) {
 	u32 result = 0;
+	u32 hash_code = 0;
 	ls_node_t* bucket = 0;
 
 	assert(ht && key);
 
 	bucket = ht_find(ht, key);
+	hash_code = ht->hash(ht, key);
+	bucket = ht->array[hash_code];
 	result = ls_try_remove(bucket, key, ls_cmp_extra);
 
 	return result;

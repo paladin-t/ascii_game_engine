@@ -36,4 +36,6 @@ typedef struct AsciiHeroGame {
 
 AsciiHeroGame* game(void);
 
+void init(void);
+
 #endif /* __GAME_H__ */
