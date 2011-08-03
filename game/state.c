@@ -129,7 +129,6 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							__m = 0;
 						}
 					} else if(is_key_down(AGE_IPT, 0, KC_OK)) {
-						state = _S_DEFAULT;
 						if(__m == 0) { /* play */
 							destroy_sprite(AGE_CVS, game()->main);
 							destroy_sprite(AGE_CVS, game()->subsidiary);
@@ -152,6 +151,8 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 						} else if(__m == 4) { /* exit */
 							exit_world();
 						}
+						state = _S_DEFAULT;
+						__m = 0;
 					}
 				}
 			}
@@ -184,8 +185,11 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 
 	switch(state) {
 		case _S_DEFAULT:
+			clear_screen(AGE_CVS);
 			get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
 			text = freadall(data);
+			draw_string(AGE_CVS, 0, 0, 0, text);
+			AGE_FREE(text);
 			++state;
 			break;
 		case _S_MAIN:
@@ -194,11 +198,10 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 			}
 			break;
 		case _S_BACK:
-			AGE_FREE(text);
 			state = _S_DEFAULT;
 			init();
-			// TODO
-			set_canvas_controller(AGE_CVS, 0);
+			set_canvas_controller(AGE_CVS, state_show_logo);
+			clear_screen(AGE_CVS);
 			break;
 	};
 

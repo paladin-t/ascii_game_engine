@@ -98,6 +98,8 @@ void init(void) {
 		"data/ui/copyright_brush.txt",
 		"data/ui/copyright_palete.txt"
 	);
+	set_sprite_position(AGE_CVS, game()->main, 0, 1024);
+	set_sprite_position(AGE_CVS, game()->subsidiary, 0, 1024);
 
 	set_canvas_controller(AGE_CVS, state_show_logo);
 }

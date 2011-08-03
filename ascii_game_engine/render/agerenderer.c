@@ -694,7 +694,7 @@ void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode) {
 }
 
 void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...) {
-	s8 buf[AGE_STR_LEN];
+	s8 buf[AGE_TXT_LEN];
 	Str pbuf = buf;
 	va_list argptr;
 	goto_xy(_x, _y);
