@@ -58,6 +58,9 @@
 #ifndef AGE_STR_LEN
 #	define AGE_STR_LEN 256
 #endif
+#ifndef AGE_TXT_LEN
+#	define AGE_TXT_LEN 10240
+#endif
 
 #ifndef EXPECTED_FPS
 #	define EXPECTED_FPS 60
