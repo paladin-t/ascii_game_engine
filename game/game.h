@@ -28,10 +28,24 @@
 
 #include "age.h"
 
+typedef enum AsciiHeroSpriteType {
+	AHST_WALK,
+	AHST_JUMP,
+	AHST_HURT,
+	AHST_FLIP,
+	AHST_COUNT,
+} AsciiHeroSpriteType;
+
 typedef struct AsciiHeroGame {
 	Sprite* main;
 	Sprite* subsidiary;
-	Sprite** array;
+	Sprite* spriteTemplates[AHST_COUNT];
+	Sprite** spritePool;
+	s32 spritePoolSize;
+	s32 spriteCount;
+	Sprite* (* add_sprite_by_type)(AsciiHeroSpriteType _type);
+	void (* add_sprite)(Sprite* _spr);
+	void (* remove_sprite)(Sprite* _spr);
 } AsciiHeroGame;
 
 AsciiHeroGame* game(void);
