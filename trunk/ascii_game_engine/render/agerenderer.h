@@ -38,6 +38,19 @@
 #define MAX_CACHED_FRAME_COUNT 16
 
 /**
+ * @brief visible visibility
+ */
+static const s32 VISIBILITY_VISIBLE = 2;
+/**
+ * @brief disappearing visibility
+ */
+static const s32 VISIBILITY_DISAPPEARING = 1;
+/**
+ * @brief hiden visibility
+ */
+static const s32 VISIBILITY_HIDEN = 0;
+
+/**
  * @brief named frame prefix, for data string parsing
  */
 static const s8 NAMED_FRAME_PREFIX = '@';
@@ -134,6 +147,9 @@ typedef s32 (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _s
  * @brief time line structure
  */
 typedef struct TimeLine {
+	Str shapeFileName;                  /**< shape file name */
+	Str brushFileName;                  /**< brush file name */
+	Str paleteFileName;                 /**< palete file name */
 	Frame* frames;                      /**< all frames */
 	s32 frameCount;                     /**< frames count */
 	s32 currentFrame;                   /**< current frame index */
@@ -188,6 +204,7 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
 typedef struct Sprite {
 	struct Canvas* owner;                 /**< owner canvas object */
 	Str name;                             /**< name */
+	s32 visibility;                       /**< visibility */
 	AgeParamSet* params;                  /**< parameter set */
 	Point position;                       /**< position */
 	Point oldPosition;                    /**< old position */
@@ -294,6 +311,15 @@ AGE_API Sprite* get_sprite_by_name(Canvas* _cvs, const Str _name);
  */
 AGE_API Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const Str _brushFile, const Str _paleteFile);
 /**
+ * @brief create a new sprite object and copy data from an exists sprite object to it
+ *
+ * @param[in] _cvs     - canvas object
+ * @param[in] _srcName - source sprite name
+ * @param[in] _tgtName - target sprite name
+ * @return - new created target sprite object
+ */
+AGE_API Sprite* clone_sprite(Canvas* _cvs, const Str _srcName, const Str _tgtName);
+/**
  * @brief destroy a sprite in a canvas
  *
  * @param[in] _cvs - canvas object
@@ -329,6 +355,25 @@ AGE_API Color get_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32
  * @param[in] _col   - color of the appointed pixel
  */
 AGE_API void set_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y, Color _col);
+
+/**
+ * @brief set visibility of a sprite
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @param[in] _vis - visible property
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl set_sprite_visible(Canvas* _cvs, Sprite* _spr, bl _vis);
+/**
+ * @brief set visibility of a sprite
+ *
+ * @param[in] _cvs  - canvas object
+ * @param[in] _spr  - sprite object
+ * @param[out] _vis - visible property pointer
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl get_sprite_visible(Canvas* _cvs, Sprite* _spr, bl* _vis);
 
 /**
  * @brief set position of a sprite
@@ -391,13 +436,13 @@ AGE_API bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt);
  */
 AGE_API void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 /**
- * @brief fire sprite rendering
+ * @brief prev sprite rendering
  *
  * @param[in] _cvs         - canvas object
  * @param[in] _spr         - sprite object
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-AGE_API void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+AGE_API void prev_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 /**
  * @brief post sprite rendering
  *

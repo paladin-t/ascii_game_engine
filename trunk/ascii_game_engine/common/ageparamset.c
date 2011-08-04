@@ -254,7 +254,17 @@ bl get_str_param(AgeParamSet* _ps, const Str _name, Str* _data) {
 
 bl remove_param(AgeParamSet* _ps, const Str _name) {
 	bl result = TRUE;
-	// TODO
+	ls_node_t* par = 0;
+	Str key = 0;
+
+	par = ht_find(_ps, _name);
+	if(par) {
+		key = (Str)(par->extra);
+		_destroy_param((AgeParam*)(par->data));
+		ht_remove(_ps, par->extra);
+		AGE_FREE(key);
+	}
+
 	return result;
 }
 

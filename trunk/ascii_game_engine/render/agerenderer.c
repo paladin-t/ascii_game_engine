@@ -37,6 +37,15 @@ static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 	s32 k = 0;
 
 	destroy_sprite_message_map(_spr);
+	if(_spr->timeLine.shapeFileName) {
+		AGE_FREE(_spr->timeLine.shapeFileName);
+	}
+	if(_spr->timeLine.brushFileName) {
+		AGE_FREE(_spr->timeLine.brushFileName);
+	}
+	if(_spr->timeLine.paleteFileName) {
+		AGE_FREE(_spr->timeLine.paleteFileName);
+	}
 	for(k = 0; k < _spr->timeLine.frameCount; ++k) {
 		AGE_FREE_N(_spr->timeLine.frames[k].tex);
 	}
@@ -104,7 +113,7 @@ static s32 _fire_render_sprite(Ptr _data, Ptr _extra) {
 	if(spr->fireRender) {
 		spr->fireRender(cvs, spr, cvs->context.lastElapsedTime);
 	} else {
-		fire_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+		prev_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
 	}
 
 	return result;
@@ -139,6 +148,7 @@ static bl _create_sprite_shape(Canvas* _cvs, Sprite* _spr, const Str _shapeFile)
 	s32 k = 0;
 	Str fname = 0;
 	union { Ptr ptr; s32 sint; } u;
+	_spr->timeLine.shapeFileName = copy_string(_shapeFile);
 	fp = fopen(_shapeFile, "rb+");
 	if(fp != 0) {
 		/* frame count */
@@ -204,6 +214,7 @@ static bl _create_sprite_brush(Canvas* _cvs, Sprite* _spr, const Str _brushFile)
 	s32 i = 0;
 	s32 j = 0;
 	s32 k = 0;
+	_spr->timeLine.brushFileName = copy_string(_brushFile);
 	fp = fopen(_brushFile, "rb+");
 	if(fp != 0) {
 		/* frame count */
@@ -255,6 +266,7 @@ static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFil
 	s32 k = 0;
 	s32 b = 0;
 	memset(palete, 0, sizeof(palete));
+	_spr->timeLine.paleteFileName = copy_string(_paleteFile);
 	fp = fopen(_paleteFile, "rb+");
 	if(fp != 0) {
 		while(!feof(fp)) {
@@ -413,6 +425,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 	if(!get_sprite_by_name(_cvs, _name)) {
 		result = AGE_MALLOC(Sprite);
 		result->name = copy_string(_name);
+		result->visibility = VISIBILITY_VISIBLE;
 		result->params = create_paramset();
 		result->owner = _cvs;
 		result->timeLine.namedFrames = ht_create(0, ht_cmp_string, ht_hash_string, _destroy_string);
@@ -425,6 +438,20 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 
 		sprites = _cvs->sprites;
 		ht_set_or_insert(sprites, _name, result);
+	}
+
+	return result;
+}
+
+Sprite* clone_sprite(Canvas* _cvs, const Str _srcName, const Str _tgtName) {
+	Sprite* result = 0;
+	Sprite* src = 0;
+
+	src = get_sprite_by_name(_cvs, _srcName);
+	// TODO
+	assert(src && result);
+	if(src && result) {
+		// TODO
 	}
 
 	return result;
@@ -488,6 +515,32 @@ void set_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 
 
 _exit:
 	return;
+}
+
+bl set_sprite_visible(Canvas* _cvs, Sprite* _spr, bl _vis) {
+	bl result = TRUE;
+
+	if(_vis) {
+		_spr->visibility = VISIBILITY_VISIBLE;
+	} else {
+		if(_spr->visibility == VISIBILITY_VISIBLE) {
+			_spr->visibility = VISIBILITY_DISAPPEARING;
+		}
+	}
+
+	return result;
+}
+
+bl get_sprite_visible(Canvas* _cvs, Sprite* _spr, bl* _vis) {
+	bl result = TRUE;
+
+	if(_vis) {
+		*_vis = _spr->visibility == VISIBILITY_VISIBLE;
+	} else {
+		result = FALSE;
+	}
+
+	return result;
 }
 
 bl set_sprite_position(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y) {
@@ -593,7 +646,7 @@ void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	}
 }
 
-void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+void prev_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	s32 i = 0;
 	s32 j = 0;
 	s32 k = 0;
@@ -605,6 +658,12 @@ void fire_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	Pixel* pixelf = 0;
 	Pixel* pixelc = 0;
 
+	if(_spr->visibility == VISIBILITY_HIDEN) {
+		return;
+	}
+	if(_spr->visibility == VISIBILITY_DISAPPEARING) {
+		_spr->visibility = VISIBILITY_HIDEN;
+	}
 	k = _spr->timeLine.lastFrame;
 	for(j = 0; j < _spr->frameSize.h; ++j) {
 		y = _spr->oldPosition.y + j;
@@ -652,6 +711,9 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	Pixel* pixelf = 0;
 	Pixel* pixelc = 0;
 
+	if(_spr->visibility != VISIBILITY_VISIBLE) {
+		return;
+	}
 	_spr->timeLine.lastFrame = _spr->timeLine.currentFrame;
 	k = _spr->timeLine.currentFrame;
 	for(j = 0; j < _spr->frameSize.h; ++j) {
