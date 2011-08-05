@@ -166,12 +166,6 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #undef _RAISING_RAIT
 }
 
-s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
-	s32 result = 0;
-
-	return result;
-}
-
 s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 #define _S_DEFAULT 0
 #define _S_MAIN 1
@@ -209,4 +203,10 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #undef _S_DEFAULT
 #undef _S_MAIN
 #undef _S_BACK
+}
+
+s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
 }

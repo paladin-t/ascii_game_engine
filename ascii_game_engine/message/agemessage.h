@@ -37,20 +37,20 @@
  * @brief enum messages
  */
 typedef enum Messages {
-	MSG_GET_PROP,         /**< get a property from an object */
-	MSG_SET_PROP,         /**< set a property from an object */
+	MSG_GET_PROP, /**< get a property from an object */
+	MSG_SET_PROP, /**< set a property from an object */
 
-	MSG_USER,             /**< beginning of user defined message */
+	MSG_USER,     /**< beginning of user defined message */
 } Messages;
 
 /**
  * @brief message processing functor
  *
- * @param[in] _sender      - the sender of this message
- * @param[in] _msg         - message type
- * @param[in] _lparam      - first param
- * @param[in] _wparam      - second param
- * @param[in] _extra       - extra data
+ * @param[in] _sender - the sender of this message
+ * @param[in] _msg    - message type
+ * @param[in] _lparam - first param
+ * @param[in] _wparam - second param
+ * @param[in] _extra  - extra data
  * @return - execution status
  */
 typedef s32 (* MessageProc)(Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
@@ -71,48 +71,90 @@ typedef struct MessageMap {
  */
 AGE_API bl create_sprite_message_map(Ptr _obj);
 /**
+ * @brief create a message map of a canvas
+ *
+ * @param[in] _obj - canvas object
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl create_canvas_message_map(Ptr _obj);
+/**
  * @brief destroy a message map of a sprite
  *
  * @param[in] _obj - sprite object
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl destroy_sprite_message_map(Ptr _obj);
-
 /**
- * @brief register a message processing functor to a sprite object
+ * @brief destroy a message map of a canvas
  *
- * @param[in] _obj  - sprite object
- * @param[in] _msg  - message type to be registered
- * @param[in] _proc - processing functor
+ * @param[in] _obj - canvas object
+ * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API void register_sprite_message_proc(Ptr _obj, u32 _msg, MessageProc _proc);
+AGE_API bl destroy_canvas_message_map(Ptr _obj);
+
 /**
  * @brief get a registered message processing functor of a sprite object
  *
- * @param[in] _obj  - sprite object
- * @param[in] _msg  - message type to be registered
+ * @param[in] _obj - sprite object
+ * @param[in] _msg - message type to be registered
  * @return - processing functor
  */
 AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
 /**
- * @brief unregister a message processing functor of a sprite object
+ * @brief get a registered message processing functor of a canvas object
  *
- * @param[in] _obj  - sprite object
- * @param[in] _msg  - message type to be registered
+ * @param[in] _obj - canvas object
+ * @param[in] _msg - message type to be registered
+ * @return - processing functor
  */
-AGE_API void unregister_sprite_message_proc(Ptr _obj, u32 _msg);
+AGE_API MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg);
+
+/**
+ * @brief register a message processing functor to an object
+ *
+ * @param[in] _map  - message map pointer
+ * @param[in] _msg  - message type to be registered
+ * @param[in] _proc - processing functor
+ */
+AGE_API void register_message_proc(MessageMap* _map, u32 _msg, MessageProc _proc);
+/**
+ * @brief unregister a message processing functor of an object
+ *
+ * @param[in] _map - message map pointer
+ * @param[in] _msg - message type to be registered
+ */
+AGE_API void unregister_message_proc(MessageMap* _map, u32 _msg);
+/**
+ * @brief copy a message processing map from one to another
+ *
+ * @param[in] _src - source message map
+ * @param[in] _tgt - target message map
+ */
+AGE_API void copy_message_map(MessageMap* _src, MessageMap* _tgt);
 
 /**
  * @brief send a message to a sprite object
  *
  * @param[in] _receiver - target sprite object
- * @param[in] _sender      - the sender of the message
- * @param[in] _msg         - message type
- * @param[in] _lparam      - first param
- * @param[in] _wparam      - second param
- * @param[in] _extra       - extra data
+ * @param[in] _sender   - the sender of the message
+ * @param[in] _msg      - message type
+ * @param[in] _lparam   - first param
+ * @param[in] _wparam   - second param
+ * @param[in] _extra    - extra data
  * @return - message sending status
  */
 AGE_API s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+/**
+ * @brief send a message to a canvas object
+ *
+ * @param[in] _receiver - target canvas object
+ * @param[in] _sender   - the sender of the message
+ * @param[in] _msg      - message type
+ * @param[in] _lparam   - first param
+ * @param[in] _wparam   - second param
+ * @param[in] _extra    - extra data
+ * @return - message sending status
+ */
+AGE_API s32 send_message_to_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 #endif /* __AGE_MESSAGE_H__ */
