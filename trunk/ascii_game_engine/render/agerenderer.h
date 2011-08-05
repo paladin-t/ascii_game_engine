@@ -218,7 +218,7 @@ typedef struct Sprite {
 	MessageMap messageMap;                /**< message processing map */
 	ControlProc control;                  /**< controlling functor, for motion controlling */
 	SpriteUpdateFunc update;              /**< updating functor, for animation controlling */
-	SpriteRenderFunc fireRender;          /**< fire rendering functor */
+	SpriteRenderFunc prevRender;          /**< fire rendering functor */
 	SpriteRenderFunc postRender;          /**< post rendering functor */
 } Sprite;
 
@@ -244,6 +244,7 @@ typedef struct Canvas {
 	ht_node_t* sprites;     /**< alive sprite objects */
 	s32 frameRate;          /**< canvas frame rate, in millisecond */
 	RunningContext context; /**< running context */
+	MessageMap messageMap;  /**< message processing map */
 	ControlProc control;    /**< canvas controlling functor*/
 } Canvas;
 

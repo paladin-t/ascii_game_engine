@@ -110,8 +110,8 @@ static s32 _fire_render_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	Canvas* cvs = (Canvas*)spr->owner;
-	if(spr->fireRender) {
-		spr->fireRender(cvs, spr, cvs->context.lastElapsedTime);
+	if(spr->prevRender) {
+		spr->prevRender(cvs, spr, cvs->context.lastElapsedTime);
 	} else {
 		prev_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
 	}
@@ -339,11 +339,13 @@ Canvas* create_canvas(const Str _name) {
 	result->pixels = AGE_MALLOC_N(Pixel, count);
 	result->sprites = ht_create(0, ht_cmp_string, ht_hash_string, 0);
 	result->context.lastColor = ERASE_PIXEL_COLOR;
+	create_canvas_message_map(result);
 
 	return result;
 }
 
 void destroy_canvas(Canvas* _cvs) {
+	destroy_canvas_message_map(_cvs);
 	destroy_paramset(_cvs->params);
 	destroy_all_sprites(_cvs);
 	ht_destroy(_cvs->sprites);
@@ -448,10 +450,25 @@ Sprite* clone_sprite(Canvas* _cvs, const Str _srcName, const Str _tgtName) {
 	Sprite* src = 0;
 
 	src = get_sprite_by_name(_cvs, _srcName);
-	// TODO
-	assert(src && result);
-	if(src && result) {
-		// TODO
+	result = get_sprite_by_name(_cvs, _tgtName);
+	assert(src && !result);
+	if(src && !result) {
+		result = create_sprite(
+			_cvs,
+			_tgtName,
+			src->timeLine.shapeFileName,
+			src->timeLine.brushFileName,
+			src->timeLine.paleteFileName
+		);
+		result->physicsMode = src->physicsMode;
+		result->collided = src->collided;
+		result->control = src->control;
+		result->update = src->update;
+		result->prevRender = src->prevRender;
+		result->postRender = src->postRender;
+		copy_message_map(&src->messageMap, &result->messageMap);
+	} else {
+		result = 0;
 	}
 
 	return result;

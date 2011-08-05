@@ -28,6 +28,23 @@
 #include "../render/agerenderer.h"
 #include "agemessage.h"
 
+static MessageMap* _tempMsgMap = 0;
+
+static s32 _copy_message_map(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+	MessageProc proc = 0;
+	Str str = _extra;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_tempMsgMap);
+
+	proc = (MessageProc)_data;
+	u.ptr = _extra;
+	register_message_proc(_tempMsgMap, u.uint, proc);
+
+	return result;
+}
+
 bl create_sprite_message_map(Ptr _obj) {
 	bl result = TRUE;
 	Sprite* spr = (Sprite*)_obj;
@@ -38,6 +55,21 @@ bl create_sprite_message_map(Ptr _obj) {
 		result = FALSE;
 	} else {
 		spr->messageMap.procMap = ht_create(0, ht_cmp_ptr, ht_hash_ptr, 0);
+	}
+
+	return result;
+}
+
+bl create_canvas_message_map(Ptr _obj) {
+	bl result = TRUE;
+	Canvas* cvs = (Canvas*)_obj;
+
+	assert(_obj);
+
+	if(cvs->messageMap.procMap) {
+		result = FALSE;
+	} else {
+		cvs->messageMap.procMap = ht_create(0, ht_cmp_ptr, ht_hash_ptr, 0);
 	}
 
 	return result;
@@ -59,20 +91,20 @@ bl destroy_sprite_message_map(Ptr _obj) {
 	return result;
 }
 
-void register_sprite_message_proc(Ptr _obj, u32 _msg, MessageProc _proc) {
-	Sprite* spr = (Sprite*)_obj;
-	ht_node_t* pm = 0;
-	union { Ptr ptr; u32 uint; } u;
+bl destroy_canvas_message_map(Ptr _obj) {
+	bl result = TRUE;
+	Canvas* cvs = (Canvas*)_obj;
 
 	assert(_obj);
 
-	if(_msg < MESSAGE_TABLE_SIZE) {
-		spr->messageMap.fastTable[_msg] = _proc;
+	if(!cvs->messageMap.procMap) {
+		result = FALSE;
 	} else {
-		pm = spr->messageMap.procMap;
-		u.uint = _msg;
-		ht_set_or_insert(pm, u.ptr, _proc);
+		ht_destroy(cvs->messageMap.procMap);
+		cvs->messageMap.procMap = 0;
 	}
+
+	return result;
 }
 
 MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
@@ -94,23 +126,79 @@ MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
 	return result;
 }
 
-void unregister_sprite_message_proc(Ptr _obj, u32 _msg) {
-	Sprite* spr = (Sprite*)_obj;
+MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg) {
+	MessageProc result = 0;
+	Canvas* cvs = (Canvas*)_obj;
 	ht_node_t* pm = 0;
 	union { Ptr ptr; u32 uint; } u;
 
 	assert(_obj);
 
 	if(_msg < MESSAGE_TABLE_SIZE) {
-		spr->messageMap.fastTable[_msg] = 0;
+		result = cvs->messageMap.fastTable[_msg];
 	} else {
-		pm = spr->messageMap.procMap;
+		pm = cvs->messageMap.procMap;
 		u.uint = _msg;
-		ht_set_or_insert(pm, u.ptr, 0);
+		ht_get(pm, u.ptr, (Ptr*)&result);
+	}
+
+	return result;
+}
+
+void register_message_proc(MessageMap* _map, u32 _msg, MessageProc _proc) {
+	ht_node_t* pm = 0;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_map);
+
+	if(_msg < MESSAGE_TABLE_SIZE) {
+		_map->fastTable[_msg] = _proc;
+	} else {
+		pm = _map->procMap;
+		u.uint = _msg;
+		ht_set_or_insert(pm, u.ptr, _proc);
 	}
 }
 
+void unregister_message_proc(MessageMap* _map, u32 _msg) {
+	ht_node_t* pm = 0;
+	ls_node_t* p = 0;
+	union { Ptr ptr; u32 uint; } u;
+
+	assert(_map);
+
+	if(_msg < MESSAGE_TABLE_SIZE) {
+		_map->fastTable[_msg] = 0;
+	} else {
+		pm = _map->procMap;
+		u.uint = _msg;
+		p = ht_find(pm, u.ptr);
+		if(p) {
+			ht_remove(pm, p->extra);
+		}
+	}
+}
+
+void copy_message_map(MessageMap* _src, MessageMap* _tgt) {
+	memcpy(_tgt->fastTable, _src->fastTable, sizeof(_src->fastTable));
+	_tempMsgMap = _tgt;
+	ht_foreach(_src->procMap, _copy_message_map);
+	_tempMsgMap = 0;
+}
+
 s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	MessageProc proc = 0;
+	
+	proc = get_sprite_message_proc(_receiver, _msg);
+	if(proc) {
+		proc(_sender, _msg, _lparam, _wparam, _extra);
+	}
+
+	return result;
+}
+
+s32 send_message_to_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	MessageProc proc = 0;
 	
