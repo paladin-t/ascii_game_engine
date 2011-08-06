@@ -135,6 +135,8 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							game()->main = game()->subsidiary = 0;
 							stop_sound(AGE_SND, ST_BGM);
 							set_canvas_controller(AGE_CVS, state_main);
+							AGE_CVS->prevRender = main_canvas_prev_render;
+							AGE_CVS->postRender = main_canvas_post_render;
 							clear_screen(AGE_CVS);
 						} else if(__m == 1) { /* rank */
 							// TODO
@@ -203,6 +205,14 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #undef _S_DEFAULT
 #undef _S_MAIN
 #undef _S_BACK
+}
+
+void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime) {
+	// TODO
+}
+
+void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime) {
+	// TODO
 }
 
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
