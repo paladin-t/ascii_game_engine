@@ -387,8 +387,14 @@ void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	Pixel* pixelc = 0;
 
 	/* fill frame buffer */
+	if(_cvs->prevRender) {
+		_cvs->prevRender(_cvs, _elapsedTime);
+	}
 	ht_foreach(_cvs->sprites, _fire_render_sprite);
 	ht_foreach(_cvs->sprites, _post_render_sprite);
+	if(_cvs->postRender) {
+		_cvs->postRender(_cvs, _elapsedTime);
+	}
 
 	/* render frame buffer to target */
 	for(y = 0; y < _cvs->size.h; ++y) {
@@ -453,6 +459,7 @@ Sprite* clone_sprite(Canvas* _cvs, const Str _srcName, const Str _tgtName) {
 	result = get_sprite_by_name(_cvs, _tgtName);
 	assert(src && !result);
 	if(src && !result) {
+		/* TODO: copy from memory, not from file */
 		result = create_sprite(
 			_cvs,
 			_tgtName,

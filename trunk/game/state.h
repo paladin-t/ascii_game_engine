@@ -32,6 +32,8 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 
 s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
+void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime);
+void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime);
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
 #endif /* __STATE_H__ */

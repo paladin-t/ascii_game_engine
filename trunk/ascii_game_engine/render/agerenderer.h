@@ -234,18 +234,28 @@ typedef struct RunningContext {
 } RunningContext;
 
 /**
+ * @brief canvas rendering functor
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+typedef void (* CanvasRenderFunc)(struct Canvas* _cvs, s32 _elapsedTime);
+
+/**
  * @brief canvas structure
  */
 typedef struct Canvas {
-	Str name;               /**< name */
-	AgeParamSet* params;    /**< parameter set */
-	Size size;              /**< canvas size */
-	Pixel* pixels;          /**< frame buffer */
-	ht_node_t* sprites;     /**< alive sprite objects */
-	s32 frameRate;          /**< canvas frame rate, in millisecond */
-	RunningContext context; /**< running context */
-	MessageMap messageMap;  /**< message processing map */
-	ControlProc control;    /**< canvas controlling functor*/
+	Str name;                    /**< name */
+	AgeParamSet* params;         /**< parameter set */
+	Size size;                   /**< canvas size */
+	Pixel* pixels;               /**< frame buffer */
+	ht_node_t* sprites;          /**< alive sprite objects */
+	s32 frameRate;               /**< canvas frame rate, in millisecond */
+	RunningContext context;      /**< running context */
+	MessageMap messageMap;       /**< message processing map */
+	ControlProc control;         /**< canvas controlling functor*/
+	CanvasRenderFunc prevRender; /**< fire rendering functor */
+	CanvasRenderFunc postRender; /**< post rendering functor */
 } Canvas;
 
 /**
