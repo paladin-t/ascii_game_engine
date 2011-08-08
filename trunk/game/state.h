@@ -28,6 +28,9 @@
 
 #include "age.h"
 
+#define GAME_AREA_WIDTH 60
+#define GAME_AREA_HEIGHT CANVAS_HEIGHT
+
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
 s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);

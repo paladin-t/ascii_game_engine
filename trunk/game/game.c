@@ -86,7 +86,7 @@ AsciiHeroGame* game(void) {
 void init(void) {
 	game()->main = create_sprite(
 		AGE_CVS,
-		"ascii_hero",
+		"ascii_hero_go_logo",
 		"data/ui/logo_shape.txt",
 		"data/ui/logo_brush.txt",
 		"data/ui/logo_palete.txt"
@@ -98,8 +98,8 @@ void init(void) {
 		"data/ui/copyright_brush.txt",
 		"data/ui/copyright_palete.txt"
 	);
-	set_sprite_position(AGE_CVS, game()->main, 0, 1024);
-	set_sprite_position(AGE_CVS, game()->subsidiary, 0, 1024);
+	set_sprite_visible(AGE_CVS, game()->main, FALSE);
+	set_sprite_visible(AGE_CVS, game()->subsidiary, FALSE);
 
 	set_canvas_controller(AGE_CVS, state_show_logo);
 }

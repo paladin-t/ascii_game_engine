@@ -82,6 +82,8 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 				if(_time >= _RAISING_RAIT) {
 					_time -= _RAISING_RAIT;
 					--_y;
+					set_sprite_visible(AGE_CVS, game()->main, TRUE);
+					set_sprite_visible(AGE_CVS, game()->subsidiary, TRUE);
 					set_sprite_position(AGE_CVS, game()->main, _x, _y);
 					set_sprite_position(AGE_CVS, game()->subsidiary, 0, _y + 20);
 					if(_y < 3) {
@@ -208,15 +210,67 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 }
 
 void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime) {
-	// TODO
+	s32 i = 0;
+	static Font f = { 1 };
+
+	for(i = 0; i < GAME_AREA_HEIGHT; ++i) {
+		put_char(_cvs, &f, 0, i, '#');
+		put_char(_cvs, &f, GAME_AREA_WIDTH, i, '#');
+	}
 }
 
 void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime) {
-	// TODO
 }
 
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_MAIN 1
+#define _S_BACK 2
 	s32 result = 0;
+	static s32 state = _S_DEFAULT;
+
+	update_input_context(AGE_IPT);
+
+	switch(state) {
+		case _S_DEFAULT:
+			game()->main = create_sprite(
+				AGE_CVS,
+				"ascii_hero",
+				"data/sprite/ascii_hero_shape.txt",
+				"data/sprite/ascii_hero_brush.txt",
+				"data/sprite/ascii_hero_palete.txt"
+			);
+			game()->boardTemplate = create_sprite(
+				AGE_CVS,
+				"board_template",
+				"data/sprite/board_shape.txt",
+				"data/sprite/board_brush.txt",
+				"data/sprite/board_palete.txt"
+			);
+			set_sprite_visible(AGE_CVS, game()->main, FALSE);
+			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
+			++state;
+			break;
+		case _S_MAIN:
+			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+				++state;
+			}
+			break;
+		case _S_BACK:
+			state = _S_DEFAULT;
+			stop_sound(AGE_SND, ST_BGM);
+			destroy_sprite(AGE_CVS, game()->boardTemplate);
+			game()->boardTemplate = 0;
+			set_canvas_controller(AGE_CVS, 0);
+			AGE_CVS->prevRender = 0;
+			AGE_CVS->postRender = 0;
+			clear_screen(AGE_CVS);
+			init();
+			break;
+	};
 
 	return result;
+#undef _S_DEFAULT
+#undef _S_MAIN
+#undef _S_BACK
 }

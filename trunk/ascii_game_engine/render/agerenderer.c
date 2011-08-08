@@ -401,7 +401,7 @@ void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
 		for(x = 0; x < _cvs->size.w; ++x) {
 			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
 			if(pixelc->color == ERASE_PIXEL_COLOR) {
-				set_color(_cvs, 0);
+				set_color(_cvs, get_mapped_color(0));
 				goto_xy(x, y);
 				putch(ERASE_PIXEL_SHAPE);
 				pixelc->color = 0;
@@ -795,6 +795,16 @@ void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...
 	printf(buf);
 }
 
+void put_char(Canvas* _cvs, Font* _font, s32 _x, s32 _y, s8 _ch) {
+	goto_xy(_x, _y);
+	if(_font) {
+		set_color(_cvs, _font->color);
+	} else {
+		set_color(_cvs, get_mapped_color(15));
+	}
+	putch(_ch);
+}
+
 Color get_mapped_color(s32 _index) {
 	Color result = ERASE_PIXEL_COLOR;
 
@@ -839,7 +849,7 @@ void clear_screen(Canvas* _cvs) {
 		for(x = 0; x < _cvs->size.w; ++x) {
 			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
 				
-			set_color(_cvs, 0);
+			set_color(_cvs, get_mapped_color(0));
 			goto_xy(x, y);
 			putch(ERASE_PIXEL_SHAPE);
 			pixelc->shape = 0;

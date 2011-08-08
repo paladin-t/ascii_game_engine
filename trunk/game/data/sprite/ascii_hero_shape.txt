@@ -1,26 +1,22 @@
-count: 5
+count: 4
 width: 5
 height: 3
 rate: 6
 
-@normal
-     
-     
- coc 
-
-     
-     
- cOc 
-
-     
+@walk
   O  
- ccc 
+ /|\ 
+ J L 
 
-     
-     
- cOc 
+  O  
+ /|\ 
+ J L 
 
-@end_normal
-     
-     
- coc 
+ _O_ 
+  |  
+ / \ 
+
+@end_walk
+ _O_ 
+  |  
+ / \ 
