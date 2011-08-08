@@ -229,6 +229,18 @@
 					RelativePath=".\data\sprite\blink_star_shape.txt"
 					>
 				</File>
+				<File
+					RelativePath=".\data\sprite\board_brush.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\board_palete.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\sprite\board_shape.txt"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="ui"

@@ -28,24 +28,40 @@
 
 #include "age.h"
 
-typedef enum AsciiHeroSpriteType {
-	AHST_WALK,
-	AHST_JUMP,
-	AHST_HURT,
-	AHST_FLIP,
-	AHST_COUNT,
-} AsciiHeroSpriteType;
+typedef enum AsciiHeroBoardType {
+	AHBT_SOLID,
+	AHBT_SPRING,
+	AHBT_SERRATION,
+	AHBT_OVERTURN,
+	AHBT_L_SCROLL,
+	AHBT_R_SCROLL,
+	AHBT_COUNT,
+} AsciiHeroBoardType;
+
+typedef struct BoardInfo {
+	const Str startFrame;
+	const Str endFrame;
+} BoardInfo;
+
+static const BoardInfo BOARD_INFO[AHBT_COUNT] = {
+	{ "solid", "end_solid" },
+	{ "spring", "end_spring" },
+	{ "serration", "end_serration" },
+	{ "overturn", "end_overturn" },
+	{ "l-scroll", "end_l-scroll" },
+	{ "r-scroll", "end_r-scroll" },
+};
 
 typedef struct AsciiHeroGame {
 	Sprite* main;
 	Sprite* subsidiary;
-	Sprite* spriteTemplates[AHST_COUNT];
-	Sprite** spritePool;
-	s32 spritePoolSize;
-	s32 spriteCount;
-	Sprite* (* add_sprite_by_type)(AsciiHeroSpriteType _type);
-	void (* add_sprite)(Sprite* _spr);
-	void (* remove_sprite)(Sprite* _spr);
+	Sprite* boardTemplate;
+	Sprite** boardPool;
+	s32 boardPoolSize;
+	s32 boardCount;
+	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
+	void (* add_board)(Sprite* _spr);
+	void (* remove_board)(Sprite* _spr);
 } AsciiHeroGame;
 
 AsciiHeroGame* game(void);

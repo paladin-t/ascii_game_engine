@@ -1,0 +1,26 @@
+count: 5
+width: 5
+height: 3
+rate: 6
+
+@normal
+     
+     
+ coc 
+
+     
+     
+ cOc 
+
+     
+  O  
+ ccc 
+
+     
+     
+ cOc 
+
+@end_normal
+     
+     
+ coc 

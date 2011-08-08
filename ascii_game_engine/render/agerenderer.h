@@ -490,6 +490,16 @@ AGE_API void set_sprite_physics_mode(Canvas* _cvs, Sprite* _spr, u32 _mode);
  * @param[in] _text - text to draw
  */
 AGE_API void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...);
+/**
+ * @brief draw a charactor on a canvas
+ *
+ * @param[in] _cvs  - canvas object
+ * @param[in] _font - drawing font
+ * @param[in] _x    - x position to draw
+ * @param[in] _y    - y position to draw
+ * @param[in] _ch   - charactor to draw
+ */
+AGE_API void put_char(Canvas* _cvs, Font* _font, s32 _x, s32 _y, s8 _ch);
 
 /**
  * @brief get a mapped color value
