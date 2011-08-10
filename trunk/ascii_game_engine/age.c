@@ -93,7 +93,7 @@ World* create_world(void) {
 	result->audio = create_sound_context();
 	result->input = create_input_context();
 	result->canvas = create_canvas(ST_DEFAULT_CANVAS_NAME);
-	set_cursor_visible(FALSE);
+	set_cursor_visible(result->canvas, FALSE);
 
 	mb_init();
 	_open_script(&result->script);
