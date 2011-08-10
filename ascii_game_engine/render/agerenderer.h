@@ -511,16 +511,18 @@ AGE_API Color get_mapped_color(s32 _index);
 /**
  * @brief set whether the console cursor is visible
  *
+ * @param[in] _cvs - canvas object
  * @param[in] _vis - whether the console cursor is visible
  */
-AGE_API void set_cursor_visible(bl _vis);
+AGE_API void set_cursor_visible(Canvas* _cvs, bl _vis);
 /**
  * @brief set the console cursor posotion to a given place
  *
- * @param[in] _x - x
- * @param[in] _y - y
+ * @param[in] _cvs - canvas object
+ * @param[in] _x   - x
+ * @param[in] _y   - y
  */
-AGE_API void goto_xy(s32 _x, s32 _y);
+AGE_API void goto_xy(Canvas* _cvs, s32 _x, s32 _y);
 /**
  * @brief set the console output color
  *

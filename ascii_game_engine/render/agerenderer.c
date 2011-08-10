@@ -402,12 +402,12 @@ void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
 			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
 			if(pixelc->color == ERASE_PIXEL_COLOR) {
 				set_color(_cvs, get_mapped_color(0));
-				goto_xy(x, y);
+				goto_xy(_cvs, x, y);
 				putch(ERASE_PIXEL_SHAPE);
 				pixelc->color = 0;
 			} else if(pixelc->shape) {
 				set_color(_cvs, pixelc->color);
-				goto_xy(x, y);
+				goto_xy(_cvs, x, y);
 				putch(pixelc->shape);
 			}
 		}
@@ -783,7 +783,7 @@ void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...
 	s8 buf[AGE_TXT_LEN];
 	Str pbuf = buf;
 	va_list argptr;
-	goto_xy(_x, _y);
+	goto_xy(_cvs, _x, _y);
 	if(_font) {
 		set_color(_cvs, _font->color);
 	} else {
@@ -796,7 +796,7 @@ void draw_string(Canvas* _cvs, Font* _font, s32 _x, s32 _y, const Str _text, ...
 }
 
 void put_char(Canvas* _cvs, Font* _font, s32 _x, s32 _y, s8 _ch) {
-	goto_xy(_x, _y);
+	goto_xy(_cvs, _x, _y);
 	if(_font) {
 		set_color(_cvs, _font->color);
 	} else {
@@ -815,7 +815,7 @@ Color get_mapped_color(s32 _index) {
 	return result;
 }
 
-void set_cursor_visible(bl _vis) {
+void set_cursor_visible(Canvas* _cvs, bl _vis) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cci;
 	GetConsoleCursorInfo(hOut, &cci);
@@ -823,7 +823,7 @@ void set_cursor_visible(bl _vis) {
 	SetConsoleCursorInfo(hOut, &cci);
 }
 
-void goto_xy(s32 _x, s32 _y) {
+void goto_xy(Canvas* _cvs, s32 _x, s32 _y) {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD pos;
 	pos.X = _x;
@@ -850,7 +850,7 @@ void clear_screen(Canvas* _cvs) {
 			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
 				
 			set_color(_cvs, get_mapped_color(0));
-			goto_xy(x, y);
+			goto_xy(_cvs, x, y);
 			putch(ERASE_PIXEL_SHAPE);
 			pixelc->shape = 0;
 			pixelc->brush = ERASE_PIXEL_SHAPE;
