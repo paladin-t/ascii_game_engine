@@ -33,6 +33,8 @@ static const Color COLOR_MAP[] = {
 	8,   9,   10,  11,  12,  13,  14,  15,
 };
 
+static Sprite* tobeRemoved = 0;
+
 static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 	s32 k = 0;
 
@@ -67,6 +69,19 @@ static s32 _destroy_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	_destroy_sprite_impl(spr->owner, spr);
+
+	return result;
+}
+
+static s32 _on_removing_sprite(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+
+	Sprite* spr = (Sprite*)_data;
+	if(spr != tobeRemoved) {
+		if(spr->onObjectRemoved) {
+			spr->onObjectRemoved(spr, tobeRemoved->owner, tobeRemoved);
+		}
+	}
 
 	return result;
 }
@@ -488,6 +503,10 @@ void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
 
 	spr = ht_find(_cvs->sprites, _spr->name);
 	if(spr) {
+		tobeRemoved = (Sprite*)spr->data;
+		ht_foreach(_cvs->sprites, _on_removing_sprite);
+		tobeRemoved = 0;
+
 		ht_remove(_cvs->sprites, spr->extra);
 		_destroy_sprite_impl(_cvs, _spr);
 	}

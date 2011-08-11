@@ -46,14 +46,15 @@ typedef enum Messages {
 /**
  * @brief message processing functor
  *
- * @param[in] _sender - the sender of this message
- * @param[in] _msg    - message type
- * @param[in] _lparam - first param
- * @param[in] _wparam - second param
- * @param[in] _extra  - extra data
+ * @param[in] _receiver - the receiver of this message
+ * @param[in] _sender   - the sender of this message
+ * @param[in] _msg      - message type
+ * @param[in] _lparam   - first param
+ * @param[in] _wparam   - second param
+ * @param[in] _extra    - extra data
  * @return - execution status
  */
-typedef s32 (* MessageProc)(Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+typedef s32 (* MessageProc)(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 /**
  * @brief message processing functor mapping structure
@@ -132,6 +133,19 @@ AGE_API void unregister_message_proc(MessageMap* _map, u32 _msg);
  */
 AGE_API void copy_message_map(MessageMap* _src, MessageMap* _tgt);
 
+/**
+ * @brief send a message to a sprite object
+ *
+ * @param[in] _func     - message processing functor
+ * @param[in] _receiver - target sprite object
+ * @param[in] _sender   - the sender of the message
+ * @param[in] _msg      - message type
+ * @param[in] _lparam   - first param
+ * @param[in] _wparam   - second param
+ * @param[in] _extra    - extra data
+ * @return - message sending status
+ */
+AGE_API s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 /**
  * @brief send a message to a sprite object
  *
