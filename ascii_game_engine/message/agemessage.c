@@ -186,13 +186,21 @@ void copy_message_map(MessageMap* _src, MessageMap* _tgt) {
 	_tempMsgMap = 0;
 }
 
+s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	result = _func(_receiver, _sender, _msg, _lparam, _wparam, _extra);
+
+	return result;
+}
+
 s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	MessageProc proc = 0;
 	
 	proc = get_sprite_message_proc(_receiver, _msg);
 	if(proc) {
-		proc(_sender, _msg, _lparam, _wparam, _extra);
+		result = proc(_receiver, _sender, _msg, _lparam, _wparam, _extra);
 	}
 
 	return result;
@@ -204,7 +212,7 @@ s32 send_message_to_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u3
 	
 	proc = get_sprite_message_proc(_receiver, _msg);
 	if(proc) {
-		proc(_sender, _msg, _lparam, _wparam, _extra);
+		result = proc(_receiver, _sender, _msg, _lparam, _wparam, _extra);
 	}
 
 	return result;
