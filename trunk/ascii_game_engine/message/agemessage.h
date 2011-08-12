@@ -65,6 +65,14 @@ typedef struct MessageMap {
 } MessageMap;
 
 /**
+ * @brief message processing object structure
+ */
+typedef struct MessageReceiver {
+	Ptr receiver;     /**< object */
+	MessageProc proc; /**< processing functor */
+} MessageReceiver;
+
+/**
  * @brief create a message map of a sprite
  *
  * @param[in] _obj - sprite object
@@ -146,6 +154,18 @@ AGE_API void copy_message_map(MessageMap* _src, MessageMap* _tgt);
  * @return - message sending status
  */
 AGE_API s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+/**
+ * @brief send a message to an object
+ *
+ * @param[in] _receiver - target object
+ * @param[in] _sender   - the sender of the message
+ * @param[in] _msg      - message type
+ * @param[in] _lparam   - first param
+ * @param[in] _wparam   - second param
+ * @param[in] _extra    - extra data
+ * @return - message sending status
+ */
+AGE_API s32 send_message_to_object(MessageReceiver* _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 /**
  * @brief send a message to a sprite object
  *
