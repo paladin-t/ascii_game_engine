@@ -194,6 +194,15 @@ s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg
 	return result;
 }
 
+s32 send_message_to_object(MessageReceiver* _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	assert(_receiver && _receiver->receiver && _receiver->proc);
+
+	result = _receiver->proc(_receiver->receiver, _sender, _msg, _lparam, _wparam, _extra);
+
+	return result;
+}
+
 s32 send_message_to_sprite(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	MessageProc proc = 0;
