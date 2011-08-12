@@ -208,6 +208,14 @@ typedef void (* SpriteUpdateFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
 typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 
 /**
+ * @brief user defined data
+ */
+typedef struct Userdata {
+	Ptr data;          /**< data */
+	Destroyer destroy; /**< data destroyer */
+} Userdata;
+
+/**
  * @brief sprite structure
  */
 typedef struct Sprite {
@@ -215,6 +223,7 @@ typedef struct Sprite {
 	Str name;                                   /**< name */
 	s32 visibility;                             /**< visibility */
 	AgeParamSet* params;                        /**< parameter set */
+	Userdata userdata;                          /**< user defined data */
 	Point position;                             /**< position */
 	Point oldPosition;                          /**< old position */
 	Size frameSize;                             /**< size of each frame */

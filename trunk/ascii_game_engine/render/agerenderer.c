@@ -59,6 +59,9 @@ static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 	if(_spr->timeLine.endName) {
 		AGE_FREE(_spr->timeLine.endName);
 	}
+	if(_spr->userdata.destroy) {
+		_spr->userdata.destroy(_spr->userdata.data);
+	}
 	destroy_paramset(_spr->params);
 	AGE_FREE(_spr->name);
 	AGE_FREE(_spr);
