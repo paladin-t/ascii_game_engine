@@ -23,61 +23,9 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __AGE_CONFIG_H__
-#define __AGE_CONFIG_H__
+#ifndef __LOGIC_H__
+#define __LOGIC_H__
 
-#include <assert.h>
-#include <malloc.h>
-#include <memory.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <conio.h>
-#include <windows.h>
-#include <crtdbg.h>
+#include "age.h"
 
-#ifdef _MSC_VER
-#	ifdef INTE_COMPILE
-#		define AGE_API __declspec(dllexport)
-#	else
-#		define AGE_API __declspec(dllimport)
-#	endif
-#	define AGE_INTERNAL
-#else
-#	define AGE_API __attribute__ ((visibility("default")))
-#	define AGE_INTERNAL __attribute__ ((visibility("hidden")))
-#endif
-
-#ifndef AGE_IMPL_CONSOLE
-#	define AGE_IMPL_CONSOLE 0
-#endif
-#ifndef AGE_IMPL_WIN32
-#	define AGE_IMPL_WIN32 1
-#endif
-
-#ifndef AGE_IMPL
-#	define AGE_IMPL AGE_IMPL_CONSOLE
-#endif
-
-#ifndef CANVAS_WIDTH
-#	define CANVAS_WIDTH 80
-#endif
-#ifndef CANVAS_HEIGHT
-#	define CANVAS_HEIGHT 25
-#endif
-
-#ifndef AGE_STR_LEN
-#	define AGE_STR_LEN 256
-#endif
-#ifndef AGE_TXT_LEN
-#	define AGE_TXT_LEN 10240
-#endif
-
-#ifndef EXPECTED_FPS
-#	define EXPECTED_FPS 60
-#endif
-#ifndef EXPECTED_FRAME_TIME
-#	define EXPECTED_FRAME_TIME (1000 / EXPECTED_FPS)
-#endif
-
-#endif /* __AGE_CONFIG_H__ */
+#endif /* __LOGIC_H__ */

@@ -31,6 +31,7 @@
 #include "age.h"
 #include "game.h"
 #include "state.h"
+#include "logic.h"
 
 static AsciiHeroGame _game;
 

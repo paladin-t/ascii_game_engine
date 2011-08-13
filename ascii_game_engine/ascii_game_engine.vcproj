@@ -264,6 +264,10 @@
 				RelativePath=".\input\ageinput.h"
 				>
 			</File>
+			<File
+				RelativePath=".\input\ageinput_win32.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="render"
@@ -274,6 +278,10 @@
 			</File>
 			<File
 				RelativePath=".\render\agerenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\render\agerenderer_win32.c"
 				>
 			</File>
 		</Filter>

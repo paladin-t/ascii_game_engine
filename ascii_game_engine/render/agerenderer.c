@@ -23,6 +23,8 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if AGE_IMPL == AGE_IMPL_CONSOLE
+
 #include "../common/ageallocator.h"
 #include "../common/ageutil.h"
 #include "../common/agestringtable.h"
@@ -885,3 +887,5 @@ void clear_screen(Canvas* _cvs) {
 
 	system("cls");
 }
+
+#endif /* AGE_IMPL == AGE_IMPL_CONSOLE */

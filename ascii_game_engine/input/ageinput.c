@@ -23,6 +23,8 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if AGE_IMPL == AGE_IMPL_CONSOLE
+
 #include "../common/ageutil.h"
 #include "../common/ageallocator.h"
 #include "ageinput.h"
@@ -92,3 +94,5 @@ bl is_key_down(Ptr _ctx, s32 _player, KeyIndex _keyIdx) {
 
 	return result;
 }
+
+#endif /* AGE_IMPL == AGE_IMPL_CONSOLE */

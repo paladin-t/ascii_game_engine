@@ -280,6 +280,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\logic.c"
+			>
+		</File>
+		<File
+			RelativePath=".\logic.h"
+			>
+		</File>
+		<File
 			RelativePath=".\state.c"
 			>
 		</File>
