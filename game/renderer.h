@@ -23,59 +23,16 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __GAME_H__
-#define __GAME_H__
+#ifndef __RENDERER_H__
+#define __RENDERER_H__
 
 #include "age.h"
 
-#define DEFAULT_LEVEL_DISTANCE 5
+#define GAME_AREA_WIDTH 60
+#define GAME_AREA_HEIGHT CANVAS_HEIGHT
 
-typedef enum AsciiHeroBoardType {
-	AHBT_SOLID,
-	AHBT_SPRING,
-	AHBT_SERRATION,
-	AHBT_OVERTURN,
-	AHBT_L_SCROLL,
-	AHBT_R_SCROLL,
-	AHBT_COUNT,
-} AsciiHeroBoardType;
+void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime);
 
-typedef struct BoardInfo {
-	const Str startFrame;
-	const Str endFrame;
-	struct {
-		s32 probMin;
-		s32 probMax;
-		AsciiHeroBoardType type;
-	};
-} BoardInfo;
+void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime);
 
-static const BoardInfo BOARD_INFO[AHBT_COUNT] = {
-	{ "solid", "end_solid", 0, 29, AHBT_SOLID },
-	{ "spring", "end_spring", 30, 39, AHBT_SPRING },
-	{ "serration", "end_serration", 40, 54, AHBT_SERRATION },
-	{ "overturn", "end_overturn", 55, 69, AHBT_OVERTURN },
-	{ "l-scroll", "end_l-scroll", 70, 79, AHBT_L_SCROLL },
-	{ "r-scroll", "end_r-scroll", 80, 89, AHBT_R_SCROLL },
-};
-
-typedef struct AsciiHeroGame {
-	Sprite* main;
-	Sprite* subsidiary;
-	Sprite* boardTemplate;
-	Sprite** boardPool;
-	s32 boardPoolSize;
-	s32 boardCount;
-	u32 lineCount;
-	u32 levelDistance;
-	AsciiHeroBoardType (* generate_board_type)(void);
-	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
-	void (* add_board)(Sprite* _spr);
-	void (* remove_board)(Sprite* _spr);
-} AsciiHeroGame;
-
-AsciiHeroGame* game(void);
-
-void init(void);
-
-#endif /* __GAME_H__ */
+#endif /* __RENDERER_H__ */

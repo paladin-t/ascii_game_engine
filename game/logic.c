@@ -26,3 +26,63 @@
 #include "logic.h"
 #include "game.h"
 #include "state.h"
+
+s32 ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 ctrl_for_sprite_board(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 common_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 common_msg_proc_for_sprite_main_player(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 common_msg_proc_for_sprite_board(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 on_playing_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
+	s32 result = 0;
+
+	return result;
+}
+
+s32 on_playing_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
+	s32 result = 0;
+
+	return result;
+}
+
+void on_removing_for_sprite_main_player(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr) {
+}
+
+void on_removing_for_sprite_board(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr) {
+}
+
+void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+}
+
+void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+}
+
+void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+}
+
+void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+}

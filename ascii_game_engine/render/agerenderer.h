@@ -219,26 +219,26 @@ typedef struct Userdata {
  * @brief sprite structure
  */
 typedef struct Sprite {
-	struct Canvas* owner;                       /**< owner canvas object */
-	Str name;                                   /**< name */
-	s32 visibility;                             /**< visibility */
-	AgeParamSet* params;                        /**< parameter set */
-	Userdata userdata;                          /**< user defined data */
-	Point position;                             /**< position */
-	Point oldPosition;                          /**< old position */
-	Size frameSize;                             /**< size of each frame */
-	TimeLine timeLine;                          /**< time line data */
-	CustomAnimation customAnimation;            /**< customized animation data */
-	f32 frameRate;                              /**< frame rate information */
-	s32 frameTick;                              /**< frame updating time tick count */
-	SpriteRemovingCallbackFunc onObjectRemoved; /**< sprite removing callback */
-	u32 physicsMode;                            /**< physics mode */
-	SpriteCollisionCallbackFunc collided;       /**< collided physics callback */
-	MessageMap messageMap;                      /**< message processing map */
-	ControlProc control;                        /**< controlling functor, for motion controlling */
-	SpriteUpdateFunc update;                    /**< updating functor, for animation controlling */
-	SpriteRenderFunc prevRender;                /**< fire rendering functor */
-	SpriteRenderFunc postRender;                /**< post rendering functor */
+	struct Canvas* owner;                     /**< owner canvas object */
+	Str name;                                 /**< name */
+	s32 visibility;                           /**< visibility */
+	AgeParamSet* params;                      /**< parameter set */
+	Userdata userdata;                        /**< user defined data */
+	Point position;                           /**< position */
+	Point oldPosition;                        /**< old position */
+	Size frameSize;                           /**< size of each frame */
+	TimeLine timeLine;                        /**< time line data */
+	CustomAnimation customAnimation;          /**< customized animation data */
+	f32 frameRate;                            /**< frame rate information */
+	s32 frameTick;                            /**< frame updating time tick count */
+	SpriteRemovingCallbackFunc objectRemoved; /**< sprite removing callback */
+	u32 physicsMode;                          /**< physics mode */
+	SpriteCollisionCallbackFunc collided;     /**< collided physics callback */
+	MessageMap messageMap;                    /**< message processing map */
+	ControlProc control;                      /**< controlling functor, for motion controlling */
+	SpriteUpdateFunc update;                  /**< updating functor, for animation controlling */
+	SpriteRenderFunc prevRender;              /**< fire rendering functor */
+	SpriteRenderFunc postRender;              /**< post rendering functor */
 } Sprite;
 
 /**

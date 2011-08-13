@@ -23,15 +23,18 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __STATE_H__
-#define __STATE_H__
+#include "renderer.h"
+#include "game.h"
 
-#include "age.h"
+void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime) {
+	s32 i = 0;
+	static Font f = { 1 };
 
-s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
+	for(i = 0; i < GAME_AREA_HEIGHT; ++i) {
+		put_char(_cvs, &f, 0, i, '#');
+		put_char(_cvs, &f, GAME_AREA_WIDTH, i, '#');
+	}
+}
 
-s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
-
-s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
-
-#endif /* __STATE_H__ */
+void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime) {
+}
