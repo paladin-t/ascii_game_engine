@@ -61,15 +61,15 @@ typedef s32 (* MessageProc)(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u
  */
 typedef struct MessageMap {
 	MessageProc fastTable[MESSAGE_TABLE_SIZE]; /**< functors cached in an array for fast accessing */
-	ht_node_t* procMap;                        /**< functors the array above cannot hold */
+	ht_node_t* procMap;                        /**< functors the array above cannot holds */
 } MessageMap;
 
 /**
  * @brief message processing object structure
  */
 typedef struct MessageReceiver {
-	Ptr receiver;     /**< object */
-	MessageProc proc; /**< processing functor */
+	Ptr receiver;           /**< object */
+	MessageMap* messageMap; /**< processing functor */
 } MessageReceiver;
 
 /**
@@ -102,10 +102,18 @@ AGE_API bl destroy_sprite_message_map(Ptr _obj);
 AGE_API bl destroy_canvas_message_map(Ptr _obj);
 
 /**
+ * @brief get a registered message processing functor in a message map
+ *
+ * @param[in] - _msgMap - message processing map
+ * @param[in] - _msg    - message type to get
+ * @return - processing functor
+ */
+AGE_API MessageProc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg);
+/**
  * @brief get a registered message processing functor of a sprite object
  *
  * @param[in] _obj - sprite object
- * @param[in] _msg - message type to be registered
+ * @param[in] _msg - message type to get
  * @return - processing functor
  */
 AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
@@ -113,7 +121,7 @@ AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
  * @brief get a registered message processing functor of a canvas object
  *
  * @param[in] _obj - canvas object
- * @param[in] _msg - message type to be registered
+ * @param[in] _msg - message type to get
  * @return - processing functor
  */
 AGE_API MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg);
@@ -130,7 +138,7 @@ AGE_API void register_message_proc(MessageMap* _map, u32 _msg, MessageProc _proc
  * @brief unregister a message processing functor of an object
  *
  * @param[in] _map - message map pointer
- * @param[in] _msg - message type to be registered
+ * @param[in] _msg - message type to be unregistered
  */
 AGE_API void unregister_message_proc(MessageMap* _map, u32 _msg);
 /**

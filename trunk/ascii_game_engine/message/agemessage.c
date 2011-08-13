@@ -107,18 +107,17 @@ bl destroy_canvas_message_map(Ptr _obj) {
 	return result;
 }
 
-MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
+MessageProc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg) {
 	MessageProc result = 0;
-	Sprite* spr = (Sprite*)_obj;
 	ht_node_t* pm = 0;
 	union { Ptr ptr; u32 uint; } u;
 
-	assert(_obj);
+	assert(_msgMap);
 
 	if(_msg < MESSAGE_TABLE_SIZE) {
-		result = spr->messageMap.fastTable[_msg];
+		result = _msgMap->fastTable[_msg];
 	} else {
-		pm = spr->messageMap.procMap;
+		pm = _msgMap->procMap;
 		u.uint = _msg;
 		ht_get(pm, u.ptr, (Ptr*)&result);
 	}
@@ -126,21 +125,24 @@ MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
 	return result;
 }
 
-MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg) {
+MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg) {
 	MessageProc result = 0;
-	Canvas* cvs = (Canvas*)_obj;
-	ht_node_t* pm = 0;
-	union { Ptr ptr; u32 uint; } u;
+	Sprite* spr = (Sprite*)_obj;
 
 	assert(_obj);
 
-	if(_msg < MESSAGE_TABLE_SIZE) {
-		result = cvs->messageMap.fastTable[_msg];
-	} else {
-		pm = cvs->messageMap.procMap;
-		u.uint = _msg;
-		ht_get(pm, u.ptr, (Ptr*)&result);
-	}
+	result = get_message_map_message_proc(&spr->messageMap, _msg);
+
+	return result;
+}
+
+MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg) {
+	MessageProc result = 0;
+	Canvas* cvs = (Canvas*)_obj;
+
+	assert(_obj);
+
+	result = get_message_map_message_proc(&cvs->messageMap, _msg);
 
 	return result;
 }
@@ -196,9 +198,14 @@ s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg
 
 s32 send_message_to_object(MessageReceiver* _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
-	assert(_receiver && _receiver->receiver && _receiver->proc);
+	MessageProc proc = 0;
 
-	result = _receiver->proc(_receiver->receiver, _sender, _msg, _lparam, _wparam, _extra);
+	assert(_receiver && _receiver->receiver && _receiver->messageMap);
+
+	proc = get_message_map_message_proc(_receiver->messageMap, _msg);
+	if(proc) {
+		result = proc(_receiver->receiver, _sender, _msg, _lparam, _wparam, _extra);
+	}
 
 	return result;
 }

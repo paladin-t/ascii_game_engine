@@ -52,32 +52,38 @@ static void _on_init(void) {
 	init();
 }
 
-static s32 _canvasControlProc(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
-	s32 result = 0;
-	Point pos = { 0, 0 };
-	get_sprite_position(AGE_CVS, game()->main, &pos.x, &pos.y);
+static AsciiHeroBoardType _generate_board_type(void) {
+	AsciiHeroBoardType result = AHBT_SOLID;
+	s32 probMax = 0;
+	s32 prob = 0;
+	s32 i = 0;
 
-	update_input_context(AGE_IPT);
-
-	if(is_key_down(AGE_IPT, 0, KC_ESC)) {
-		exit_world();
-	}
-	if(is_key_down(AGE_IPT, 0, KC_UP)) {
-		--pos.y;
-		set_sprite_position(AGE_CVS, game()->main, pos.x, pos.y);
-	} else if(is_key_down(AGE_IPT, 0, KC_DOWN)) {
-		++pos.y;
-		set_sprite_position(AGE_CVS, game()->main, pos.x, pos.y);
-	}
-	if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
-		--pos.x;
-		set_sprite_position(AGE_CVS, game()->main, pos.x, pos.y);
-	} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
-		++pos.x;
-		set_sprite_position(AGE_CVS, game()->main, pos.x, pos.y);
+	probMax = BOARD_INFO[_countof(BOARD_INFO) - 1].probMax;
+	prob = age_rand(0, probMax);
+	for(i = 0; i < _countof(BOARD_INFO); ++i) {
+		if(prob >= BOARD_INFO[i].probMin && prob <= BOARD_INFO[i].probMax) {
+			result = BOARD_INFO[i].type;
+			break;
+		}
 	}
 
 	return result;
+}
+
+static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
+	Sprite* result = 0;
+
+	// TODO
+
+	return result;
+}
+
+static void _add_board(Sprite* _spr) {
+	// TODO
+}
+
+static void _remove_board(Sprite* _spr) {
+	// TODO
 }
 
 AsciiHeroGame* game(void) {
@@ -85,6 +91,8 @@ AsciiHeroGame* game(void) {
 }
 
 void init(void) {
+	game()->levelDistance = DEFAULT_LEVEL_DISTANCE;
+
 	game()->main = create_sprite(
 		AGE_CVS,
 		"ascii_hero_go_logo",
@@ -103,6 +111,11 @@ void init(void) {
 	set_sprite_visible(AGE_CVS, game()->subsidiary, FALSE);
 
 	set_canvas_controller(AGE_CVS, state_show_logo);
+
+	game()->generate_board_type = _generate_board_type;
+	game()->add_board_by_type = _add_board_by_type;
+	game()->add_board = _add_board;
+	game()->remove_board = _remove_board;
 }
 
 s32 main(s32 argc, Str argv[]) {

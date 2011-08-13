@@ -176,14 +176,17 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 	} else {
 		assert("Unknown sound type");
 	}
-	if(thread && thread->threadHandle) {
-		TerminateThread(thread->threadHandle, 1);
-		WaitForSingleObject(thread->threadHandle, 10);
-		CloseHandle(thread->threadHandle);
-		thread->threadHandle = 0;
-		thread->threadId = 0;
-		if(_cnt->sequence) {
-			AGE_FREE(_cnt->sequence);
+	if(thread) {
+		thread->level = 1;
+		if(thread->threadHandle) {
+			TerminateThread(thread->threadHandle, 1);
+			WaitForSingleObject(thread->threadHandle, 10);
+			CloseHandle(thread->threadHandle);
+			thread->threadHandle = 0;
+			thread->threadId = 0;
+			if(_cnt->sequence) {
+				AGE_FREE(_cnt->sequence);
+			}
 		}
 	}
 }

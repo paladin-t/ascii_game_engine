@@ -24,6 +24,8 @@
 */
 
 #include "state.h"
+#include "logic.h"
+#include "renderer.h"
 #include "game.h"
 
 static void _draw_logo(s32 _time) {
@@ -209,19 +211,6 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #undef _S_BACK
 }
 
-void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime) {
-	s32 i = 0;
-	static Font f = { 1 };
-
-	for(i = 0; i < GAME_AREA_HEIGHT; ++i) {
-		put_char(_cvs, &f, 0, i, '#');
-		put_char(_cvs, &f, GAME_AREA_WIDTH, i, '#');
-	}
-}
-
-void main_canvas_post_render(Canvas* _cvs, s32 _elapsedTime) {
-}
-
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 #define _S_DEFAULT 0
 #define _S_MAIN 1
@@ -249,6 +238,14 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			);
 			set_sprite_visible(AGE_CVS, game()->main, FALSE);
 			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
+			set_sprite_controller(game()->main, ctrl_for_sprite_main_player);
+			set_sprite_controller(game()->boardTemplate, ctrl_for_sprite_board);
+			game()->main->objectRemoved = on_removing_for_sprite_main_player;
+			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
+			game()->main->collided = on_collide_for_sprite_main_player;
+			game()->boardTemplate->collided = on_collide_for_sprite_board;
+			game()->main->update = on_update_for_sprite_main_player;
+			game()->boardTemplate->update = on_update_for_sprite_board;
 			++state;
 			break;
 		case _S_MAIN:

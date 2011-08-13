@@ -83,8 +83,8 @@ static s32 _on_removing_sprite(Ptr _data, Ptr _extra) {
 
 	Sprite* spr = (Sprite*)_data;
 	if(spr != tobeRemoved) {
-		if(spr->onObjectRemoved) {
-			spr->onObjectRemoved(spr, tobeRemoved->owner, tobeRemoved);
+		if(spr->objectRemoved) {
+			spr->objectRemoved(spr, tobeRemoved->owner, tobeRemoved);
 		}
 	}
 
@@ -490,6 +490,7 @@ Sprite* clone_sprite(Canvas* _cvs, const Str _srcName, const Str _tgtName) {
 		result->physicsMode = src->physicsMode;
 		result->collided = src->collided;
 		result->control = src->control;
+		result->objectRemoved = src->objectRemoved;
 		result->update = src->update;
 		result->prevRender = src->prevRender;
 		result->postRender = src->postRender;
