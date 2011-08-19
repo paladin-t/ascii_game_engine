@@ -28,6 +28,7 @@
 
 #include "age.h"
 
+#define DEFAULT_LINE_UP_TIME 300
 #define DEFAULT_LEVEL_DISTANCE 5
 
 typedef enum AsciiHeroBoardType {
@@ -66,12 +67,15 @@ typedef struct AsciiHeroGame {
 	Sprite** boardPool;
 	s32 boardPoolSize;
 	s32 boardCount;
+	s32 time;
+	s32 lineUpTime;
 	u32 lineCount;
 	u32 levelDistance;
+	u32 levelCount;
 	AsciiHeroBoardType (* generate_board_type)(void);
 	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
-	void (* add_board)(Sprite* _spr);
-	void (* remove_board)(Sprite* _spr);
+	s32 (* remove_board)(Sprite* _spr);
+	s32 (* clear_board)(void);
 } AsciiHeroGame;
 
 AsciiHeroGame* game(void);

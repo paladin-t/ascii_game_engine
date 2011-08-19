@@ -648,6 +648,26 @@ bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl 
 	return result;
 }
 
+bl pause_sprite(Canvas* _cvs, Sprite* _spr) {
+	bl result = TRUE;
+
+	assert(_cvs && _spr);
+
+	_spr->timeLine.pause = TRUE;
+
+	return result;
+}
+
+bl resume_sprite(Canvas* _cvs, Sprite* _spr) {
+	bl result = TRUE;
+
+	assert(_cvs && _spr);
+
+	_spr->timeLine.pause = FALSE;
+
+	return result;
+}
+
 bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt) {
 	bl result = TRUE;
 
@@ -673,23 +693,26 @@ bl stop_sprite(Canvas* _cvs, Sprite* _spr, s32 _stopAt) {
 void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	s32 tickableTime = 0;
 
-	tickableTime = (s32)(_cvs->frameRate * _spr->frameRate);
-	_spr->frameTick += _elapsedTime;
-	if(_spr->frameTick >= tickableTime) {
-		_spr->frameTick -= tickableTime;
-		++_spr->timeLine.currentFrame;
-		if(_spr->timeLine.beginName && _spr->timeLine.endName) {
-			if(_spr->timeLine.currentFrame >= _spr->timeLine.endIndex) {
-				if(_spr->timeLine.callback) {
-					_spr->timeLine.callback(_cvs, _spr, _spr->timeLine.beginName, _spr->timeLine.endName, _spr->timeLine.currentFrame);
+	assert(_cvs && _spr);
+	if(!_spr->timeLine.pause) {
+		tickableTime = (s32)(_cvs->frameRate * _spr->frameRate);
+		_spr->frameTick += _elapsedTime;
+		if(_spr->frameTick >= tickableTime) {
+			_spr->frameTick -= tickableTime;
+			++_spr->timeLine.currentFrame;
+			if(_spr->timeLine.beginName && _spr->timeLine.endName) {
+				if(_spr->timeLine.currentFrame >= _spr->timeLine.endIndex) {
+					if(_spr->timeLine.callback) {
+						_spr->timeLine.callback(_cvs, _spr, _spr->timeLine.beginName, _spr->timeLine.endName, _spr->timeLine.currentFrame);
+					}
+					if(_spr->timeLine.loop) {
+						_spr->timeLine.currentFrame = _spr->timeLine.beginIndex;
+					}
 				}
-				if(_spr->timeLine.loop) {
-					_spr->timeLine.currentFrame = _spr->timeLine.beginIndex;
+			} else {
+				if(_spr->timeLine.currentFrame >= _spr->timeLine.frameCount) {
+					_spr->timeLine.currentFrame = 0;
 				}
-			}
-		} else {
-			if(_spr->timeLine.currentFrame >= _spr->timeLine.frameCount) {
-				_spr->timeLine.currentFrame = 0;
 			}
 		}
 	}

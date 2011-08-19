@@ -98,5 +98,8 @@ AGE_API void age_free(Ptr _ptr);
 #ifndef AGE_REALLOC
 #	define AGE_REALLOC(_type, _ptr, _size) ((_type*)age_realloc(_ptr, _size))
 #endif
+#ifndef AGE_REALLOC_N
+#	define AGE_REALLOC_N(_type, _ptr, _count) ((_type*)age_realloc(_ptr, sizeof(_type) * _count))
+#endif
 
 #endif /* __AGE_ALLOCATOR_H__ */
