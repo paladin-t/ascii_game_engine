@@ -252,6 +252,12 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
 				++state;
 			}
+
+			game()->time += _elapsedTime;
+			if(game()->time >= game()->lineUpTime) {
+				game()->time -= game()->lineUpTime;
+				// TODO
+			}
 			break;
 		case _S_BACK:
 			state = _S_DEFAULT;

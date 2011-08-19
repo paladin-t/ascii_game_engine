@@ -159,6 +159,7 @@ typedef struct TimeLine {
 	Str endName;                        /**< end frame name */
 	s32 beginIndex;                     /**< begin frame index */
 	s32 endIndex;                       /**< end frame index */
+	bl pause;                           /**< whether paused */
 	bl loop;                            /**< whether loop between begin and end frame */
 	SpritePlayingCallbackFunc callback; /**< sprite playing event callback functor */
 } TimeLine;
@@ -447,6 +448,22 @@ AGE_API s32 get_named_frame_index(Canvas* _cvs, Sprite* _spr, const Str _name);
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, SpritePlayingCallbackFunc _cb);
+/**
+ * @brief pause an animation of a time line
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl pause_sprite(Canvas* _cvs, Sprite* _spr);
+/**
+ * @brief resume an animation of a time line
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _spr - sprite object
+ * @return - return TRUE if succeed, or FALSE if failed
+ */
+AGE_API bl resume_sprite(Canvas* _cvs, Sprite* _spr);
 /**
  * @brief stop an animation of a time line
  *

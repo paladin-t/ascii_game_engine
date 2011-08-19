@@ -29,6 +29,22 @@
 #include "../age.h"
 #include "agescriptapi.h"
 
+bl register_func(mb_interpreter_t* s, const Str n, mb_func_t f) {
+	bl result = TRUE;
+
+	result = !!mb_register_func(s, n, f);
+
+	return result;
+}
+
+bl unregister_func(mb_interpreter_t* s, const Str n) {
+	bl result = TRUE;
+
+	result = !!mb_remove_func(s, n);
+
+	return result;
+}
+
 int age_api_beep(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;
 

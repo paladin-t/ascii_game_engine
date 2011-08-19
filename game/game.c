@@ -38,12 +38,20 @@ static AsciiHeroGame _game;
 static void _on_exit(void) {
 	s32 c = 0;
 
+	if(game()->clear_board) {
+		game()->clear_board();
+	}
 	destroy_world();
 
 	c = _CrtDumpMemoryLeaks();
 
 	if(0 != c) {
+#ifdef _DEBUG
 		_asm int 3
+#else
+		printf("Memory leak detected.\n");
+		system("pause");
+#endif
 	}
 }
 
@@ -72,18 +80,67 @@ static AsciiHeroBoardType _generate_board_type(void) {
 
 static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 	Sprite* result = 0;
+	static u32 boardId = 0;
+	s8 newName[AGE_STR_LEN];
 
-	// TODO
+	assert(_type >= 0 && _type < AHBT_COUNT);
+	++game()->boardCount;
+	if(game()->boardCount > game()->boardPoolSize) {
+		AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardCount);
+	}
+	sprintf(newName, "board_%u", boardId++);
+	result = clone_sprite(AGE_CVS, game()->boardTemplate->name, newName);
+	game()->boardPool[game()->boardCount - 1] = result;
+	play_sprite(
+		AGE_CVS,
+		result,
+		BOARD_INFO[_type].startFrame,
+		BOARD_INFO[_type].endFrame,
+		FALSE,
+		on_playing_for_sprite_board
+	);
+	pause_sprite(AGE_CVS, result);
 
 	return result;
 }
 
-static void _add_board(Sprite* _spr) {
-	// TODO
+static s32 _remove_board(Sprite* _spr) {
+	s32 result = 0;
+	s32 i = 0;
+	Sprite* b = 0;
+
+	for(i = 0; i < game()->boardCount; ++i) {
+		b = game()->boardPool[i];
+		if(b == _spr) {
+			--game()->boardCount;
+			if(game()->boardCount) {
+				game()->boardPool[i] = game()->boardPool[game()->boardCount];
+			}
+			destroy_sprite(AGE_CVS, b);
+			++result;
+			break;
+		}
+	}
+
+	return result;
 }
 
-static void _remove_board(Sprite* _spr) {
-	// TODO
+static s32 _clear_board(void) {
+	s32 result = 0;
+	s32 i = 0;
+	Sprite* b = 0;
+
+	for(i = 0; i < game()->boardCount; ++i) {
+		b = game()->boardPool[i];
+		game()->boardPool[i] = 0;
+		destroy_sprite(AGE_CVS, b);
+		++result;
+	}
+	if(game()->boardPool) {
+		AGE_FREE_N(game()->boardPool);
+	}
+
+	return result;
 }
 
 AsciiHeroGame* game(void) {
@@ -114,8 +171,11 @@ void init(void) {
 
 	game()->generate_board_type = _generate_board_type;
 	game()->add_board_by_type = _add_board_by_type;
-	game()->add_board = _add_board;
 	game()->remove_board = _remove_board;
+	game()->clear_board = _clear_board;
+
+	game()->time = 0;
+	game()->lineUpTime = DEFAULT_LINE_UP_TIME;
 }
 
 s32 main(s32 argc, Str argv[]) {
