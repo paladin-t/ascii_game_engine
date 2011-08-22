@@ -1,5 +1,5 @@
 /*
-** This source file is part of MY-BASIC
+** This source file is part of AGE
 **
 ** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
@@ -27,6 +27,8 @@
 #define __STATE_H__
 
 #include "age.h"
+
+s32 state_show_splash(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 

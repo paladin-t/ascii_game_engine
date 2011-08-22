@@ -1,5 +1,5 @@
 /*
-** This source file is part of MY-BASIC
+** This source file is part of AGE
 **
 ** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
