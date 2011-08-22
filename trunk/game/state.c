@@ -1,5 +1,5 @@
 /*
-** This source file is part of MY-BASIC
+** This source file is part of AGE
 **
 ** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
@@ -46,6 +46,88 @@ static void _draw_logo(s32 _time) {
 		set_sprite_pixel_color(AGE_CVS, game()->main, 0, i, j, get_mapped_color(15));
 		++j;
 	}
+}
+
+s32 state_show_splash(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_TATE_1 1
+#define _S_TATE_2 2
+#define _S_TATE_3 3
+#define _S_TATE_4 4
+	static const Str _SPLASH = "A Tony's Toy Game";
+	static const Color _COLORS[] = { 0, 7, 8, 15 };
+	static const s32 _PHASE_TIME = 800;
+	static Font f;
+
+	s32 result = 0;
+	static s32 state = _S_DEFAULT;
+	static s32 time = 0;
+	static s32 ci = 0;
+
+	time += _elapsedTime;
+
+	switch(state) {
+		case _S_DEFAULT:
+			{
+				if(time >= _PHASE_TIME) {
+					ci = 1;
+					++state;
+				} else {
+					if(time % (s32)(_PHASE_TIME / 2.0f) < (s32)(_PHASE_TIME / 3.0f)) {
+						ci = age_rand(0, _countof(_COLORS));
+					}
+				}
+			}
+			break;
+		case _S_TATE_1:
+			{
+				if(time >= _PHASE_TIME * 2) {
+					++state;
+				}
+			}
+			break;
+		case _S_TATE_2:
+			{
+				if(time >= _PHASE_TIME * 3) {
+					++state;
+				} else {
+					if(time % (s32)(_PHASE_TIME / 3.0f) < (s32)(_PHASE_TIME / 5.0f)) {
+						ci = 3;
+					}
+				}
+			}
+			break;
+		case _S_TATE_3:
+			{
+				if(time >= _PHASE_TIME * 4) {
+					ci = 0;
+					++state;
+				} else {
+					if(time % (s32)(_PHASE_TIME / 2.0f) < (s32)(_PHASE_TIME / 3.0f)) {
+						ci = age_rand(0, _countof(_COLORS));
+					}
+				}
+			}
+			break;
+		case _S_TATE_4:
+			{
+				if(time >= _PHASE_TIME * 5) {
+					state = _S_DEFAULT;
+					set_canvas_controller(AGE_CVS, state_show_logo);
+				}
+			}
+			break;
+	}
+
+	f.color = get_mapped_color(_COLORS[ci]);
+	draw_string(AGE_CVS, &f, 31, 11, _SPLASH);
+
+	return result;
+#undef _S_DEFAULT
+#undef _S_TATE_1
+#undef _S_TATE_2
+#undef _S_TATE_3
+#undef _S_TATE_4
 }
 
 s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
@@ -249,14 +331,27 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			++state;
 			break;
 		case _S_MAIN:
-			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
-				++state;
-			}
+			{
+				AsciiHeroBoardType bt = AHBT_SOLID;
+				Sprite* bd = 0;
 
-			game()->time += _elapsedTime;
-			if(game()->time >= game()->lineUpTime) {
-				game()->time -= game()->lineUpTime;
-				// TODO
+				if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+					++state;
+				}
+
+				game()->time += _elapsedTime;
+				if(game()->time >= game()->lineUpTime) {
+					game()->time -= game()->lineUpTime;
+					++game()->lineCount;
+					if(!(game()->lineCount % game()->levelDistance) && !game()->levelGenerated) {
+						game()->levelGenerated = TRUE;
+					} else if(game()->lineCount % game()->levelDistance) {
+						game()->levelGenerated = FALSE;
+					}
+					bt = game()->generate_board_type();
+					//bd = game()->add_board_by_type(bt);
+					// TODO : level up
+				}
 			}
 			break;
 		case _S_BACK:
@@ -269,6 +364,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			AGE_CVS->postRender = 0;
 			clear_screen(AGE_CVS);
 			init();
+			set_canvas_controller(AGE_CVS, state_show_logo);
 			break;
 	};
 

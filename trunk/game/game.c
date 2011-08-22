@@ -1,5 +1,5 @@
 /*
-** This source file is part of MY-BASIC
+** This source file is part of AGE
 **
 ** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
@@ -86,7 +86,7 @@ static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 	assert(_type >= 0 && _type < AHBT_COUNT);
 	++game()->boardCount;
 	if(game()->boardCount > game()->boardPoolSize) {
-		AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardCount);
+		game()->boardPool = AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardCount);
 	}
 	sprintf(newName, "board_%u", boardId++);
 	result = clone_sprite(AGE_CVS, game()->boardTemplate->name, newName);
@@ -167,7 +167,7 @@ void init(void) {
 	set_sprite_visible(AGE_CVS, game()->main, FALSE);
 	set_sprite_visible(AGE_CVS, game()->subsidiary, FALSE);
 
-	set_canvas_controller(AGE_CVS, state_show_logo);
+	set_canvas_controller(AGE_CVS, state_show_splash);
 
 	game()->generate_board_type = _generate_board_type;
 	game()->add_board_by_type = _add_board_by_type;

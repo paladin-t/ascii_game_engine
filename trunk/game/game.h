@@ -1,5 +1,5 @@
 /*
-** This source file is part of MY-BASIC
+** This source file is part of AGE
 **
 ** For the latest info, see http://code.google.com/p/ascii-game-engine/
 **
@@ -72,6 +72,7 @@ typedef struct AsciiHeroGame {
 	u32 lineCount;
 	u32 levelDistance;
 	u32 levelCount;
+	bl levelGenerated;
 	AsciiHeroBoardType (* generate_board_type)(void);
 	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
 	s32 (* remove_board)(Sprite* _spr);
