@@ -31,16 +31,16 @@
 #include "../common/agelist.h"
 #include "../common/agehashtable.h"
 
-#define MESSAGE_TABLE_SIZE 8
+#define MESSAGE_TABLE_SIZE 32
 
 /**
  * @brief enum messages
  */
 typedef enum Messages {
-	MSG_GET_PROP, /**< get a property from an object */
-	MSG_SET_PROP, /**< set a property from an object */
+	MSG_GET_PROP,  /**< get a property from an object */
+	MSG_SET_PROP,  /**< set a property from an object */
 
-	MSG_USER,     /**< beginning of user defined message */
+	MSG_USER = 64, /**< beginning of user defined message */
 } Messages;
 
 /**
@@ -104,8 +104,8 @@ AGE_API bl destroy_canvas_message_map(Ptr _obj);
 /**
  * @brief get a registered message processing functor in a message map
  *
- * @param[in] - _msgMap - message processing map
- * @param[in] - _msg    - message type to get
+ * @param[in] _msgMap - message processing map
+ * @param[in] _msg    - message type to get
  * @return - processing functor
  */
 AGE_API MessageProc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg);

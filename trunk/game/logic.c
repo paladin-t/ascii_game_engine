@@ -27,6 +27,26 @@
 #include "game.h"
 #include "state.h"
 
+typedef struct MessageContext {
+	Ptr receiver;
+	Ptr sender;
+	u32 msg;
+	u32 lparam;
+	u32 wparam;
+	Ptr extra;
+} MessageContext;
+
+static MessageContext lastMsg;
+
+static s32 _broadcast_message_to_sprite(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+
+	Sprite* spr = (Sprite*)_data;
+	send_message_to_sprite(spr, lastMsg.receiver, lastMsg.msg, lastMsg.lparam, lastMsg.wparam, lastMsg.extra);
+
+	return result;
+}
+
 s32 ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
@@ -41,6 +61,22 @@ s32 ctrl_for_sprite_board(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lpar
 
 s32 common_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
+	Canvas* cvs = (Canvas*)_receiver;
+
+	lastMsg.receiver = _receiver;
+	lastMsg.sender = _sender;
+	lastMsg.msg = _msg;
+	lastMsg.lparam = _lparam;
+	lastMsg.wparam = _wparam;
+	lastMsg.extra = _extra;
+
+	assert(cvs && cvs->sprites);
+
+	switch(_msg) {
+		case MSG_BOARD_UP:
+			ht_foreach(cvs->sprites, _broadcast_message_to_sprite);
+			break;
+	}
 
 	return result;
 }

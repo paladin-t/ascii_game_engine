@@ -30,6 +30,20 @@
 
 static MessageMap* _tempMsgMap = 0;
 
+static s32 _ht_cmp_msg(Ptr d1, Ptr d2) {
+	u32 i1 = (u32)d1;
+	u32 i2 = (u32)d2;
+	s32 i = (s64)i1 - (s64)i2;
+	s32 result = 0;
+	if(i < 0) {
+		result = -1;
+	} else if(i > 0) {
+		result = 1;
+	}
+
+	return result;
+}
+
 static s32 _copy_message_map(Ptr _data, Ptr _extra) {
 	s32 result = 0;
 	MessageProc proc = 0;
@@ -54,7 +68,7 @@ bl create_sprite_message_map(Ptr _obj) {
 	if(spr->messageMap.procMap) {
 		result = FALSE;
 	} else {
-		spr->messageMap.procMap = ht_create(0, ht_cmp_ptr, ht_hash_ptr, 0);
+		spr->messageMap.procMap = ht_create(0, _ht_cmp_msg, ht_hash_ptr, 0);
 	}
 
 	return result;
@@ -69,7 +83,7 @@ bl create_canvas_message_map(Ptr _obj) {
 	if(cvs->messageMap.procMap) {
 		result = FALSE;
 	} else {
-		cvs->messageMap.procMap = ht_create(0, ht_cmp_ptr, ht_hash_ptr, 0);
+		cvs->messageMap.procMap = ht_create(0, _ht_cmp_msg, ht_hash_ptr, 0);
 	}
 
 	return result;
@@ -226,7 +240,7 @@ s32 send_message_to_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u3
 	s32 result = 0;
 	MessageProc proc = 0;
 	
-	proc = get_sprite_message_proc(_receiver, _msg);
+	proc = get_canvas_message_proc(_receiver, _msg);
 	if(proc) {
 		result = proc(_receiver, _sender, _msg, _lparam, _wparam, _extra);
 	}
