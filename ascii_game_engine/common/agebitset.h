@@ -37,17 +37,17 @@ typedef struct Bitset {
 	u32* raw;
 } Bitset;
 
-AGE_INTERNAL Bitset* bs_create(s32 _size);
-AGE_INTERNAL void bs_destroy(Bitset* _bs);
-AGE_INTERNAL void bs_clear(Bitset* _bs);
-AGE_INTERNAL void bs_set_bit(Bitset* _bs, s32 _pos, bl _val);
-AGE_INTERNAL void bs_set_all_bits(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL bl bs_get_bit(Bitset* _bs, s32 _pos);
-AGE_INTERNAL bl bs_empty(Bitset* _bs);
-AGE_INTERNAL bl bs_equals(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL void bs_arithmetic_and(Bitset* _bs, Bitset* _other, Bitset* _result);
-AGE_INTERNAL void bs_arithmetic_or(Bitset* _bs, Bitset* _other, Bitset* _result);
-AGE_INTERNAL bl bs_logic_and(Bitset* _bs, Bitset* _other);
-AGE_INTERNAL bl bs_logic_or(Bitset* _bs, Bitset* _other);
+AGE_API Bitset* bs_create(s32 _size);
+AGE_API void bs_destroy(Bitset* _bs);
+AGE_API void bs_clear(Bitset* _bs);
+AGE_API void bs_set_bit(Bitset* _bs, s32 _pos, bl _val);
+AGE_API void bs_set_all_bits(Bitset* _bs, Bitset* _other);
+AGE_API bl bs_get_bit(Bitset* _bs, s32 _pos);
+AGE_API bl bs_empty(Bitset* _bs);
+AGE_API bl bs_equals(Bitset* _bs, Bitset* _other);
+AGE_API void bs_arithmetic_and(Bitset* _bs, Bitset* _other, Bitset* _result);
+AGE_API void bs_arithmetic_or(Bitset* _bs, Bitset* _other, Bitset* _result);
+AGE_API bl bs_logic_and(Bitset* _bs, Bitset* _other);
+AGE_API bl bs_logic_or(Bitset* _bs, Bitset* _other);
 
 #endif /* __AGE_BITSET_H__ */

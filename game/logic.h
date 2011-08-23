@@ -28,6 +28,11 @@
 
 #include "age.h"
 
+typedef enum UserMessages {
+	MSG_USER_BEGIN = MSG_USER + 1,
+	MSG_BOARD_UP,
+}UserMessages;
+
 s32 ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
 s32 ctrl_for_sprite_board(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);

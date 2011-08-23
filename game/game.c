@@ -176,6 +176,8 @@ void init(void) {
 
 	game()->time = 0;
 	game()->lineUpTime = DEFAULT_LINE_UP_TIME;
+
+	register_message_proc(&AGE_CVS->messageMap, MSG_BOARD_UP, common_msg_proc_for_canvas);
 }
 
 s32 main(s32 argc, Str argv[]) {

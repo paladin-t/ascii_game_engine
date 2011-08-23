@@ -344,13 +344,13 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 					game()->time -= game()->lineUpTime;
 					++game()->lineCount;
 					if(!(game()->lineCount % game()->levelDistance) && !game()->levelGenerated) {
+						bt = game()->generate_board_type();
+						//bd = game()->add_board_by_type(bt);
 						game()->levelGenerated = TRUE;
 					} else if(game()->lineCount % game()->levelDistance) {
 						game()->levelGenerated = FALSE;
 					}
-					bt = game()->generate_board_type();
-					//bd = game()->add_board_by_type(bt);
-					// TODO : level up
+					send_message_to_canvas(AGE_CVS, 0, MSG_BOARD_UP, 0, 0, 0);
 				}
 			}
 			break;
