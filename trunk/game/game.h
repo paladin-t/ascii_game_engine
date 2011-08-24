@@ -75,6 +75,7 @@ typedef struct AsciiHeroGame {
 	bl levelGenerated;
 	AsciiHeroBoardType (* generate_board_type)(void);
 	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
+	s32 (* drop_board)(Sprite* _spr);
 	s32 (* remove_board)(Sprite* _spr);
 	s32 (* clear_board)(void);
 } AsciiHeroGame;

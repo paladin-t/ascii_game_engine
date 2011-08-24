@@ -320,8 +320,8 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			);
 			set_sprite_visible(AGE_CVS, game()->main, FALSE);
 			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
-			set_sprite_controller(game()->main, ctrl_for_sprite_main_player);
-			set_sprite_controller(game()->boardTemplate, ctrl_for_sprite_board);
+			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
+			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
 			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
 			game()->main->collided = on_collide_for_sprite_main_player;
@@ -334,6 +334,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			{
 				AsciiHeroBoardType bt = AHBT_SOLID;
 				Sprite* bd = 0;
+				s32 left = 0;
 
 				if(is_key_down(AGE_IPT, 0, KC_ESC)) {
 					++state;
@@ -345,7 +346,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 					++game()->lineCount;
 					if(!(game()->lineCount % game()->levelDistance) && !game()->levelGenerated) {
 						bt = game()->generate_board_type();
-						//bd = game()->add_board_by_type(bt);
+						bd = game()->add_board_by_type(bt);
+						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - bd->frameSize.w);
+						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
 						game()->levelGenerated = TRUE;
 					} else if(game()->lineCount % game()->levelDistance) {
 						game()->levelGenerated = FALSE;
@@ -357,7 +360,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 		case _S_BACK:
 			state = _S_DEFAULT;
 			stop_sound(AGE_SND, ST_BGM);
+			destroy_sprite(AGE_CVS, game()->main);
 			destroy_sprite(AGE_CVS, game()->boardTemplate);
+			game()->clear_board();
 			game()->boardTemplate = 0;
 			set_canvas_controller(AGE_CVS, 0);
 			AGE_CVS->prevRender = 0;
