@@ -47,21 +47,38 @@ static s32 _broadcast_message_to_sprite(Ptr _data, Ptr _extra) {
 	return result;
 }
 
-s32 ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+BoardUserdata* create_board_userdata(void) {
+	BoardUserdata* result = 0;
+
+	result = AGE_MALLOC(BoardUserdata);
+
+	return result;
+}
+
+void destroy_board_userdata(Ptr _ptr) {
+	BoardUserdata* ud = (BoardUserdata*)_ptr;
+	assert(ud);
+	AGE_FREE(ud);
+}
+
+s32 on_ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
 	return result;
 }
 
-s32 ctrl_for_sprite_board(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+s32 on_ctrl_for_sprite_board(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
 	return result;
 }
 
-s32 common_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+s32 on_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 	Canvas* cvs = (Canvas*)_receiver;
+	BoardUserdata* ud = 0;
+	Sprite* b = 0;
+	s32 i = 0;
 
 	lastMsg.receiver = _receiver;
 	lastMsg.sender = _sender;
@@ -75,19 +92,27 @@ s32 common_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam
 	switch(_msg) {
 		case MSG_BOARD_UP:
 			ht_foreach(cvs->sprites, _broadcast_message_to_sprite);
+			for(i = 0; i < game()->boardCount; ++i) {
+				b = game()->boardPool[i];
+				ud = (BoardUserdata*)b->userdata.data;
+				assert(ud);
+				if(ud->drop) {
+					game()->remove_board(b);
+				}
+			}
 			break;
 	}
 
 	return result;
 }
 
-s32 common_msg_proc_for_sprite_main_player(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+s32 on_msg_proc_for_sprite_main_player(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
 	return result;
 }
 
-s32 common_msg_proc_for_sprite_board(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+s32 on_msg_proc_for_sprite_board(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
 	return result;
@@ -121,4 +146,24 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 }
 
 void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+}
+
+s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	Sprite* spr = (Sprite*)_receiver;
+	Canvas* cvs = (Canvas*)_sender;
+	s32 x = 0;
+	s32 y = 0;
+
+	assert(_msg == MSG_BOARD_UP);
+
+	get_sprite_position(cvs, spr, &x, &y);
+	--y;
+	if(y < -spr->frameSize.h) {
+		game()->drop_board(spr);
+	} else {
+		set_sprite_position(cvs, spr, x, y);
+	}
+
+	return result;
 }

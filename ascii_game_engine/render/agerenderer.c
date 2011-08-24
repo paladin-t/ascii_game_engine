@@ -62,6 +62,7 @@ static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 		AGE_FREE(_spr->timeLine.endName);
 	}
 	if(_spr->userdata.destroy) {
+		assert(_spr->userdata.data);
 		_spr->userdata.destroy(_spr->userdata.data);
 	}
 	destroy_paramset(_spr->params);
@@ -465,7 +466,7 @@ Sprite* create_sprite(Canvas* _cvs, const Str _name, const Str _shapeFile, const
 		create_sprite_message_map(result);
 
 		sprites = _cvs->sprites;
-		ht_set_or_insert(sprites, _name, result);
+		ht_set_or_insert(sprites, result->name, result);
 	}
 
 	return result;

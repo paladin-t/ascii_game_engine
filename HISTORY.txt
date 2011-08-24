@@ -1,3 +1,6 @@
+Aug. 25 2011
+Implemented basic board logic.
+
 Aug. 11 2011
 Added sprite removing callback.
 

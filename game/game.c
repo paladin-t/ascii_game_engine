@@ -86,11 +86,15 @@ static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 	assert(_type >= 0 && _type < AHBT_COUNT);
 	++game()->boardCount;
 	if(game()->boardCount > game()->boardPoolSize) {
-		game()->boardPool = AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardCount);
+		game()->boardPoolSize = game()->boardCount + 8;
+		game()->boardPool = AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardPoolSize);
 	}
 	sprintf(newName, "board_%u", boardId++);
 	result = clone_sprite(AGE_CVS, game()->boardTemplate->name, newName);
+	result->userdata.data = create_board_userdata();
+	result->userdata.destroy = destroy_board_userdata;
 	game()->boardPool[game()->boardCount - 1] = result;
+	register_message_proc(&result->messageMap, MSG_BOARD_UP, on_msg_proc_for_sprite_board_up);
 	play_sprite(
 		AGE_CVS,
 		result,
@@ -100,6 +104,16 @@ static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 		on_playing_for_sprite_board
 	);
 	pause_sprite(AGE_CVS, result);
+
+	return result;
+}
+
+static s32 _drop_board(Sprite* _spr) {
+	s32 result = 0;
+
+	BoardUserdata* ud = (BoardUserdata*)_spr->userdata.data;
+	assert(ud);
+	ud->drop = TRUE;
 
 	return result;
 }
@@ -137,6 +151,8 @@ static s32 _clear_board(void) {
 		++result;
 	}
 	if(game()->boardPool) {
+		game()->boardCount = 0;
+		game()->boardPoolSize = 0;
 		AGE_FREE_N(game()->boardPool);
 	}
 
@@ -171,13 +187,14 @@ void init(void) {
 
 	game()->generate_board_type = _generate_board_type;
 	game()->add_board_by_type = _add_board_by_type;
+	game()->drop_board = _drop_board;
 	game()->remove_board = _remove_board;
 	game()->clear_board = _clear_board;
 
 	game()->time = 0;
 	game()->lineUpTime = DEFAULT_LINE_UP_TIME;
 
-	register_message_proc(&AGE_CVS->messageMap, MSG_BOARD_UP, common_msg_proc_for_canvas);
+	register_message_proc(&AGE_CVS->messageMap, MSG_BOARD_UP, on_msg_proc_for_canvas);
 }
 
 s32 main(s32 argc, Str argv[]) {

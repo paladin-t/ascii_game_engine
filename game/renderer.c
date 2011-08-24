@@ -31,8 +31,8 @@ void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime) {
 	static Font f = { 1 };
 
 	for(i = 0; i < GAME_AREA_HEIGHT; ++i) {
-		put_char(_cvs, &f, 0, i, '#');
-		put_char(_cvs, &f, GAME_AREA_WIDTH, i, '#');
+		put_char(_cvs, &f, GAME_AREA_LEFT, i, '#');
+		put_char(_cvs, &f, GAME_AREA_RIGHT, i, '#');
 	}
 }
 
