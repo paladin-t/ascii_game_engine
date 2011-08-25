@@ -26,6 +26,7 @@
 #include "logic.h"
 #include "game.h"
 #include "state.h"
+#include "renderer.h"
 
 typedef struct MessageContext {
 	Ptr receiver;
@@ -57,6 +58,20 @@ BoardUserdata* create_board_userdata(void) {
 
 void destroy_board_userdata(Ptr _ptr) {
 	BoardUserdata* ud = (BoardUserdata*)_ptr;
+	assert(ud);
+	AGE_FREE(ud);
+}
+
+PlayerUserdata* create_player_userdata(void) {
+	PlayerUserdata* result = 0;
+
+	result = AGE_MALLOC(PlayerUserdata);
+
+	return result;
+}
+
+void destroy_player_userdata(Ptr _ptr) {
+	PlayerUserdata* ud = (PlayerUserdata*)_ptr;
 	assert(ud);
 	AGE_FREE(ud);
 }
@@ -143,6 +158,24 @@ void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _
 }
 
 void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+	PlayerUserdata* ud = 0;
+	s32 x = 0;
+	s32 y = 0;
+
+	assert(_cvs && _spr);
+
+	ud = (PlayerUserdata*)(_spr->userdata.data);
+	assert(ud);
+	ud->time += _elapsedTime;
+	if(ud->time >= ud->fallTime) {
+		ud->time -= ud->fallTime;
+		get_sprite_position(_cvs, _spr, &x, &y);
+		++y;
+		set_sprite_position(_cvs, _spr, x, y);
+		if(y > GAME_AREA_BOTTOM) {
+			// TODO
+		}
+	}
 }
 
 void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
