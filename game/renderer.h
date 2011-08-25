@@ -32,6 +32,8 @@
 #define GAME_AREA_HEIGHT CANVAS_HEIGHT
 #define GAME_AREA_LEFT 0
 #define GAME_AREA_RIGHT (GAME_AREA_LEFT + GAME_AREA_WIDTH)
+#define GAME_AREA_TOP 0
+#define GAME_AREA_BOTTOM (GAME_AREA_TOP + GAME_AREA_HEIGHT)
 
 void main_canvas_prev_render(Canvas* _cvs, s32 _elapsedTime);
 

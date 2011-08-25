@@ -323,10 +323,13 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
-			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
 			game()->main->collided = on_collide_for_sprite_main_player;
-			game()->boardTemplate->collided = on_collide_for_sprite_board;
 			game()->main->update = on_update_for_sprite_main_player;
+			game()->main->userdata.data = create_player_userdata();
+			game()->main->userdata.destroy = destroy_player_userdata;
+			((PlayerUserdata*)(game()->main->userdata.data))->fallTime = DEFAULT_FALL_TIME;
+			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
+			game()->boardTemplate->collided = on_collide_for_sprite_board;
 			game()->boardTemplate->update = on_update_for_sprite_board;
 			++state;
 			break;
@@ -350,6 +353,10 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - bd->frameSize.w);
 						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
 						game()->levelGenerated = TRUE;
+						if(game()->lineCount == game()->levelDistance) {
+							set_sprite_position(AGE_CVS, game()->main, left + 2, GAME_AREA_TOP - game()->main->frameSize.h + 1);
+							set_sprite_visible(AGE_CVS, game()->main, TRUE);
+						}
 					} else if(game()->lineCount % game()->levelDistance) {
 						game()->levelGenerated = FALSE;
 					}

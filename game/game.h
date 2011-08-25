@@ -30,6 +30,7 @@
 
 #define DEFAULT_LINE_UP_TIME 300
 #define DEFAULT_LEVEL_DISTANCE 5
+#define DEFAULT_FALL_TIME 300
 
 typedef enum AsciiHeroBoardType {
 	AHBT_SOLID,

@@ -37,8 +37,16 @@ typedef struct BoardUserdata {
 	bl drop;
 } BoardUserdata;
 
+typedef struct PlayerUserdata {
+	s32 time;
+	s32 fallTime;
+} PlayerUserdata;
+
 BoardUserdata* create_board_userdata(void);
 void destroy_board_userdata(Ptr _ptr);
+
+PlayerUserdata* create_player_userdata(void);
+void destroy_player_userdata(Ptr _ptr);
 
 s32 on_ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
