@@ -200,3 +200,26 @@ s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _l
 
 	return result;
 }
+
+s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	Sprite* spr = (Sprite*)_receiver;
+	s32 x = 0;
+	s32 y = 0;
+
+	assert(_msg == MSG_MOVE);
+
+	get_sprite_position(spr->owner, spr, &x, &y);
+	switch(_lparam) {
+		case DIR_LEFT:
+			break;
+		case DIR_RIGHT:
+			break;
+		default:
+			assert("Unknow direction");
+			break;
+	}
+	// TODO
+
+	return result;
+}

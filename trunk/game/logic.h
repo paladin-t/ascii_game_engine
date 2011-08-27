@@ -28,9 +28,17 @@
 
 #include "age.h"
 
+typedef enum Direction {
+	DIR_LEFT,
+	DIR_RIGHT,
+	DIR_UP,
+	DIR_DOWN,
+} Direction;
+
 typedef enum UserMessages {
 	MSG_USER_BEGIN = MSG_USER + 1,
 	MSG_BOARD_UP,
+	MSG_MOVE,
 }UserMessages;
 
 typedef struct BoardUserdata {
@@ -75,5 +83,7 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 
 s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+
+s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 #endif /* __LOGIC_H__ */

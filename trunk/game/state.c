@@ -322,6 +322,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
+			register_message_proc(&game()->main->messageMap, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
 			game()->main->collided = on_collide_for_sprite_main_player;
 			game()->main->update = on_update_for_sprite_main_player;
@@ -341,6 +342,11 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 
 				if(is_key_down(AGE_IPT, 0, KC_ESC)) {
 					++state;
+				}
+				if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
+					send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
+				} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
+					send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
 				}
 
 				game()->time += _elapsedTime;
