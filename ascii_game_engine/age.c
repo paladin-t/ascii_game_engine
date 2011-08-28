@@ -154,8 +154,8 @@ s32 run_world(void) {
 		elapsed = now - old;
 		old = now;
 		update_sound(AGE_SND, elapsed);
-		update_canvas(AGE_CVS, elapsed);
 		render_canvas(AGE_CVS, elapsed);
+		update_canvas(AGE_CVS, elapsed);
 		delay = EXPECTED_FRAME_TIME - (age_tick_count() - old);
 		if(delay > 0) {
 			age_sleep(delay);
