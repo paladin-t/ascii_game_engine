@@ -272,6 +272,22 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="resource"
+			>
+			<File
+				RelativePath=".\game.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\icon.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\game.c"
 			>

@@ -164,8 +164,6 @@ AsciiHeroGame* game(void) {
 }
 
 void init(void) {
-	game()->levelDistance = DEFAULT_LEVEL_DISTANCE;
-
 	game()->main = create_sprite(
 		AGE_CVS,
 		"ascii_hero_go_logo",
@@ -193,6 +191,10 @@ void init(void) {
 
 	game()->time = 0;
 	game()->lineUpTime = DEFAULT_LINE_UP_TIME;
+	game()->lineCount = 0;
+	game()->levelDistance = DEFAULT_LEVEL_DISTANCE;
+	game()->levelCount = 0;
+	game()->levelGenerated = FALSE;
 
 	register_message_proc(&AGE_CVS->messageMap, MSG_BOARD_UP, on_msg_proc_for_canvas);
 }
