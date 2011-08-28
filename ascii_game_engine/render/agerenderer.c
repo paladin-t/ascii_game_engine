@@ -333,23 +333,23 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 	if((_pm | PHYSICS_MODE_CHECKER) != PHYSICS_MODE_NULL) {
 		if(_pixelc->frameCount != 0) {
 			if(_sprf->collided) {
-				_sprf->collided(_sprf->owner, _sprf, _px, _py);
+				_sprf->collided(_sprf->owner, _sprf, _sprf->position.x + _px, _sprf->position.y + _py);
 			}
 		}
 	}
 	/* fill */
 	if((_pm | PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
-		for(i = 0; i < _pixelc->frameCount; ++i) {
-			_sprc = _pixelc->ownerFrames[i]->parent;
-			if(_sprc->collided) {
-				_sprc->collided(_sprc->owner, _sprc, _px, _py);
-			}
-		}
 		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
 			_pixelc->ownerFrames[
 				_pixelc->frameCount++
 			] = _pixelf->parent;
 			result = TRUE;
+		}
+		for(i = 0; i < _pixelc->frameCount; ++i) {
+			_sprc = _pixelc->ownerFrames[i]->parent;
+			if(_sprf != _sprc && _sprc->collided) {
+				_sprc->collided(_sprc->owner, _sprc, _sprf->position.x + _px, _sprf->position.y + _py);
+			}
 		}
 	}
 
