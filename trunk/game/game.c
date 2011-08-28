@@ -129,6 +129,8 @@ static s32 _remove_board(Sprite* _spr) {
 			--game()->boardCount;
 			if(game()->boardCount) {
 				game()->boardPool[i] = game()->boardPool[game()->boardCount];
+			} else {
+				AGE_FREE_N(game()->boardPool);
 			}
 			destroy_sprite(AGE_CVS, b);
 			++result;

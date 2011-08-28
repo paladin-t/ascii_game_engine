@@ -158,6 +158,26 @@ void on_removing_for_sprite_board(Ptr _handlerObj, struct Canvas* _cvs, struct S
 }
 
 void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+	Pixel* pixelc = 0;
+	PlayerUserdata* ud = 0;
+	Sprite* bd = 0;
+	s32 i = 0;
+	s32 x = 0;
+	s32 y = 0;
+
+	assert(_px >= 0 && _px < CANVAS_WIDTH && _py >= 0 && _py < CANVAS_HEIGHT);
+
+	pixelc = &_cvs->pixels[_px + _py * _cvs->size.w];
+	ud = (PlayerUserdata*)(_spr->userdata.data);
+	ud->onBoard[0] = '\0';
+	for(i = 0; i < pixelc->frameCount; ++i) {
+		bd = pixelc->ownerFrames[i]->parent;
+		if(bd != _spr) {
+			assert(strlen(_spr->name) + 1 < _countof(ud->onBoard));
+			sprintf(ud->onBoard, bd->name);
+			break;
+		}
+	}
 }
 
 void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
@@ -165,8 +185,11 @@ void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _
 
 void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
 	PlayerUserdata* ud = 0;
+	Sprite* bd = 0;
 	s32 x = 0;
 	s32 y = 0;
+	s32 bx = 0;
+	s32 by = 0;
 
 	assert(_cvs && _spr);
 
@@ -176,12 +199,26 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 	if(ud->time >= ud->fallTime) {
 		ud->time -= ud->fallTime;
 		get_sprite_position(_cvs, _spr, &x, &y);
-		++y;
-		set_sprite_position(_cvs, _spr, x, y);
-		if(y > GAME_AREA_BOTTOM) {
-			// TODO
+		if(ud->onBoard[0]) {
+			bd = get_sprite_by_name(_cvs, ud->onBoard);
+			if(bd) {
+				get_sprite_position(_cvs, bd, &bx, &by);
+				by = by - _spr->frameSize.h + 1;
+				set_sprite_position(_cvs, _spr, x, by);
+				if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
+					_asm nop
+					// TODO
+				}
+			}
+		} else {
+			++y;
+			set_sprite_position(_cvs, _spr, x, y);
+			if(y > GAME_AREA_BOTTOM) {
+				// TODO
+			}
 		}
 	}
+	ud->onBoard[0] = '\0';
 }
 
 void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {

@@ -48,6 +48,7 @@ typedef struct BoardUserdata {
 typedef struct PlayerUserdata {
 	s32 time;
 	s32 fallTime;
+	s8 onBoard[AGE_STR_LEN];
 } PlayerUserdata;
 
 BoardUserdata* create_board_userdata(void);
