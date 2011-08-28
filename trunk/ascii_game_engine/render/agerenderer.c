@@ -320,7 +320,9 @@ static bl _create_sprite_palete(Canvas* _cvs, Sprite* _spr, const Str _paleteFil
 static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32 _py) {
 	bl result = FALSE;
 	Sprite* _sprf = 0;
+	Sprite* _sprc = 0;
 	u32 _pm = PHYSICS_MODE_NULL;
+	s32 i = 0;
 
 	assert(_pixelc && _pixelf);
 
@@ -337,6 +339,12 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 	}
 	/* fill */
 	if((_pm | PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
+		for(i = 0; i < _pixelc->frameCount; ++i) {
+			_sprc = _pixelc->ownerFrames[i]->parent;
+			if(_sprc->collided) {
+				_sprc->collided(_sprc->owner, _sprc, _px, _py);
+			}
+		}
 		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
 			_pixelc->ownerFrames[
 				_pixelc->frameCount++

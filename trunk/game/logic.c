@@ -79,6 +79,12 @@ void destroy_player_userdata(Ptr _ptr) {
 s32 on_ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
+	if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
+		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
+	} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
+		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
+	}
+
 	return result;
 }
 
@@ -212,14 +218,22 @@ s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg
 	get_sprite_position(spr->owner, spr, &x, &y);
 	switch(_lparam) {
 		case DIR_LEFT:
+			--x;
+			if(x <= GAME_AREA_LEFT) {
+				x = GAME_AREA_LEFT + 1;
+			}
 			break;
 		case DIR_RIGHT:
+			++x;
+			if(x + spr->frameSize.w - 1 >= GAME_AREA_RIGHT) {
+				x = GAME_AREA_RIGHT - spr->frameSize.w;
+			}
 			break;
 		default:
 			assert("Unknow direction");
 			break;
 	}
-	// TODO
+	set_sprite_position(spr->owner, spr, x, y);
 
 	return result;
 }

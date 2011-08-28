@@ -1,22 +1,22 @@
 count: 4
-width: 5
+width: 3
 height: 3
 rate: 6
 
 @walk
-  O  
- /|\ 
- J L 
+ O 
+/|\
+J L
 
-  O  
- /|\ 
- J L 
+ O 
+/|\
+J L
 
- _O_ 
-  |  
- / \ 
+_O_
+ | 
+/ \
 
 @end_walk
- _O_ 
-  |  
- / \ 
+_O_
+ | 
+/ \

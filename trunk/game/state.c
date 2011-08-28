@@ -323,6 +323,8 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
 			register_message_proc(&game()->main->messageMap, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
+			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
+			set_sprite_physics_mode(AGE_CVS, game()->main, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
 			game()->main->collided = on_collide_for_sprite_main_player;
 			game()->main->update = on_update_for_sprite_main_player;
@@ -343,11 +345,6 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				if(is_key_down(AGE_IPT, 0, KC_ESC)) {
 					++state;
 				}
-				if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
-					send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
-				} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
-					send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
-				}
 
 				game()->time += _elapsedTime;
 				if(game()->time >= game()->lineUpTime) {
@@ -358,9 +355,10 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 						bd = game()->add_board_by_type(bt);
 						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - bd->frameSize.w);
 						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
+						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 						game()->levelGenerated = TRUE;
 						if(game()->lineCount == game()->levelDistance) {
-							set_sprite_position(AGE_CVS, game()->main, left + 2, GAME_AREA_TOP - game()->main->frameSize.h + 1);
+							set_sprite_position(AGE_CVS, game()->main, left + 3, GAME_AREA_TOP - game()->main->frameSize.h + 1);
 							set_sprite_visible(AGE_CVS, game()->main, TRUE);
 						}
 					} else if(game()->lineCount % game()->levelDistance) {
