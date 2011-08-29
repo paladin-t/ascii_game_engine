@@ -207,6 +207,14 @@ typedef void (* SpriteUpdateFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @param[in] _elapsedTime - elapsed time since last frame
  */
 typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+/**
+ * @brief sprite colliding functor
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _spr         - sprite object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+typedef void (* SpriteCollideFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 
 /**
  * @brief user defined data
@@ -240,6 +248,7 @@ typedef struct Sprite {
 	SpriteUpdateFunc update;                  /**< updating functor, for animation controlling */
 	SpriteRenderFunc prevRender;              /**< fire rendering functor */
 	SpriteRenderFunc postRender;              /**< post rendering functor */
+	SpriteCollideFunc collide;                /**< colliding functor */
 } Sprite;
 
 /**
@@ -272,6 +281,9 @@ typedef struct Canvas {
 	ht_node_t* sprites;          /**< alive sprite objects */
 	s32 frameRate;               /**< canvas frame rate, in millisecond */
 	RunningContext context;      /**< running context */
+	Sprite** droppedSprites;     /**< dropped sprites */
+	s32 droppedSpritesCount;     /**< dropped sprites count */
+	s32 droppedSpritesSize;      /**< dropped sprites buffer size */
 	MessageMap messageMap;       /**< message processing map */
 	ControlProc control;         /**< canvas controlling functor*/
 	CanvasRenderFunc prevRender; /**< fire rendering functor */
@@ -307,6 +319,13 @@ AGE_API void set_frame_rate(Canvas* _cvs, s32 _rate);
  */
 AGE_API s32 get_frame_rate(Canvas* _cvs);
 
+/**
+ * @brief run collition in a canvas
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+AGE_API void collide_canvas(Canvas* _cvs, s32 _elapsedTime);
 /**
  * @brief update a canvas for a frame
  *
@@ -498,6 +517,14 @@ AGE_API void prev_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
  * @param[in] _elapsedTime - elapsed time since last frame
  */
 AGE_API void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
+/**
+ * @brief sprite colliding
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _spr         - sprite object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+AGE_API void collide_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
 /**
  * @brief get the physics mode of a sprite object

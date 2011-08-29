@@ -70,11 +70,24 @@ static void _destroy_sprite_impl(Canvas* _cvs, Sprite* _spr) {
 	AGE_FREE(_spr);
 }
 
+static s32 _drop_sprite(Canvas* _cvs, Sprite* _spr) {
+	s32 result = 0;
+
+	++_cvs->droppedSpritesCount;
+	if(_cvs->droppedSpritesCount > _cvs->droppedSpritesSize) {
+		_cvs->droppedSpritesSize = _cvs->droppedSpritesCount + 8;
+		_cvs->droppedSprites = AGE_REALLOC_N(Sprite*, _cvs->droppedSprites, _cvs->droppedSpritesSize);
+	}
+	_cvs->droppedSprites[_cvs->droppedSpritesCount - 1] = _spr;
+
+	return result;
+}
+
 static s32 _destroy_sprite(Ptr _data, Ptr _extra) {
 	s32 result = 0;
 
 	Sprite* spr = (Sprite*)_data;
-	_destroy_sprite_impl(spr->owner, spr);
+	_drop_sprite(spr->owner, spr);
 
 	return result;
 }
@@ -149,6 +162,20 @@ static s32 _post_render_sprite(Ptr _data, Ptr _extra) {
 		spr->postRender(cvs, spr, cvs->context.lastElapsedTime);
 	} else {
 		post_render_sprite(cvs, spr, cvs->context.lastElapsedTime);
+	}
+
+	return result;
+}
+
+static s32 _collide_sprite(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+
+	Sprite* spr = (Sprite*)_data;
+	Canvas* cvs = (Canvas*)spr->owner;
+	if(spr->collide) {
+		spr->collide(cvs, spr, cvs->context.lastElapsedTime);
+	} else {
+		collide_sprite(cvs, spr, cvs->context.lastElapsedTime);
 	}
 
 	return result;
@@ -374,10 +401,23 @@ Canvas* create_canvas(const Str _name) {
 }
 
 void destroy_canvas(Canvas* _cvs) {
+	s32 i = 0;
+	Sprite* spr = 0;
+
 	destroy_canvas_message_map(_cvs);
 	destroy_paramset(_cvs->params);
 	destroy_all_sprites(_cvs);
+
+	for(i = 0; i < _cvs->droppedSpritesCount; ++i) {
+		spr = _cvs->droppedSprites[i];
+		_destroy_sprite_impl(_cvs, spr);
+	}
+	AGE_FREE_N(_cvs->droppedSprites);
+	_cvs->droppedSpritesSize = 0;
+	_cvs->droppedSpritesCount = 0;
+
 	ht_destroy(_cvs->sprites);
+
 	AGE_FREE_N(_cvs->pixels);
 	AGE_FREE(_cvs->name);
 	AGE_FREE(_cvs);
@@ -395,8 +435,23 @@ s32 get_frame_rate(Canvas* _cvs) {
 	return _cvs->frameRate;
 }
 
+void collide_canvas(Canvas* _cvs, s32 _elapsedTime) {
+	ControlProc ctrl = 0;
+	s32 i = 0;
+	Sprite* spr = 0;
+
+	_cvs->context.lastElapsedTime = _elapsedTime;
+	_cvs->context.lastLParam = 0;
+	_cvs->context.lastWParam = 0;
+	_cvs->context.lastExtra = 0;
+
+	ht_foreach(_cvs->sprites, _collide_sprite);
+}
+
 void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	ControlProc ctrl = 0;
+	s32 i = 0;
+	Sprite* spr = 0;
 
 	_cvs->context.lastElapsedTime = _elapsedTime;
 	_cvs->context.lastLParam = 0;
@@ -407,7 +462,18 @@ void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	if(ctrl) {
 		ctrl(_cvs, _cvs->name, _elapsedTime, 0, 0, 0);
 	}
+
 	ht_foreach(_cvs->sprites, _update_sprite);
+
+	for(i = 0; i < _cvs->droppedSpritesCount; ++i) {
+		spr = _cvs->droppedSprites[i];
+		_destroy_sprite_impl(_cvs, spr);
+	}
+	if(_cvs->droppedSpritesSize - _cvs->droppedSpritesCount > 16) {
+		AGE_FREE_N(_cvs->droppedSprites);
+		_cvs->droppedSpritesSize = 0;
+	}
+	_cvs->droppedSpritesCount = 0;
 }
 
 void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
@@ -523,7 +589,7 @@ void destroy_sprite(Canvas* _cvs, Sprite* _spr) {
 		tobeRemoved = 0;
 
 		ht_remove(_cvs->sprites, spr->extra);
-		_destroy_sprite_impl(_cvs, _spr);
+		_drop_sprite(_cvs, _spr);
 	}
 }
 
@@ -816,6 +882,40 @@ void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 					pixelc->color = pixelf->color;
 					pixelc->zorder = pixelf->zorder;
 				}
+			}
+		}
+	}
+}
+
+void collide_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
+	s32 i = 0;
+	s32 j = 0;
+	s32 k = 0;
+	s32 x = 0;
+	s32 y = 0;
+	s32 s = 0;
+	Pixel* pixelf = 0;
+	Pixel* pixelc = 0;
+
+	if(_spr->visibility != VISIBILITY_VISIBLE) {
+		return;
+	}
+	_spr->timeLine.lastFrame = _spr->timeLine.currentFrame;
+	k = _spr->timeLine.currentFrame;
+	for(j = 0; j < _spr->frameSize.h; ++j) {
+		y = _spr->position.y + j;
+		if(y < 0 || y >= _cvs->size.h) {
+			continue;
+		}
+		for(i = 0; i < _spr->frameSize.w; ++i) {
+			x = _spr->position.x + i;
+			if(x < 0 || x >= _cvs->size.w) {
+				continue;
+			}
+			pixelf = &_spr->timeLine.frames[k].tex[i + j * _spr->frameSize.w];
+			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
+			s = (s32)pixelf->shape;
+			if(s != ERASE_PIXEL_SHAPE) {
 				_try_fill_pixel_collision(pixelc, pixelf, i, j);
 			} else if(pixelf->brush != ERASE_PIXEL_SHAPE) {
 				_try_fill_pixel_collision(pixelc, pixelf, i, j);
