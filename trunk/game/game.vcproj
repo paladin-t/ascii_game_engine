@@ -313,6 +313,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\script.c"
+			>
+		</File>
+		<File
+			RelativePath=".\script.h"
+			>
+		</File>
+		<File
 			RelativePath=".\state.c"
 			>
 		</File>

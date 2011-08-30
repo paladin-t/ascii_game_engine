@@ -30,8 +30,9 @@
 
 #include "age.h"
 #include "game.h"
-#include "state.h"
 #include "logic.h"
+#include "script.h"
+#include "state.h"
 
 static AsciiHeroGame _game;
 
@@ -208,6 +209,7 @@ s32 main(s32 argc, Str argv[]) {
 
 	/* initialize */
 	create_world();
+	register_game_script_interfaces();
 	config_world("data/config.bas");
 	_on_init();
 	/* the main loop, go! */

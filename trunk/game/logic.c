@@ -162,8 +162,13 @@ void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr,
 	PlayerUserdata* ud = 0;
 	Sprite* bd = 0;
 	s32 i = 0;
+	//s32 k = 0;
 	s32 x = 0;
 	s32 y = 0;
+	//s32 fx = 0;
+	//s32 fy = 0;
+	//s8 b = 0;
+	//bl ob = FALSE;
 
 	assert(_px >= 0 && _px < CANVAS_WIDTH && _py >= 0 && _py < CANVAS_HEIGHT);
 
@@ -173,11 +178,23 @@ void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr,
 	for(i = 0; i < pixelc->frameCount; ++i) {
 		bd = pixelc->ownerFrames[i]->parent;
 		if(bd != _spr) {
-			assert(strlen(_spr->name) + 1 < _countof(ud->onBoard));
-			sprintf(ud->onBoard, bd->name);
-			break;
+			//fx = _px - _spr->position.x;
+			//fy = _py - _spr->position.y;
+			//k = _spr->timeLine.currentFrame;
+			//b = _spr->timeLine.frames[k].tex[fx + fy * _spr->frameSize.w].brush;
+
+			//if(b == game()->footBrush) {
+				assert(strlen(_spr->name) + 1 < _countof(ud->onBoard));
+				sprintf(ud->onBoard, bd->name);
+				//ob = TRUE;
+				break;
+			//}
 		}
 	}
+
+	//if(!ob) {
+	//	set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x, _spr->position.y);
+	//}
 }
 
 void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {

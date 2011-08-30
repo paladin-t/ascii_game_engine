@@ -31,22 +31,58 @@
 #include "my_basic/my_basic.h"
 
 /**
- * @brief register a script interface
- *
- * @param[in] s - my-basic interpreter structure
- * @param[in] n - interface name
- * @param[in] f - interface functor pointer
- * @return - return TRUE if succeed, or FALSE if failed
+ * @brief my-basic interface adapter
  */
-AGE_API bl register_func(mb_interpreter_t* s, const Str n, mb_func_t f);
+AGE_API bl amb_register_func(mb_interpreter_t* s, const Str n, mb_func_t f);
 /**
- * @brief unregister a script interface
- *
- * @param[in] s - my-basic interpreter structure
- * @param[in] n - interface name
- * @return - return TRUE if succeed, or FALSE if failed
+ * @brief my-basic interface adapter
  */
-AGE_API bl unregister_func(mb_interpreter_t* s, const Str n);
+AGE_API bl amb_unregister_func(mb_interpreter_t* s, const Str n);
+
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_attempt_func_begin(mb_interpreter_t* s, void** l);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_attempt_open_bracket(mb_interpreter_t* s, void** l);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_attempt_close_bracket(mb_interpreter_t* s, void** l);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_pop_int(mb_interpreter_t* s, void** l, int_t* val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_pop_real(mb_interpreter_t* s, void** l, real_t* val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_pop_string(mb_interpreter_t* s, void** l, char** val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_pop_value(mb_interpreter_t* s, void** l, mb_value_t* val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_push_int(mb_interpreter_t* s, void** l, int_t val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_push_real(mb_interpreter_t* s, void** l, real_t val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_push_string(mb_interpreter_t* s, void** l, char* val);
+/**
+ * @brief my-basic interface adapter
+ */
+AGE_API int amb_push_value(mb_interpreter_t* s, void** l, mb_value_t val);
 
 /**
  * @brief my-basic api: pronounce a beep
