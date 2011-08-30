@@ -235,6 +235,7 @@ typedef struct Sprite {
 	Userdata userdata;                        /**< user defined data */
 	Point position;                           /**< position */
 	Point oldPosition;                        /**< old position */
+	Point lastFramePosition;                  /**< last frame position */
 	Size frameSize;                           /**< size of each frame */
 	TimeLine timeLine;                        /**< time line data */
 	CustomAnimation customAnimation;          /**< customized animation data */

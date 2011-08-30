@@ -366,13 +366,13 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 	}
 	/* fill */
 	if((_pm | PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
-		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) {
+		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) { /* fill */
 			_pixelc->ownerFrames[
 				_pixelc->frameCount++
 			] = _pixelf->parent;
 			result = TRUE;
 		}
-		for(i = 0; i < _pixelc->frameCount; ++i) {
+		for(i = 0; i < _pixelc->frameCount; ++i) { /* check */
 			_sprc = _pixelc->ownerFrames[i]->parent;
 			if(_sprf != _sprc && _sprc->collided) {
 				_sprc->collided(_sprc->owner, _sprc, _sprf->position.x + _px, _sprf->position.y + _py);
@@ -845,6 +845,7 @@ void prev_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 			}
 		}
 	}
+	_spr->lastFramePosition = _spr->oldPosition;
 	_spr->oldPosition = _spr->position;
 }
 

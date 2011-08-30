@@ -29,7 +29,7 @@
 #include "../age.h"
 #include "agescriptapi.h"
 
-bl register_func(mb_interpreter_t* s, const Str n, mb_func_t f) {
+bl amb_register_func(mb_interpreter_t* s, const Str n, mb_func_t f) {
 	bl result = TRUE;
 
 	result = !!mb_register_func(s, n, f);
@@ -37,12 +37,56 @@ bl register_func(mb_interpreter_t* s, const Str n, mb_func_t f) {
 	return result;
 }
 
-bl unregister_func(mb_interpreter_t* s, const Str n) {
+bl amb_unregister_func(mb_interpreter_t* s, const Str n) {
 	bl result = TRUE;
 
 	result = !!mb_remove_func(s, n);
 
 	return result;
+}
+
+int amb_attempt_func_begin(mb_interpreter_t* s, void** l) {
+	return mb_attempt_func_begin(s, l);
+}
+
+int amb_attempt_open_bracket(mb_interpreter_t* s, void** l) {
+	return mb_attempt_open_bracket(s, l);
+}
+
+int amb_attempt_close_bracket(mb_interpreter_t* s, void** l) {
+	return mb_attempt_close_bracket(s, l);
+}
+
+int amb_pop_int(mb_interpreter_t* s, void** l, int_t* val) {
+	return mb_pop_int(s, l, val);
+}
+
+int amb_pop_real(mb_interpreter_t* s, void** l, real_t* val) {
+	return mb_pop_real(s, l, val);
+}
+
+int amb_pop_string(mb_interpreter_t* s, void** l, char** val) {
+	return mb_pop_string(s, l, val);
+}
+
+int amb_pop_value(mb_interpreter_t* s, void** l, mb_value_t* val) {
+	return mb_pop_value(s, l, val);
+}
+
+int amb_push_int(mb_interpreter_t* s, void** l, int_t val) {
+	return mb_push_int(s, l, val);
+}
+
+int amb_push_real(mb_interpreter_t* s, void** l, real_t val) {
+	return mb_push_real(s, l, val);
+}
+
+int amb_push_string(mb_interpreter_t* s, void** l, char* val) {
+	return mb_push_string(s, l, val);
+}
+
+int amb_push_value(mb_interpreter_t* s, void** l, mb_value_t val) {
+	return mb_push_value(s, l, val);
 }
 
 int age_api_beep(mb_interpreter_t* s, void** l) {
