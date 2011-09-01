@@ -79,6 +79,7 @@ void destroy_player_userdata(Ptr _ptr) {
 s32 on_ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
 
+	game()->main->direction = 0;
 	if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
 		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
 	} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
@@ -162,42 +163,76 @@ void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr,
 	PlayerUserdata* ud = 0;
 	Sprite* bd = 0;
 	s32 i = 0;
-	//s32 k = 0;
+	s32 k = 0;
 	s32 x = 0;
 	s32 y = 0;
-	//s32 fx = 0;
-	//s32 fy = 0;
-	//s8 b = 0;
-	//bl ob = FALSE;
+	s32 fx = 0;
+	s32 fy = 0;
+	s8 b = 0;
+	bl ob = FALSE;
 
 	assert(_px >= 0 && _px < CANVAS_WIDTH && _py >= 0 && _py < CANVAS_HEIGHT);
 
+	fx = _px - _spr->position.x;
+	fy = _py - _spr->position.y;
+	k = _spr->timeLine.currentFrame;
+	b = _spr->timeLine.frames[k].tex[fx + fy * _spr->frameSize.w].brush;
+
 	pixelc = &_cvs->pixels[_px + _py * _cvs->size.w];
 	ud = (PlayerUserdata*)(_spr->userdata.data);
-	ud->onBoard[0] = '\0';
+	if(ud->onBoard[0]) {
+		return;
+	}
 	for(i = 0; i < pixelc->frameCount; ++i) {
 		bd = pixelc->ownerFrames[i]->parent;
 		if(bd != _spr) {
-			//fx = _px - _spr->position.x;
-			//fy = _py - _spr->position.y;
-			//k = _spr->timeLine.currentFrame;
-			//b = _spr->timeLine.frames[k].tex[fx + fy * _spr->frameSize.w].brush;
-
-			//if(b == game()->footBrush) {
+			if(b == game()->footBrush) {
 				assert(strlen(_spr->name) + 1 < _countof(ud->onBoard));
 				sprintf(ud->onBoard, bd->name);
-				//ob = TRUE;
+				ob = TRUE;
+				if(_px + bd->position.x <= _spr->position.x) {
+					ud->collitionDirection = -1;
+				} else if(_px >= _spr->position.x + _spr->frameSize.w) {
+					ud->collitionDirection = 1;
+				} else {
+					ud->collitionDirection = 0;
+				}
 				break;
-			//}
+			}
+		} else {
+			if(pixelc->frameCount == 1) {
+				ob = TRUE;
+			}
 		}
 	}
 
-	//if(!ob) {
-	//	set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x, _spr->position.y);
-	//}
+	if(!ob) {
+		if(ud->collitionDirection && _spr->direction && ud->collitionDirection == _spr->direction) {
+			set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x/* - _spr->direction*/, _spr->position.y);
+		}
+	}
 }
 
 void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+	Pixel* pixelc = 0;
+	BoardUserdata* bu = 0;
+	Sprite* bd = 0;
+	s32 i = 0;
+
+	assert(_cvs && _spr);
+
+	pixelc = &_cvs->pixels[_px + _py * _cvs->size.w];
+	for(i = 0; i < pixelc->frameCount; ++i) {
+		bd = pixelc->ownerFrames[i]->parent;
+		if(bd != _spr) {
+			bu = (BoardUserdata*)(_spr->userdata.data);
+			if(_spr->timeLine.pause) {
+				bu->collition = TRUE;
+				resume_sprite(_cvs, _spr);
+				break;
+			}
+		}
+	}
 }
 
 void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
@@ -223,7 +258,6 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 				by = by - _spr->frameSize.h + 1;
 				set_sprite_position(_cvs, _spr, x, by);
 				if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
-					_asm nop
 					// TODO
 				}
 			}
@@ -239,6 +273,20 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 }
 
 void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+	BoardUserdata* bu = 0;
+
+	assert(_cvs && _spr);
+
+	bu = (BoardUserdata*)(_spr->userdata.data);
+	if(bu) {
+		if(bu->collition) {
+			bu->collition = FALSE;
+		} else if(!_spr->timeLine.pause) {
+			pause_sprite(_cvs, _spr);
+		}
+	}
+
+	update_sprite(_cvs, _spr, _elapsedTime);
 }
 
 s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
@@ -272,12 +320,14 @@ s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg
 	get_sprite_position(spr->owner, spr, &x, &y);
 	switch(_lparam) {
 		case DIR_LEFT:
+			spr->direction = -1;
 			--x;
 			if(x <= GAME_AREA_LEFT) {
 				x = GAME_AREA_LEFT + 1;
 			}
 			break;
 		case DIR_RIGHT:
+			spr->direction = 1;
 			++x;
 			if(x + spr->frameSize.w - 1 >= GAME_AREA_RIGHT) {
 				x = GAME_AREA_RIGHT - spr->frameSize.w;

@@ -157,6 +157,7 @@ s32 run_world(void) {
 		render_canvas(AGE_CVS, elapsed);
 		update_canvas(AGE_CVS, elapsed);
 		collide_canvas(AGE_CVS, elapsed);
+		tidy_canvas(AGE_CVS, elapsed);
 		delay = EXPECTED_FRAME_TIME - (age_tick_count() - old);
 		if(delay > 0) {
 			age_sleep(delay);

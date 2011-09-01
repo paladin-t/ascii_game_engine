@@ -318,6 +318,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				"data/sprite/board_brush.txt",
 				"data/sprite/board_palete.txt"
 			);
+			pause_sprite(AGE_CVS, game()->boardTemplate);
 			set_sprite_visible(AGE_CVS, game()->main, FALSE);
 			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);

@@ -236,6 +236,7 @@ typedef struct Sprite {
 	Point position;                           /**< position */
 	Point oldPosition;                        /**< old position */
 	Point lastFramePosition;                  /**< last frame position */
+	s32 direction;                            /**< moving direction */
 	Size frameSize;                           /**< size of each frame */
 	TimeLine timeLine;                        /**< time line data */
 	CustomAnimation customAnimation;          /**< customized animation data */
@@ -334,6 +335,13 @@ AGE_API void collide_canvas(Canvas* _cvs, s32 _elapsedTime);
  * @param[in] _elapsedTime - elapsed time since last frame
  */
 AGE_API void update_canvas(Canvas* _cvs, s32 _elapsedTime);
+/**
+ * @brief delete dropped sprites
+ *
+ * @param[in] _cvs         - canvas object
+ * @param[in] _elapsedTime - elapsed time since last frame
+ */
+AGE_API void tidy_canvas(Canvas* _cvs, s32 _elapsedTime);
 /**
  * @brief render a canvas for a frame
  *
