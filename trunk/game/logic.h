@@ -43,12 +43,14 @@ typedef enum UserMessages {
 
 typedef struct BoardUserdata {
 	bl drop;
+	bl collition;
 } BoardUserdata;
 
 typedef struct PlayerUserdata {
 	s32 time;
 	s32 fallTime;
 	s8 onBoard[AGE_STR_LEN];
+	s32 collitionDirection;
 } PlayerUserdata;
 
 BoardUserdata* create_board_userdata(void);

@@ -57,7 +57,9 @@ static void _on_exit(void) {
 }
 
 static void _on_init(void) {
+	s8 fb = game()->footBrush;
 	memset(game(), 0, sizeof(AsciiHeroGame));
+	game()->footBrush = fb;
 	init();
 }
 
@@ -101,7 +103,7 @@ static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 		result,
 		BOARD_INFO[_type].startFrame,
 		BOARD_INFO[_type].endFrame,
-		FALSE,
+		TRUE,
 		on_playing_for_sprite_board
 	);
 	pause_sprite(AGE_CVS, result);

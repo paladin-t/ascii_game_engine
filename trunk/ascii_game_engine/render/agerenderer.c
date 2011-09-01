@@ -450,8 +450,6 @@ void collide_canvas(Canvas* _cvs, s32 _elapsedTime) {
 
 void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	ControlProc ctrl = 0;
-	s32 i = 0;
-	Sprite* spr = 0;
 
 	_cvs->context.lastElapsedTime = _elapsedTime;
 	_cvs->context.lastLParam = 0;
@@ -464,6 +462,11 @@ void update_canvas(Canvas* _cvs, s32 _elapsedTime) {
 	}
 
 	ht_foreach(_cvs->sprites, _update_sprite);
+}
+
+void tidy_canvas(Canvas* _cvs, s32 _elapsedTime) {
+	Sprite* spr = 0;
+	s32 i = 0;
 
 	for(i = 0; i < _cvs->droppedSpritesCount; ++i) {
 		spr = _cvs->droppedSprites[i];
@@ -486,6 +489,16 @@ void render_canvas(Canvas* _cvs, s32 _elapsedTime) {
 		_cvs->prevRender(_cvs, _elapsedTime);
 	}
 	ht_foreach(_cvs->sprites, _fire_render_sprite);
+	{
+		s32 i = 0;
+		s32 j = 0;
+		for(i = 0; i < _cvs->size.w; ++i) {
+			for(j = 0; j < _cvs->size.h; ++j) {
+				Pixel* pc = &_cvs->pixels[i + j * _cvs->size.w];
+				pc->frameCount = 0;
+			}
+		}
+	}
 	ht_foreach(_cvs->sprites, _post_render_sprite);
 	if(_cvs->postRender) {
 		_cvs->postRender(_cvs, _elapsedTime);
@@ -833,14 +846,11 @@ void prev_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 				for(itf = 0; itf < pixelc->frameCount; ++itf) {
 					if(pixelc->ownerFrames[itf] == pixelf->parent) {
 						found = itf;
-						break;
+						pixelc->ownerFrames[found] =
+							pixelc->ownerFrames[
+								--pixelc->frameCount
+							];
 					}
-				}
-				if(found != INVALID_FRAME_INDEX) {
-					pixelc->ownerFrames[found] =
-						pixelc->ownerFrames[
-							--pixelc->frameCount
-						];
 				}
 			}
 		}
