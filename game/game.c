@@ -31,6 +31,7 @@
 #include "age.h"
 #include "game.h"
 #include "logic.h"
+#include "renderer.h"
 #include "script.h"
 #include "state.h"
 
@@ -39,9 +40,9 @@ static AsciiHeroGame _game;
 static void _on_exit(void) {
 	s32 c = 0;
 
-	if(game()->clear_board) {
-		game()->clear_board();
-	}
+	game()->destroy_score_boards();
+	game()->clear_board();
+
 	destroy_world();
 
 	c = _CrtDumpMemoryLeaks();
@@ -61,6 +62,7 @@ static void _on_init(void) {
 	memset(game(), 0, sizeof(AsciiHeroGame));
 	game()->footBrush = fb;
 	init();
+	game()->create_score_boards();
 }
 
 static AsciiHeroBoardType _generate_board_type(void) {
@@ -164,6 +166,54 @@ static s32 _clear_board(void) {
 	return result;
 }
 
+void _create_score_boards(void) {
+	s32 i = 0;
+	s8 n[AGE_STR_LEN];
+	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
+		sprintf(n, "score_cell_%d", i);
+		game()->scoreBoard[i] = create_sprite(
+			AGE_CVS,
+			n,
+			"data/ui/number_shape.txt",
+			"data/ui/number_brush.txt",
+			"data/ui/number_palete.txt"
+		);
+		play_sprite(AGE_CVS, game()->scoreBoard[i], "s0", "e0", FALSE, 0);
+		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + i * 4 + 2, 0);
+		set_sprite_physics_mode(AGE_CVS, game()->scoreBoard[i], PHYSICS_MODE_NULL);
+		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], FALSE);
+	}
+}
+
+void _destroy_score_boards(void) {
+	s32 i = 0;
+	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
+		destroy_sprite(AGE_CVS, game()->scoreBoard[i]);
+	}
+	memset(game()->scoreBoard, 0, sizeof(game()->scoreBoard));
+}
+
+void _set_score_board_value(u32 score) {
+	s32 i = 0;
+	s32 n = 0;
+	s8 sf[AGE_STR_LEN];
+	s8 ef[AGE_STR_LEN];
+	while(score) {
+		n = score % 10;
+		sprintf(sf, "s%d", n);
+		sprintf(ef, "e%d", n);
+		play_sprite(AGE_CVS, game()->scoreBoard[i], sf, ef, FALSE, 0);
+		++i;
+	}
+}
+
+void _set_score_board_visible(bl vis) {
+	s32 i = 0;
+	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
+		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], vis);
+	}
+}
+
 AsciiHeroGame* game(void) {
 	return &_game;
 }
@@ -193,6 +243,10 @@ void init(void) {
 	game()->drop_board = _drop_board;
 	game()->remove_board = _remove_board;
 	game()->clear_board = _clear_board;
+	game()->create_score_boards = _create_score_boards;
+	game()->destroy_score_boards = _destroy_score_boards;
+	game()->set_score_board_value = _set_score_board_value;
+	game()->set_score_board_visible = _set_score_board_visible;
 
 	game()->time = 0;
 	game()->lineUpTime = DEFAULT_LINE_UP_TIME;

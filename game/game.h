@@ -32,6 +32,8 @@
 #define DEFAULT_LEVEL_DISTANCE 5
 #define DEFAULT_FALL_TIME 100
 
+#define SCORE_BOARD_SIZE 4
+
 typedef enum AsciiHeroBoardType {
 	AHBT_SOLID,
 	AHBT_SPRING,
@@ -68,6 +70,7 @@ typedef struct AsciiHeroGame {
 	Sprite** boardPool;
 	s32 boardPoolSize;
 	s32 boardCount;
+	Sprite* scoreBoard[SCORE_BOARD_SIZE];
 	s32 time;
 	s32 lineUpTime;
 	u32 lineCount;
@@ -80,6 +83,10 @@ typedef struct AsciiHeroGame {
 	s32 (* drop_board)(Sprite* _spr);
 	s32 (* remove_board)(Sprite* _spr);
 	s32 (* clear_board)(void);
+	void (* create_score_boards)(void);
+	void (* destroy_score_boards)(void);
+	void (* set_score_board_value)(u32 score);
+	void (* set_score_board_visible)(bl vis);
 } AsciiHeroGame;
 
 AsciiHeroGame* game(void);
