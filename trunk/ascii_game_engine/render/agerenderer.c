@@ -795,6 +795,8 @@ void update_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 					}
 					if(_spr->timeLine.loop) {
 						_spr->timeLine.currentFrame = _spr->timeLine.beginIndex;
+					} else {
+						--_spr->timeLine.currentFrame;
 					}
 				}
 			} else {

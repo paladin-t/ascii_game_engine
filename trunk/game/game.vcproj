@@ -270,6 +270,18 @@
 					RelativePath=".\data\ui\logo_shape.txt"
 					>
 				</File>
+				<File
+					RelativePath=".\data\ui\number_brush.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\number_palete.txt"
+					>
+				</File>
+				<File
+					RelativePath=".\data\ui\number_shape.txt"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
