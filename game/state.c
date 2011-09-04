@@ -223,8 +223,13 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							AGE_CVS->prevRender = main_canvas_prev_render;
 							AGE_CVS->postRender = main_canvas_post_render;
 							clear_screen(AGE_CVS);
-						} else if(__m == 1) { /* rank */
-							// TODO
+						} else if(__m == 1) { /* highscore */
+							destroy_sprite(AGE_CVS, game()->main);
+							destroy_sprite(AGE_CVS, game()->subsidiary);
+							game()->main = game()->subsidiary = 0;
+							stop_sound(AGE_SND, ST_BGM);
+							set_canvas_controller(AGE_CVS, state_show_highscore);
+							clear_screen(AGE_CVS);
 						} else if(__m == 2) { /* about */
 							set_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", "data/info.txt");
 							destroy_sprite(AGE_CVS, game()->main);
@@ -291,6 +296,46 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #undef _S_BACK
 }
 
+s32 state_show_highscore(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_MAIN 1
+#define _S_BACK 2
+	s32 result = 0;
+	s32 hs = 0;
+	static s8 buf[AGE_STR_LEN];
+	static s32 state = _S_DEFAULT;
+
+	update_input_context(AGE_IPT);
+
+	switch(state) {
+		case _S_DEFAULT:
+			clear_screen(AGE_CVS);
+			get_s32_param(AGE_CVS_PAR, "HIGH_SCORE", &hs);
+			sprintf(buf, "Highscore: %04d", hs);
+			++state;
+			break;
+		case _S_MAIN:
+			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+				++state;
+			}
+
+			draw_string(AGE_CVS, 0, 32, 13, buf);
+			break;
+		case _S_BACK:
+			state = _S_DEFAULT;
+			init();
+			set_canvas_controller(AGE_CVS, state_show_logo);
+			clear_screen(AGE_CVS);
+			memset(buf, 0, _countof(buf));
+			break;
+	};
+
+	return result;
+#undef _S_DEFAULT
+#undef _S_MAIN
+#undef _S_BACK
+}
+
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 #define _S_DEFAULT 0
 #define _S_MAIN 1
@@ -337,6 +382,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			game()->boardTemplate->update = on_update_for_sprite_board;
 			game()->set_score_board_visible(TRUE);
 			game()->set_score_board_value(0);
+			draw_string(AGE_CVS, 0, GAME_AREA_WIDTH + 2, 0, "Score:");
 			++state;
 			break;
 		case _S_MAIN:

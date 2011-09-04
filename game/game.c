@@ -187,7 +187,7 @@ void _create_score_boards(void) {
 			"data/ui/number_palete.txt"
 		);
 		play_sprite(AGE_CVS, game()->scoreBoard[i], "s0", "e0", FALSE, 0);
-		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + (SCORE_BOARD_SIZE - 1 - i) * 4 + 2, 0);
+		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + (SCORE_BOARD_SIZE - 1 - i) * 4 + 2, 1);
 		set_sprite_physics_mode(AGE_CVS, game()->scoreBoard[i], PHYSICS_MODE_NULL);
 		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], FALSE);
 	}
