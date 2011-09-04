@@ -208,7 +208,7 @@ void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr,
 
 	if(!ob) {
 		if(ud->collitionDirection && _spr->direction && ud->collitionDirection == _spr->direction) {
-			set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x/* - _spr->direction*/, _spr->position.y);
+			set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x, _spr->position.y);
 		}
 	}
 }
@@ -242,29 +242,43 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 	s32 y = 0;
 	s32 bx = 0;
 	s32 by = 0;
+	s32 l = 0;
 
 	assert(_cvs && _spr);
 
+	get_sprite_position(_cvs, _spr, &x, &y);
 	ud = (PlayerUserdata*)(_spr->userdata.data);
 	assert(ud);
+
+	l = game()->lineCount - GAME_AREA_HEIGHT + y + _spr->frameSize.h;
+	if(/*!(l % game()->levelDistance) && */l > 0) {
+		l /= game()->levelDistance;
+		if(l > (s32)game()->levelCount) {
+			game()->levelCount = l;
+			game()->set_score_board_value(l);
+			set_s32_param(AGE_CVS_PAR, "SCORE", l);
+		}
+	}
+
 	ud->time += _elapsedTime;
 	if(ud->time >= ud->fallTime) {
 		ud->time -= ud->fallTime;
-		get_sprite_position(_cvs, _spr, &x, &y);
-		if(ud->onBoard[0]) {
-			bd = get_sprite_by_name(_cvs, ud->onBoard);
-			if(bd) {
-				get_sprite_position(_cvs, bd, &bx, &by);
-				by = by - _spr->frameSize.h + 1;
-				set_sprite_position(_cvs, _spr, x, by);
-				if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
-					// TODO
-				}
-			}
-		} else {
+		if(!ud->onBoard[0]) {
 			++y;
 			set_sprite_position(_cvs, _spr, x, y);
 			if(y > GAME_AREA_BOTTOM) {
+				// TODO
+			}
+		}
+	}
+
+	if(ud->onBoard[0]) {
+		bd = get_sprite_by_name(_cvs, ud->onBoard);
+		if(bd) {
+			get_sprite_position(_cvs, bd, &bx, &by);
+			by = by - _spr->frameSize.h + 1;
+			set_sprite_position(_cvs, _spr, x, by);
+			if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
 				// TODO
 			}
 		}

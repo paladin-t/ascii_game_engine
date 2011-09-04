@@ -53,6 +53,22 @@ static bl _register_apis(mb_interpreter_t* s) {
 	mb_register_func(s, "GET_SPRITE_POS_Y", age_api_get_sprite_position_y);
 	mb_register_func(s, "PLAY_SPRITE", age_api_play_sprite);
 	mb_register_func(s, "STOP_SPRITE", age_api_stop_sprite);
+	mb_register_func(s, "GET_CVS_S32_PARAM", age_api_get_cvs_s32_param);
+	mb_register_func(s, "SET_CVS_S32_PARAM", age_api_set_cvs_s32_param);
+	mb_register_func(s, "GET_CVS_U32_PARAM", age_api_get_cvs_u32_param);
+	mb_register_func(s, "SET_CVS_U32_PARAM", age_api_set_cvs_u32_param);
+	mb_register_func(s, "GET_CVS_F32_PARAM", age_api_get_cvs_f32_param);
+	mb_register_func(s, "SET_CVS_F32_PARAM", age_api_set_cvs_f32_param);
+	mb_register_func(s, "GET_CVS_STR_PARAM", age_api_get_cvs_str_param);
+	mb_register_func(s, "SET_CVS_STR_PARAM", age_api_set_cvs_str_param);
+	mb_register_func(s, "GET_SPR_S32_PARAM", age_api_get_spr_s32_param);
+	mb_register_func(s, "SET_SPR_S32_PARAM", age_api_set_spr_s32_param);
+	mb_register_func(s, "GET_SPR_U32_PARAM", age_api_get_spr_u32_param);
+	mb_register_func(s, "SET_SPR_U32_PARAM", age_api_set_spr_u32_param);
+	mb_register_func(s, "GET_SPR_F32_PARAM", age_api_get_spr_f32_param);
+	mb_register_func(s, "SET_SPR_F32_PARAM", age_api_set_spr_f32_param);
+	mb_register_func(s, "GET_SPR_STR_PARAM", age_api_get_spr_str_param);
+	mb_register_func(s, "SET_SPR_STR_PARAM", age_api_set_spr_str_param);
 
 	return result;
 }

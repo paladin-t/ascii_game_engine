@@ -139,4 +139,93 @@ AGE_INTERNAL int age_api_play_sprite(mb_interpreter_t* s, void** l);
  */
 AGE_INTERNAL int age_api_stop_sprite(mb_interpreter_t* s, void** l);
 
+/**
+ * @brief my-basic api: get a s32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_get_cvs_s32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a s32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_set_cvs_s32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a u32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_get_cvs_u32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a u32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_set_cvs_u32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a f32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_get_cvs_f32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a f32 parameter of the canvas
+ */
+AGE_INTERNAL int age_api_set_cvs_f32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a string parameter of the canvas
+ */
+AGE_INTERNAL int age_api_get_cvs_str_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a string parameter of the canvas
+ */
+AGE_INTERNAL int age_api_set_cvs_str_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a s32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_get_spr_s32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a s32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_set_spr_s32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a u32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_get_spr_u32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a u32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_set_spr_u32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a f32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_get_spr_f32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a f32 parameter of a sprite
+ */
+AGE_INTERNAL int age_api_set_spr_f32_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: get a string parameter of a sprite
+ */
+AGE_INTERNAL int age_api_get_spr_str_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: set a string parameter of a sprite
+ */
+AGE_INTERNAL int age_api_set_spr_str_param(mb_interpreter_t* s, void** l);
+
+/**
+ * @brief my-basic api: load saved data
+ */
+AGE_API void amb_load_data(const Str file);
+/**
+ * @brief my-basic api: save data
+ */
+AGE_API void amb_save_data(const Str file);
+
 #endif /* __AGE_SCRIPT_API_H__ */

@@ -39,6 +39,29 @@
 typedef ht_node_t AgeParamSet;
 
 /**
+ * @brief parameter type
+ */
+typedef enum AgeParamType {
+	APT_S32, /**< signed in 32bits */
+	APT_U32, /**< unsigned in 32bits */
+	APT_F32, /**< float in 32bits */
+	APT_STR, /**< string */
+} AgeParamType;
+
+/**
+ * @brief parameter item
+ */
+typedef struct AgeParam {
+	AgeParamType type; /**< parameter type */
+	union {
+		s32 s32;       /**< signed in 32bits */
+		u32 u32;       /**< unsigned in 32bits */
+		f32 f32;       /**< float in 32bits */
+		Str str;       /**< string */
+	};
+} AgeParam;
+
+/**
  * @brief create a parameter set object
  *
  * @return - created parameter set object

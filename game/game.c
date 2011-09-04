@@ -43,6 +43,8 @@ static void _on_exit(void) {
 	game()->destroy_score_boards();
 	game()->clear_board();
 
+	amb_save_data("data/save.bas");
+
 	destroy_world();
 
 	c = _CrtDumpMemoryLeaks();
@@ -63,6 +65,12 @@ static void _on_init(void) {
 	game()->footBrush = fb;
 	init();
 	game()->create_score_boards();
+	AGE_CVS->storeParams = TRUE;
+
+	SetConsoleTitleA("ASCII HERO GO!");
+
+	set_s32_param(AGE_CVS_PAR, "HIGH_SCORE", 0);
+	amb_load_data("data/save.bas");
 }
 
 static AsciiHeroBoardType _generate_board_type(void) {
@@ -179,7 +187,7 @@ void _create_score_boards(void) {
 			"data/ui/number_palete.txt"
 		);
 		play_sprite(AGE_CVS, game()->scoreBoard[i], "s0", "e0", FALSE, 0);
-		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + i * 4 + 2, 0);
+		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + (SCORE_BOARD_SIZE - 1 - i) * 4 + 2, 0);
 		set_sprite_physics_mode(AGE_CVS, game()->scoreBoard[i], PHYSICS_MODE_NULL);
 		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], FALSE);
 	}
@@ -195,6 +203,7 @@ void _destroy_score_boards(void) {
 
 void _set_score_board_value(u32 score) {
 	s32 i = 0;
+	s32 j = 0;
 	s32 n = 0;
 	s8 sf[AGE_STR_LEN];
 	s8 ef[AGE_STR_LEN];
@@ -202,8 +211,14 @@ void _set_score_board_value(u32 score) {
 		n = score % 10;
 		sprintf(sf, "s%d", n);
 		sprintf(ef, "e%d", n);
+		assert(i >= 0 && i < _countof(game()->scoreBoard));
 		play_sprite(AGE_CVS, game()->scoreBoard[i], sf, ef, FALSE, 0);
 		++i;
+		score /= 10;
+	}
+	for(j = i; j < SCORE_BOARD_SIZE; ++j) {
+		assert(j >= 0 && j < _countof(game()->scoreBoard));
+		play_sprite(AGE_CVS, game()->scoreBoard[j], "s0", "e0", FALSE, 0);
 	}
 }
 
@@ -263,15 +278,12 @@ s32 main(s32 argc, Str argv[]) {
 
 	atexit(_on_exit);
 
-	/* initialize */
 	create_world();
 	register_game_script_interfaces();
 	config_world("data/config.bas");
 	_on_init();
-	/* the main loop, go! */
+
 	run_world();
-	/* destroy everything */
-	destroy_world();
 
 	return 0;
 }

@@ -298,6 +298,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 #define _S_MAIN 1
 #define _S_BACK 2
 	s32 result = 0;
+	s32 hs = 0;
 	static s32 state = _S_DEFAULT;
 
 	update_input_context(AGE_IPT);
@@ -319,6 +320,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				"data/sprite/board_palete.txt"
 			);
 			pause_sprite(AGE_CVS, game()->boardTemplate);
+			set_sprite_position(AGE_CVS, game()->main, 0, GAME_AREA_TOP - game()->main->frameSize.h + 1);
 			set_sprite_visible(AGE_CVS, game()->main, FALSE);
 			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
@@ -335,6 +337,8 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
 			game()->boardTemplate->collided = on_collide_for_sprite_board;
 			game()->boardTemplate->update = on_update_for_sprite_board;
+			game()->set_score_board_visible(TRUE);
+			game()->set_score_board_value(0);
 			++state;
 			break;
 		case _S_MAIN:
@@ -353,15 +357,16 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 					++game()->lineCount;
 					if(!(game()->lineCount % game()->levelDistance) && !game()->levelGenerated) {
 						bt = game()->generate_board_type();
-						bd = game()->add_board_by_type(bt);
-						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - bd->frameSize.w);
-						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
-						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
-						game()->levelGenerated = TRUE;
+						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - 10);
 						if(game()->lineCount == game()->levelDistance) {
+							bt = AHBT_SOLID;
 							set_sprite_position(AGE_CVS, game()->main, left + 3, GAME_AREA_TOP - game()->main->frameSize.h + 1);
 							set_sprite_visible(AGE_CVS, game()->main, TRUE);
 						}
+						bd = game()->add_board_by_type(bt);
+						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
+						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
+						game()->levelGenerated = TRUE;
 					} else if(game()->lineCount % game()->levelDistance) {
 						game()->levelGenerated = FALSE;
 					}
@@ -371,11 +376,19 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			break;
 		case _S_BACK:
 			state = _S_DEFAULT;
+			get_s32_param(AGE_CVS_PAR, "HIGH_SCORE", &hs);
+			if((s32)game()->levelCount > hs) {
+				hs = game()->levelCount;
+				set_s32_param(AGE_CVS_PAR, "HIGH_SCORE", hs);
+			}
+			remove_param(AGE_CVS_PAR, "SCORE");
 			stop_sound(AGE_SND, ST_BGM);
 			destroy_sprite(AGE_CVS, game()->main);
 			destroy_sprite(AGE_CVS, game()->boardTemplate);
 			game()->clear_board();
 			game()->boardTemplate = 0;
+			game()->set_score_board_visible(FALSE);
+			game()->set_score_board_value(0);
 			set_canvas_controller(AGE_CVS, 0);
 			AGE_CVS->prevRender = 0;
 			AGE_CVS->postRender = 0;
