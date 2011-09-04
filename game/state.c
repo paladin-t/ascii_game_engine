@@ -136,11 +136,10 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 #define _S_MENU 2
 #define _RAISING_RAIT 128
 	static const Str _MENU_TEXT[] = {
-		"    P L A Y    ",
-		"    R A N K    ",
-		"S E T T I N G S",
-		"   A B O U T   ",
-		"    E X I T    "
+		"     P L A Y     ",
+		"H I G H S C O R E",
+		"    A B O U T    ",
+		"     E X I T     "
 	};
 
 	s32 result = 0;
@@ -201,7 +200,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 				{
 					static s32 __m = 0;
 					for(i = 0; i < _countof(_MENU_TEXT); ++i) {
-						draw_string(AGE_CVS, (i == __m) ? &_f2 : &_f1, 32, 15 + i, "%s %s", (i == __m) ? ">" : " ", _MENU_TEXT[i]);
+						draw_string(AGE_CVS, (i == __m) ? &_f2 : &_f1, 31, 15 + i, "%s %s", (i == __m) ? ">" : " ", _MENU_TEXT[i]);
 					}
 
 					if(is_key_down(AGE_IPT, 0, KC_UP)) {
@@ -226,9 +225,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							clear_screen(AGE_CVS);
 						} else if(__m == 1) { /* rank */
 							// TODO
-						} else if(__m == 2) { /* settings */
-							// TODO
-						} else if(__m == 3) { /* about */
+						} else if(__m == 2) { /* about */
 							set_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", "data/info.txt");
 							destroy_sprite(AGE_CVS, game()->main);
 							destroy_sprite(AGE_CVS, game()->subsidiary);
@@ -236,7 +233,7 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							stop_sound(AGE_SND, ST_BGM);
 							set_canvas_controller(AGE_CVS, state_text_list);
 							clear_screen(AGE_CVS);
-						} else if(__m == 4) { /* exit */
+						} else if(__m == 3) { /* exit */
 							exit_world();
 						}
 						state = _S_DEFAULT;
@@ -269,6 +266,7 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 		case _S_DEFAULT:
 			clear_screen(AGE_CVS);
 			get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
+			remove_param(AGE_CVS_PAR, "STATE_TRANS_DATA");
 			text = freadall(data);
 			draw_string(AGE_CVS, 0, 0, 0, text);
 			AGE_FREE(text);
