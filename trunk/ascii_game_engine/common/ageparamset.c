@@ -26,23 +26,6 @@
 #include "ageparamset.h"
 #include "ageutil.h"
 
-typedef enum AgeParamType {
-	APT_S32,
-	APT_U32,
-	APT_F32,
-	APT_STR,
-} AgeParamType;
-
-typedef struct AgeParam {
-	AgeParamType type;
-	union {
-		s32 s32;
-		u32 u32;
-		f32 f32;
-		Str str;
-	};
-} AgeParam;
-
 static AgeParam* _create_param(AgeParamType _type) {
 	AgeParam* result = AGE_MALLOC(AgeParam);
 	result->type = _type;

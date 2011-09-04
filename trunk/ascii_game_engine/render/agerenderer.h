@@ -232,6 +232,7 @@ typedef struct Sprite {
 	Str name;                                 /**< name */
 	s32 visibility;                           /**< visibility */
 	AgeParamSet* params;                      /**< parameter set */
+	bl storeParams;                           /**< whether store parameters to saved data file or not */
 	Userdata userdata;                        /**< user defined data */
 	Point position;                           /**< position */
 	Point oldPosition;                        /**< old position */
@@ -278,6 +279,7 @@ typedef void (* CanvasRenderFunc)(struct Canvas* _cvs, s32 _elapsedTime);
 typedef struct Canvas {
 	Str name;                    /**< name */
 	AgeParamSet* params;         /**< parameter set */
+	bl storeParams;              /**< whether store parameters to saved data file or not */
 	Size size;                   /**< canvas size */
 	Pixel* pixels;               /**< frame buffer */
 	ht_node_t* sprites;          /**< alive sprite objects */

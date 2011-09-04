@@ -203,6 +203,26 @@
 				RelativePath=".\data\info.txt"
 				>
 			</File>
+			<File
+				RelativePath=".\data\save.bas"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
 			<Filter
 				Name="sprite"
 				>

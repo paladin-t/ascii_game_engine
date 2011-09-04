@@ -29,6 +29,40 @@
 #include "../age.h"
 #include "agescriptapi.h"
 
+static FILE* dataFile = 0;
+
+static s32 _save_cvs_param(Ptr _data, Ptr _extra) {
+	s32 result = 0;
+	Str name = 0;
+	AgeParam* par = 0;
+	s8 buf[AGE_STR_LEN];
+
+	par = (AgeParam*)_data;
+	name = (Str)_extra;
+
+	switch(par->type) {
+		case APT_S32:
+			sprintf(buf, "SET_CVS_S32_PARAM(\"%s\", %d)\r\n", name, par->s32);
+			break;
+		case APT_U32:
+			sprintf(buf, "SET_CVS_U32_PARAM(\"%s\", %d)\r\n", name, par->u32);
+			break;
+		case APT_F32:
+			sprintf(buf, "SET_CVS_S32_PARAM(\"%s\", %f)\r\n", name, par->f32);
+			break;
+		case APT_STR:
+			sprintf(buf, "SET_CVS_S32_PARAM(\"%s\", %s)\r\n", name, par->str);
+			break;
+		default:
+			assert("Unknown parameter type");
+			break;
+	}
+
+	fwrite(buf, 1, strlen(buf), dataFile);
+
+	return result;
+}
+
 bl amb_register_func(mb_interpreter_t* s, const Str n, mb_func_t f) {
 	bl result = TRUE;
 
@@ -295,4 +329,331 @@ int age_api_stop_sprite(mb_interpreter_t* s, void** l) {
 	}
 
 	return result;
+}
+
+int age_api_get_cvs_s32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	get_s32_param(AGE_CVS_PAR, name, &val);
+	mb_push_int(s, l, val);
+
+	return result;
+}
+
+int age_api_set_cvs_s32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	set_s32_param(AGE_CVS_PAR, name, val);
+
+	return result;
+}
+
+int age_api_get_cvs_u32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	u32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	get_u32_param(AGE_CVS_PAR, name, &val);
+	mb_push_int(s, l, (int)val);
+
+	return result;
+}
+
+int age_api_set_cvs_u32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	set_u32_param(AGE_CVS_PAR, name, (u32)val);
+
+	return result;
+}
+
+int age_api_get_cvs_f32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	f32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	get_f32_param(AGE_CVS_PAR, name, &val);
+	mb_push_real(s, l, val);
+
+	return result;
+}
+
+int age_api_set_cvs_f32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	f32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_real(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	set_f32_param(AGE_CVS_PAR, name, val);
+
+	return result;
+}
+
+int age_api_get_cvs_str_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Str val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	get_str_param(AGE_CVS_PAR, name, &val);
+	mb_push_string(s, l, val);
+
+	return result;
+}
+
+int age_api_set_cvs_str_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str name = 0;
+	Str val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &name);
+	mb_pop_string(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	set_str_param(AGE_CVS_PAR, name, val);
+
+	return result;
+}
+
+int age_api_get_spr_s32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	get_s32_param(spr->params, name, &val);
+	mb_push_int(s, l, val);
+
+	return result;
+}
+
+int age_api_set_spr_s32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	set_s32_param(spr->params, name, val);
+
+	return result;
+}
+
+int age_api_get_spr_u32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	u32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	get_u32_param(spr->params, name, &val);
+	mb_push_int(s, l, (int)val);
+
+	return result;
+}
+
+int age_api_set_spr_u32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	s32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_pop_int(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	set_u32_param(spr->params, name, (u32)val);
+
+	return result;
+}
+
+int age_api_get_spr_f32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	f32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	get_f32_param(spr->params, name, &val);
+	mb_push_real(s, l, val);
+
+	return result;
+}
+
+int age_api_set_spr_f32_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	f32 val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_pop_real(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	set_f32_param(spr->params, name, val);
+
+	return result;
+}
+
+int age_api_get_spr_str_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	Str val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	get_str_param(spr->params, name, &val);
+	mb_push_string(s, l, val);
+
+	return result;
+}
+
+int age_api_set_spr_str_param(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	Str sn = 0;
+	Sprite* spr = 0;
+	Str name = 0;
+	Str val = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_string(s, l, &sn);
+	mb_pop_string(s, l, &name);
+	mb_pop_string(s, l, &val);
+	mb_attempt_close_bracket(s, l);
+
+	spr = get_sprite_by_name(AGE_CVS, sn);
+	assert(spr);
+	set_str_param(spr->params, name, val);
+
+	return result;
+}
+
+void amb_load_data(const Str file) {
+	run_new_script(file);
+}
+
+void amb_save_data(const Str file) {
+	dataFile = fopen(file, "wb+");
+	if(AGE_CVS->storeParams && dataFile) {
+		ht_foreach(AGE_CVS->params, _save_cvs_param);
+	}
+	if(dataFile) {
+		fclose(dataFile);
+		dataFile = 0;
+	}
 }
