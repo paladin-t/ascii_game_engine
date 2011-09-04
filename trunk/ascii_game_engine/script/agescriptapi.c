@@ -48,10 +48,10 @@ static s32 _save_cvs_param(Ptr _data, Ptr _extra) {
 			sprintf(buf, "SET_CVS_U32_PARAM(\"%s\", %d)\r\n", name, par->u32);
 			break;
 		case APT_F32:
-			sprintf(buf, "SET_CVS_S32_PARAM(\"%s\", %f)\r\n", name, par->f32);
+			sprintf(buf, "SET_CVS_F32_PARAM(\"%s\", %f)\r\n", name, par->f32);
 			break;
 		case APT_STR:
-			sprintf(buf, "SET_CVS_S32_PARAM(\"%s\", %s)\r\n", name, par->str);
+			sprintf(buf, "SET_CVS_STR_PARAM(\"%s\", %s)\r\n", name, par->str);
 			break;
 		default:
 			assert("Unknown parameter type");
