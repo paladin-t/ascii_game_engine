@@ -38,4 +38,6 @@ s32 state_show_highscore(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lpara
 
 s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
+s32 state_game_over(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
+
 #endif /* __STATE_H__ */

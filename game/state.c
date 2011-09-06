@@ -278,7 +278,7 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 			++state;
 			break;
 		case _S_MAIN:
-			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+			if(is_key_down(AGE_IPT, 0, KC_ESC) || is_key_down(AGE_IPT, 0, KC_OK)) {
 				++state;
 			}
 			break;
@@ -315,7 +315,7 @@ s32 state_show_highscore(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lpara
 			++state;
 			break;
 		case _S_MAIN:
-			if(is_key_down(AGE_IPT, 0, KC_ESC)) {
+			if(is_key_down(AGE_IPT, 0, KC_ESC) || is_key_down(AGE_IPT, 0, KC_OK)) {
 				++state;
 			}
 
@@ -391,6 +391,10 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				Sprite* bd = 0;
 				s32 left = 0;
 
+				if(game()->game_over) {
+					++state;
+				}
+
 				if(is_key_down(AGE_IPT, 0, KC_ESC)) {
 					++state;
 				}
@@ -437,8 +441,37 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			AGE_CVS->prevRender = 0;
 			AGE_CVS->postRender = 0;
 			clear_screen(AGE_CVS);
-			init();
-			set_canvas_controller(AGE_CVS, state_show_logo);
+			if(game()->game_over) {
+				game()->game_over = FALSE;
+				set_canvas_controller(AGE_CVS, state_game_over);
+			} else {
+				init();
+				set_canvas_controller(AGE_CVS, state_show_logo);
+			}
+			break;
+	};
+
+	return result;
+#undef _S_DEFAULT
+#undef _S_MAIN
+#undef _S_BACK
+}
+
+s32 state_game_over(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
+#define _S_DEFAULT 0
+#define _S_MAIN 1
+#define _S_BACK 2
+	s32 result = 0;
+	static s32 state = _S_DEFAULT;
+
+	update_input_context(AGE_IPT);
+
+	switch(state) {
+		case _S_DEFAULT:
+			break;
+		case _S_MAIN:
+			break;
+		case _S_BACK:
 			break;
 	};
 

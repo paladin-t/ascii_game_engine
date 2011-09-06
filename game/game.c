@@ -174,7 +174,7 @@ static s32 _clear_board(void) {
 	return result;
 }
 
-void _create_score_boards(void) {
+static void _create_score_boards(void) {
 	s32 i = 0;
 	s8 n[AGE_STR_LEN];
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
@@ -193,7 +193,7 @@ void _create_score_boards(void) {
 	}
 }
 
-void _destroy_score_boards(void) {
+static void _destroy_score_boards(void) {
 	s32 i = 0;
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
 		destroy_sprite(AGE_CVS, game()->scoreBoard[i]);
@@ -201,7 +201,7 @@ void _destroy_score_boards(void) {
 	memset(game()->scoreBoard, 0, sizeof(game()->scoreBoard));
 }
 
-void _set_score_board_value(u32 score) {
+static void _set_score_board_value(u32 score) {
 	s32 i = 0;
 	s32 j = 0;
 	s32 n = 0;
@@ -222,7 +222,7 @@ void _set_score_board_value(u32 score) {
 	}
 }
 
-void _set_score_board_visible(bl vis) {
+static void _set_score_board_visible(bl vis) {
 	s32 i = 0;
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
 		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], vis);

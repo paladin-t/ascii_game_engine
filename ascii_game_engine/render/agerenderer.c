@@ -384,7 +384,7 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 }
 
 Canvas* create_canvas(const Str _name) {
-	int count = CANVAS_WIDTH * CANVAS_HEIGHT;
+	s32 count = CANVAS_WIDTH * CANVAS_HEIGHT;
 	Str name = copy_string(_name);
 	Canvas* result = AGE_MALLOC(Canvas);
 

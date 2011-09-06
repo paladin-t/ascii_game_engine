@@ -268,6 +268,7 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 			set_sprite_position(_cvs, _spr, x, y);
 			if(y > GAME_AREA_BOTTOM) {
 				// TODO
+				//game()->game_over = TRUE;
 			}
 		}
 	}
@@ -280,6 +281,7 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 			set_sprite_position(_cvs, _spr, x, by);
 			if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
 				// TODO
+				//game()->game_over = TRUE;
 			}
 		}
 	}
