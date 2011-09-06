@@ -71,6 +71,7 @@ typedef struct AsciiHeroGame {
 	s32 boardPoolSize;
 	s32 boardCount;
 	Sprite* scoreBoard[SCORE_BOARD_SIZE];
+	bl game_over;
 	s32 time;
 	s32 lineUpTime;
 	u32 lineCount;
