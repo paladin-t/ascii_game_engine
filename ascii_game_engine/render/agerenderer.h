@@ -606,6 +606,14 @@ AGE_API void goto_xy(Canvas* _cvs, s32 _x, s32 _y);
 AGE_API void set_color(Canvas* _cvs, Color _col);
 
 /**
+ * @brief clear a pixel
+ *
+ * @param[in] _cvs - canvas object
+ * @param[in] _x   - x position of the pixel to be cleared
+ * @param[in] _y   - y position of the pixel to be cleared
+ */
+AGE_API void clear_pixel(Canvas* _cvs, s32 _x, s32 _y);
+/**
  * @brief clear screen
  *
  * @param[in] _cvs - canvas object

@@ -140,25 +140,25 @@ s32 on_msg_proc_for_sprite_board(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lpar
 	return result;
 }
 
-s32 on_playing_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
+s32 on_playing_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
 	s32 result = 0;
 
 	return result;
 }
 
-s32 on_playing_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
+s32 on_playing_for_sprite_board(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx) {
 	s32 result = 0;
 
 	return result;
 }
 
-void on_removing_for_sprite_main_player(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr) {
+void on_removing_for_sprite_main_player(Ptr _handlerObj, Canvas* _cvs, Sprite* _spr) {
 }
 
-void on_removing_for_sprite_board(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr) {
+void on_removing_for_sprite_board(Ptr _handlerObj, Canvas* _cvs, Sprite* _spr) {
 }
 
-void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+void on_collide_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _px, s32 _py) {
 	Pixel* pixelc = 0;
 	PlayerUserdata* ud = 0;
 	Sprite* bd = 0;
@@ -213,7 +213,7 @@ void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr,
 	}
 }
 
-void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py) {
+void on_collide_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _px, s32 _py) {
 	Pixel* pixelc = 0;
 	BoardUserdata* bu = 0;
 	Sprite* bd = 0;
@@ -235,7 +235,7 @@ void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _
 	}
 }
 
-void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	PlayerUserdata* ud = 0;
 	Sprite* bd = 0;
 	s32 x = 0;
@@ -251,12 +251,11 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 	assert(ud);
 
 	l = game()->lineCount - GAME_AREA_HEIGHT + y + _spr->frameSize.h;
-	if(/*!(l % game()->levelDistance) && */l > 0) {
+	if(l > 0) {
 		l /= game()->levelDistance;
 		if(l > (s32)game()->levelCount) {
 			game()->levelCount = l;
 			game()->set_score_board_value(l);
-			set_s32_param(AGE_CVS_PAR, "SCORE", l);
 		}
 	}
 
@@ -267,8 +266,7 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 			++y;
 			set_sprite_position(_cvs, _spr, x, y);
 			if(y > GAME_AREA_BOTTOM) {
-				// TODO
-				//game()->game_over = TRUE;
+				game()->game_over = TRUE;
 			}
 		}
 	}
@@ -280,15 +278,14 @@ void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, 
 			by = by - _spr->frameSize.h + 1;
 			set_sprite_position(_cvs, _spr, x, by);
 			if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
-				// TODO
-				//game()->game_over = TRUE;
+				game()->game_over = TRUE;
 			}
 		}
 	}
 	ud->onBoard[0] = '\0';
 }
 
-void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime) {
+void on_update_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 	BoardUserdata* bu = 0;
 
 	assert(_cvs && _spr);
@@ -350,7 +347,7 @@ s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg
 			}
 			break;
 		default:
-			assert("Unknow direction");
+			assert("Unknown direction");
 			break;
 	}
 	set_sprite_position(spr->owner, spr, x, y);

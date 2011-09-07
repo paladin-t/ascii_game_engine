@@ -69,21 +69,21 @@ s32 on_msg_proc_for_sprite_main_player(Ptr _receiver, Ptr _sender, u32 _msg, u32
 
 s32 on_msg_proc_for_sprite_board(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
-s32 on_playing_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
+s32 on_playing_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
 
-s32 on_playing_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
+s32 on_playing_for_sprite_board(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
 
-void on_removing_for_sprite_main_player(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr);
+void on_removing_for_sprite_main_player(Ptr _handlerObj, Canvas* _cvs, Sprite* _spr);
 
-void on_removing_for_sprite_board(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr);
+void on_removing_for_sprite_board(Ptr _handlerObj, Canvas* _cvs, Sprite* _spr);
 
-void on_collide_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py);
+void on_collide_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _px, s32 _py);
 
-void on_collide_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py);
+void on_collide_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _px, s32 _py);
 
-void on_update_for_sprite_main_player(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
-void on_update_for_sprite_board(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+void on_update_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
 s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
