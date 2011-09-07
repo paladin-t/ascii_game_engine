@@ -369,11 +369,10 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
 			register_message_proc(&game()->main->messageMap, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
-			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_physics_mode(AGE_CVS, game()->main, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
 			game()->main->collided = on_collide_for_sprite_main_player;
-			game()->main->update = on_update_for_sprite_main_player;
+			game()->main->update = 0;
 			game()->main->userdata.data = create_player_userdata();
 			game()->main->userdata.destroy = destroy_player_userdata;
 			((PlayerUserdata*)(game()->main->userdata.data))->fallTime = DEFAULT_FALL_TIME;
@@ -408,6 +407,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - 10);
 						if(game()->lineCount == game()->levelDistance) {
 							bt = AHBT_SOLID;
+							game()->main->update = on_update_for_sprite_main_player;
 							set_sprite_position(AGE_CVS, game()->main, left + 3, GAME_AREA_TOP - game()->main->frameSize.h + 1);
 							set_sprite_visible(AGE_CVS, game()->main, TRUE);
 						}
@@ -429,22 +429,21 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				hs = game()->levelCount;
 				set_s32_param(AGE_CVS_PAR, "HIGH_SCORE", hs);
 			}
-			remove_param(AGE_CVS_PAR, "SCORE");
 			stop_sound(AGE_SND, ST_BGM);
 			destroy_sprite(AGE_CVS, game()->main);
 			destroy_sprite(AGE_CVS, game()->boardTemplate);
 			game()->clear_board();
 			game()->boardTemplate = 0;
-			game()->set_score_board_visible(FALSE);
-			game()->set_score_board_value(0);
 			set_canvas_controller(AGE_CVS, 0);
 			AGE_CVS->prevRender = 0;
 			AGE_CVS->postRender = 0;
-			clear_screen(AGE_CVS);
 			if(game()->game_over) {
 				game()->game_over = FALSE;
 				set_canvas_controller(AGE_CVS, state_game_over);
 			} else {
+				game()->set_score_board_visible(FALSE);
+				game()->set_score_board_value(0);
+				clear_screen(AGE_CVS);
 				init();
 				set_canvas_controller(AGE_CVS, state_show_logo);
 			}
@@ -459,24 +458,96 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 
 s32 state_game_over(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 #define _S_DEFAULT 0
-#define _S_MAIN 1
-#define _S_BACK 2
+#define _S_INTRO_0 1
+#define _S_INTRO_1 2
+#define _S_MAIN 3
+#define _S_BACK 4
+
+#define _STEP_TIME 20
 	s32 result = 0;
 	static s32 state = _S_DEFAULT;
+	static s32 x = GAME_AREA_LEFT + 1;
+	static s32 y = GAME_AREA_TOP;
+	static s32 time = 0;
+	s32 i = 0;
+	s32 j = 0;
 
 	update_input_context(AGE_IPT);
 
+	time += _elapsedTime;
 	switch(state) {
 		case _S_DEFAULT:
+			++state;
+			break;
+		case _S_INTRO_0:
+			if(time >= _STEP_TIME) {
+				time -= _STEP_TIME;
+				for(i = x; i < GAME_AREA_WIDTH - x + 1; ++i) {
+					clear_pixel(AGE_CVS, i, y);
+					clear_pixel(AGE_CVS, i, GAME_AREA_HEIGHT - 1 - y);
+					put_char(AGE_CVS, 0, i, y, '*');
+					put_char(AGE_CVS, 0, i, GAME_AREA_HEIGHT - 1 - y, '*');
+				}
+				for(j = y; j < GAME_AREA_HEIGHT - y; ++j) {
+					clear_pixel(AGE_CVS, x, j);
+					clear_pixel(AGE_CVS, GAME_AREA_WIDTH - x, j);
+					put_char(AGE_CVS, 0, x, j, '*');
+					put_char(AGE_CVS, 0, GAME_AREA_WIDTH - x, j, '*');
+				}
+				++x;
+				++y;
+				if(x >= (GAME_AREA_WIDTH - x) / 2 + 1 && y >= (GAME_AREA_HEIGHT - y) / 2 + 1) {
+					++state;
+					x = y = 0;
+				}
+			}
+			break;
+		case _S_INTRO_1:
+			if(time >= _STEP_TIME) {
+				time -= _STEP_TIME;
+				for(i = x; i < GAME_AREA_WIDTH - x + 1; ++i) {
+					clear_pixel(AGE_CVS, i, y);
+					clear_pixel(AGE_CVS, i, GAME_AREA_HEIGHT - 1 - y);
+					put_char(AGE_CVS, 0, i, y, ' ');
+					put_char(AGE_CVS, 0, i, GAME_AREA_HEIGHT - 1 - y, ' ');
+				}
+				for(j = y; j < GAME_AREA_HEIGHT - y; ++j) {
+					clear_pixel(AGE_CVS, x, j);
+					clear_pixel(AGE_CVS, GAME_AREA_WIDTH - x, j);
+					put_char(AGE_CVS, 0, x, j, ' ');
+					put_char(AGE_CVS, 0, GAME_AREA_WIDTH - x, j, ' ');
+				}
+				++x;
+				++y;
+				if(x >= (GAME_AREA_WIDTH - x) / 2 + 1 && y >= (GAME_AREA_HEIGHT - y) / 2 + 1) {
+					++state;
+				}
+			}
 			break;
 		case _S_MAIN:
+			if(is_key_down(AGE_IPT, 0, KC_ESC) || is_key_down(AGE_IPT, 0, KC_OK)) {
+				++state;
+			}
+
+			draw_string(AGE_CVS, 0, 27, 12, "Game Over");
 			break;
 		case _S_BACK:
+			state = _S_DEFAULT;
+			x = GAME_AREA_LEFT + 1;
+			y = GAME_AREA_TOP;
+			time = 0;
+			game()->set_score_board_visible(FALSE);
+			game()->set_score_board_value(0);
+			clear_screen(AGE_CVS);
+			init();
+			set_canvas_controller(AGE_CVS, state_show_logo);
 			break;
 	};
 
 	return result;
 #undef _S_DEFAULT
+#undef _S_INTRO_0
+#undef _S_INTRO_1
 #undef _S_MAIN
 #undef _S_BACK
 }

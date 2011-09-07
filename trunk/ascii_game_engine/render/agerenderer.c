@@ -1010,24 +1010,29 @@ void set_color(Canvas* _cvs, Color _col) {
 	}
 }
 
+void clear_pixel(Canvas* _cvs, s32 _x, s32 _y) {
+	Pixel* pixelc = 0;
+
+	pixelc = &_cvs->pixels[_x + _y * _cvs->size.w];
+
+	set_color(_cvs, get_mapped_color(0));
+	goto_xy(_cvs, _x, _y);
+	putch(ERASE_PIXEL_SHAPE);
+	pixelc->shape = 0;
+	pixelc->brush = ERASE_PIXEL_SHAPE;
+	pixelc->color = 0;
+	pixelc->frameCount = 0;
+	pixelc->parent = 0;
+	pixelc->zorder = DEFAULT_Z_ORDER;
+}
+
 void clear_screen(Canvas* _cvs) {
 	s32 x = 0;
 	s32 y = 0;
-	Pixel* pixelc = 0;
 
 	for(y = 0; y < _cvs->size.h; ++y) {
 		for(x = 0; x < _cvs->size.w; ++x) {
-			pixelc = &_cvs->pixels[x + y * _cvs->size.w];
-				
-			set_color(_cvs, get_mapped_color(0));
-			goto_xy(_cvs, x, y);
-			putch(ERASE_PIXEL_SHAPE);
-			pixelc->shape = 0;
-			pixelc->brush = ERASE_PIXEL_SHAPE;
-			pixelc->color = 0;
-			pixelc->frameCount = 0;
-			pixelc->parent = 0;
-			pixelc->zorder = DEFAULT_Z_ORDER;
+			clear_pixel(_cvs, x, y);
 		}
 	}
 
