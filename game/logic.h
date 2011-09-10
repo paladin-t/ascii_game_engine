@@ -28,6 +28,49 @@
 
 #include "age.h"
 
+#define DEFAULT_LINE_UP_TIME 500
+#define DEFAULT_LEVEL_DISTANCE 5
+#define DEFAULT_FALL_TIME 100
+
+#define SCORE_BOARD_SIZE 4
+
+typedef enum AsciiHeroBoardType {
+	AHBT_SOLID,
+	AHBT_SPRING,
+	AHBT_SERRATION,
+	AHBT_OVERTURN,
+	AHBT_L_SCROLL,
+	AHBT_R_SCROLL,
+	AHBT_COUNT,
+} AsciiHeroBoardType;
+
+typedef struct AsciiHeroGame {
+	Sprite* main;
+	Sprite* subsidiary;
+	Sprite* boardTemplate;
+	Sprite** boardPool;
+	s32 boardPoolSize;
+	s32 boardCount;
+	Sprite* scoreBoard[SCORE_BOARD_SIZE];
+	bl game_over;
+	s32 time;
+	s32 lineUpTime;
+	u32 lineCount;
+	u32 levelDistance;
+	u32 levelCount;
+	bl levelGenerated;
+	s8 footBrush;
+	AsciiHeroBoardType (* generate_board_type)(void);
+	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
+	s32 (* drop_board)(Sprite* _spr);
+	s32 (* remove_board)(Sprite* _spr);
+	s32 (* clear_board)(void);
+	void (* create_score_boards)(void);
+	void (* destroy_score_boards)(void);
+	void (* set_score_board_value)(u32 score);
+	void (* set_score_board_visible)(bl vis);
+} AsciiHeroGame;
+
 typedef enum Direction {
 	DIR_LEFT,
 	DIR_RIGHT,
@@ -42,8 +85,10 @@ typedef enum UserMessages {
 }UserMessages;
 
 typedef struct BoardUserdata {
+	u32 type;
 	bl drop;
 	bl collition;
+	s32 time;
 } BoardUserdata;
 
 typedef struct PlayerUserdata {
@@ -52,6 +97,36 @@ typedef struct PlayerUserdata {
 	s8 onBoard[AGE_STR_LEN];
 	s32 collitionDirection;
 } PlayerUserdata;
+
+typedef void (* BoardAction)(Canvas* _cvs, Sprite* _spr);
+typedef struct BoardInfo {
+	const Str startFrame;
+	const Str endFrame;
+	struct {
+		s32 probMin;
+		s32 probMax;
+		AsciiHeroBoardType type;
+	};
+	BoardAction action;
+} BoardInfo;
+
+void solid_board_action(Canvas* _cvs, Sprite* _spr);
+void spring_board_action(Canvas* _cvs, Sprite* _spr);
+void serration_board_action(Canvas* _cvs, Sprite* _spr);
+void overturn_board_action(Canvas* _cvs, Sprite* _spr);
+void lscroll_board_action(Canvas* _cvs, Sprite* _spr);
+void rscroll_board_action(Canvas* _cvs, Sprite* _spr);
+
+static const BoardInfo BOARD_INFO[AHBT_COUNT] = {
+	{ "solid", "end_solid", 0, 29, AHBT_SOLID, solid_board_action },
+	{ "spring", "end_spring", 30, 39, AHBT_SPRING, spring_board_action },
+	{ "serration", "end_serration", 40, 54, AHBT_SERRATION, serration_board_action },
+	{ "overturn", "end_overturn", 55, 69, AHBT_OVERTURN, overturn_board_action },
+	{ "l-scroll", "end_l-scroll", 70, 79, AHBT_L_SCROLL, lscroll_board_action },
+	{ "r-scroll", "end_r-scroll", 80, 89, AHBT_R_SCROLL, rscroll_board_action },
+};
+
+void init(void);
 
 BoardUserdata* create_board_userdata(void);
 void destroy_board_userdata(Ptr _ptr);

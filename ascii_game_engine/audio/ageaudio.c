@@ -158,7 +158,7 @@ void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _
 	} else if(_type == ST_SFX) {
 		thread = (ThreadInfo*)(_cnt->sfx);
 	} else {
-		assert("Unknown sound type");
+		assert(0 && "Unknown sound type");
 	}
 	_cnt->sequence = copy_string(_seq);
 	thread->loop = _loop;
@@ -174,7 +174,7 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 	} else if(_type == ST_SFX) {
 		thread = (ThreadInfo*)(_cnt->sfx);
 	} else {
-		assert("Unknown sound type");
+		assert(0 && "Unknown sound type");
 	}
 	if(thread) {
 		thread->level = 1;

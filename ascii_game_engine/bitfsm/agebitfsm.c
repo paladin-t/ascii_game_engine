@@ -416,7 +416,7 @@ s32 get_bitfsm_command_count(Fsm* _fsm, s32 _index) {
 
 Bitset* get_bitfsm_step_command_condition(Fsm* _fsm, s32 _index, s32 _step) {
 	if(!_ensure_index_and_step_index_valid(_fsm, _index, _step)) {
-		assert("Invalid index");
+		assert(0 && "Invalid index");
 		return 0;
 	}
 
@@ -425,7 +425,7 @@ Bitset* get_bitfsm_step_command_condition(Fsm* _fsm, s32 _index, s32 _step) {
 
 s32 get_bitfsm_step_command_next(Fsm* _fsm, s32 _index, s32 _step) {
 	if(!_ensure_index_and_step_index_valid(_fsm, _index, _step)) {
-		assert("Invalid index");
+		assert(0 && "Invalid index");
 		return 0;
 	}
 
@@ -434,7 +434,7 @@ s32 get_bitfsm_step_command_next(Fsm* _fsm, s32 _index, s32 _step) {
 
 bl get_bitfsm_step_exact(Fsm* _fsm, s32 _index, s32 _step) {
 	if(!_ensure_index_and_step_index_valid(_fsm, _index, _step)) {
-		assert("Invalid index");
+		assert(0 && "Invalid index");
 		return 0;
 	}
 

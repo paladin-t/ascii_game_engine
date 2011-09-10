@@ -54,7 +54,7 @@ static s32 _save_cvs_param(Ptr _data, Ptr _extra) {
 			sprintf(buf, "SET_CVS_STR_PARAM(\"%s\", %s)\r\n", name, par->str);
 			break;
 		default:
-			assert("Unknown parameter type");
+			assert(0 && "Unknown parameter type");
 			break;
 	}
 

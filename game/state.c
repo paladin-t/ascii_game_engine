@@ -386,6 +386,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			break;
 		case _S_MAIN:
 			{
+				BoardUserdata* bu = 0;
 				AsciiHeroBoardType bt = AHBT_SOLID;
 				Sprite* bd = 0;
 				s32 left = 0;
@@ -412,6 +413,8 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 							set_sprite_visible(AGE_CVS, game()->main, TRUE);
 						}
 						bd = game()->add_board_by_type(bt);
+						bu = (BoardUserdata*)(bd->userdata.data);
+						bu->type = bt;
 						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
 						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 						game()->levelGenerated = TRUE;
