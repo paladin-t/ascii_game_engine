@@ -39,7 +39,13 @@ static AsciiHeroGame _game;
 
 static void _on_exit(void) {
 	s32 c = 0;
+	s32 i = 0;
 
+	for(i = 0; i < AHAT_COUNT; ++i) {
+		if(game()->audio[i]) {
+			AGE_FREE(game()->audio[i]);
+		}
+	}
 	game()->destroy_score_boards();
 	game()->clear_board();
 
@@ -60,8 +66,11 @@ static void _on_exit(void) {
 }
 
 static void _on_init(void) {
+	Str audio[AHAT_COUNT];
 	s8 fb = game()->footBrush;
+	memcpy(audio, game()->audio, sizeof(game()->audio));
 	memset(game(), 0, sizeof(AsciiHeroGame));
+	memcpy(game()->audio, audio, sizeof(game()->audio));
 	game()->footBrush = fb;
 	init();
 	game()->create_score_boards();

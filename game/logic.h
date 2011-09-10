@@ -29,10 +29,13 @@
 #include "age.h"
 
 #define DEFAULT_LINE_UP_TIME 500
-#define DEFAULT_LEVEL_DISTANCE 5
+#define DEFAULT_LEVEL_DISTANCE 6
 #define DEFAULT_FALL_TIME 100
 
 #define SCORE_BOARD_SIZE 4
+
+#define DEFAULT_JUMP_LINE 3
+#define DEFAULT_JUMP_TIME 50
 
 typedef enum AsciiHeroBoardType {
 	AHBT_SOLID,
@@ -44,7 +47,16 @@ typedef enum AsciiHeroBoardType {
 	AHBT_COUNT,
 } AsciiHeroBoardType;
 
+typedef enum AsciiHeroAudioTypes {
+	AHAT_LOGO,
+	AHAT_TICK,
+	AHAT_COLLIDE,
+	AHAT_GAME_OVER,
+	AHAT_COUNT,
+} AsciiHeroAudioTypes;
+
 typedef struct AsciiHeroGame {
+	Str audio[AHAT_COUNT];
 	Sprite* main;
 	Sprite* subsidiary;
 	Sprite* boardTemplate;
@@ -82,6 +94,7 @@ typedef enum UserMessages {
 	MSG_USER_BEGIN = MSG_USER + 1,
 	MSG_BOARD_UP,
 	MSG_MOVE,
+	MSG_JUMP,
 }UserMessages;
 
 typedef struct BoardUserdata {
@@ -94,6 +107,8 @@ typedef struct BoardUserdata {
 typedef struct PlayerUserdata {
 	s32 time;
 	s32 fallTime;
+	s32 jumpLine;
+	s32 jumpTime;
 	s8 onBoard[AGE_STR_LEN];
 	s32 collitionDirection;
 } PlayerUserdata;
@@ -163,5 +178,7 @@ void on_update_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+
+s32 on_msg_proc_for_sprite_main_player_jump(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 #endif /* __LOGIC_H__ */

@@ -187,6 +187,7 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 			if(_cnt->sequence) {
 				AGE_FREE(_cnt->sequence);
 			}
+			_cnt->position = 0;
 		}
 	}
 }

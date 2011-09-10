@@ -1,3 +1,6 @@
+Sep. 10 2011
+Implemented boards' logic.
+
 Aug. 30 2011
 Use delayed queue for sprite destruction.
 Use separated collition detection.

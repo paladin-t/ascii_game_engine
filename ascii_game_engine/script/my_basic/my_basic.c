@@ -101,7 +101,7 @@ extern "C" {
 #define _HT_ARRAY_SIZE_DEFAULT _HT_ARRAY_SIZE_SMALL
 
 /* Max length of per symbol */
-#define _SINGLE_SYMBOL_MAX_LENGTH 32
+#define _SINGLE_SYMBOL_MAX_LENGTH 256
 /* Max dimension of an array */
 #define _MAX_DIMENSION_COUNT 4
 

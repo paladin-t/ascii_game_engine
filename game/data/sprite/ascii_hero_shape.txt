@@ -1,7 +1,7 @@
 count: 4
 width: 3
 height: 4
-rate: 6
+rate: 3
 
 @walk
  O 
