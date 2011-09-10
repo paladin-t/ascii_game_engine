@@ -25,7 +25,7 @@
 
 #include "agehashtable.h"
 
-#define safe_free(__p) { if(__p) { free(__p); __p = 0; } else { assert("Memory already released"); } }
+#define safe_free(__p) { if(__p) { free(__p); __p = 0; } else { assert(0 && "Memory already released"); } }
 
 u32 ht_hash_string(Ptr ht, Ptr d) {
 	u32 result = 0;
