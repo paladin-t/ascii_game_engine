@@ -173,7 +173,9 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 						_y = CANVAS_HEIGHT + 3;
 						_time = 0;
 						++state;
-						play_sound_string(AGE_SND, "DEDEC>A<C>A<EDEDEC>A<C>A<EPPPP", ST_BGM, TRUE);
+						if(game()->audio[AHAT_LOGO]) {
+							play_sound_string(AGE_SND, game()->audio[AHAT_LOGO], ST_BGM, TRUE);
+						}
 					}
 				}
 			}
@@ -369,6 +371,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
 			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
 			register_message_proc(&game()->main->messageMap, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
+			register_message_proc(&game()->main->messageMap, MSG_JUMP, on_msg_proc_for_sprite_main_player_jump);
 			set_sprite_physics_mode(AGE_CVS, game()->main, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 			game()->main->objectRemoved = on_removing_for_sprite_main_player;
 			game()->main->collided = on_collide_for_sprite_main_player;
@@ -441,6 +444,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 			AGE_CVS->prevRender = 0;
 			AGE_CVS->postRender = 0;
 			if(game()->game_over) {
+				if(game()->audio[AHAT_GAME_OVER]) {
+					play_sound_string(AGE_SND, game()->audio[AHAT_GAME_OVER], ST_BGM, FALSE);
+				}
 				game()->game_over = FALSE;
 				set_canvas_controller(AGE_CVS, state_game_over);
 			} else {

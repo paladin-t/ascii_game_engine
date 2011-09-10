@@ -209,12 +209,9 @@ void solid_board_action(Canvas* _cvs, Sprite* _spr) {
 }
 
 void spring_board_action(Canvas* _cvs, Sprite* _spr) {
-	BoardUserdata* bu = 0;
-
 	assert(_cvs && _spr);
 
-	bu = (BoardUserdata*)(_spr->userdata.data);
-	// TODO
+	send_message_to_sprite(game()->main, _spr, MSG_JUMP, 0, 0, 0);
 }
 
 void serration_board_action(Canvas* _cvs, Sprite* _spr) {
@@ -223,29 +220,41 @@ void serration_board_action(Canvas* _cvs, Sprite* _spr) {
 
 void overturn_board_action(Canvas* _cvs, Sprite* _spr) {
 	BoardUserdata* bu = 0;
+	static const s32 OVERTURN_TIME = 300;
 
 	assert(_cvs && _spr);
 
 	bu = (BoardUserdata*)(_spr->userdata.data);
-	// TODO
+	if(bu->time >= OVERTURN_TIME) {
+		set_sprite_physics_mode(_cvs, _spr, PHYSICS_MODE_NULL);
+	}
 }
 
 void lscroll_board_action(Canvas* _cvs, Sprite* _spr) {
 	BoardUserdata* bu = 0;
+	static const s32 SCROLL_TIME = 100;
 
 	assert(_cvs && _spr);
 
 	bu = (BoardUserdata*)(_spr->userdata.data);
-	// TODO
+	if(bu->time >= SCROLL_TIME) {
+		bu->time -= SCROLL_TIME;
+		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
+	}
 }
 
 void rscroll_board_action(Canvas* _cvs, Sprite* _spr) {
 	BoardUserdata* bu = 0;
+	static const s32 SCROLL_TIME = 100;
 
 	assert(_cvs && _spr);
 
 	bu = (BoardUserdata*)(_spr->userdata.data);
-	// TODO
+	bu = (BoardUserdata*)(_spr->userdata.data);
+	if(bu->time >= SCROLL_TIME) {
+		bu->time -= SCROLL_TIME;
+		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
+	}
 }
 
 void init(void) {
@@ -499,26 +508,36 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 		}
 	}
 
-	ud->time += _elapsedTime;
-	if(ud->time >= ud->fallTime) {
-		ud->time -= ud->fallTime;
-		if(!ud->onBoard[0]) {
-			++y;
+	if(ud->jumpLine) {
+		ud->jumpTime += _elapsedTime;
+		if(ud->jumpTime >= DEFAULT_JUMP_TIME) {
+			ud->jumpTime -= DEFAULT_JUMP_TIME;
+			--ud->jumpLine;
+			--y;
 			set_sprite_position(_cvs, _spr, x, y);
-			if(y > GAME_AREA_BOTTOM) {
-				game()->game_over = TRUE;
+		}
+	} else {
+		ud->time += _elapsedTime;
+		if(ud->time >= ud->fallTime) {
+			ud->time -= ud->fallTime;
+			if(!ud->onBoard[0]) {
+				++y;
+				set_sprite_position(_cvs, _spr, x, y);
+				if(y > GAME_AREA_BOTTOM) {
+					game()->game_over = TRUE;
+				}
 			}
 		}
-	}
 
-	if(ud->onBoard[0]) {
-		bd = get_sprite_by_name(_cvs, ud->onBoard);
-		if(bd) {
-			get_sprite_position(_cvs, bd, &bx, &by);
-			by = by - _spr->frameSize.h + 1;
-			set_sprite_position(_cvs, _spr, x, by);
-			if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
-				game()->game_over = TRUE;
+		if(ud->onBoard[0]) {
+			bd = get_sprite_by_name(_cvs, ud->onBoard);
+			if(bd) {
+				get_sprite_position(_cvs, bd, &bx, &by);
+				by = by - _spr->frameSize.h + 1;
+				set_sprite_position(_cvs, _spr, x, by);
+				if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
+					game()->game_over = TRUE;
+				}
 			}
 		}
 	}
@@ -595,6 +614,19 @@ s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg
 			break;
 	}
 	set_sprite_position(spr->owner, spr, x, y);
+
+	return result;
+}
+
+s32 on_msg_proc_for_sprite_main_player_jump(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra) {
+	s32 result = 0;
+	Sprite* spr = 0;
+	PlayerUserdata* ud = 0;
+
+	spr = (Sprite*)_receiver;
+	ud = (PlayerUserdata*)(spr->userdata.data);
+	ud->jumpLine = DEFAULT_JUMP_LINE;
+	ud->jumpTime = 0;
 
 	return result;
 }

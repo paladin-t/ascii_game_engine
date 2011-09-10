@@ -41,6 +41,28 @@ static int _set_foot_brush(mb_interpreter_t* s, void** l) {
 	return result;
 }
 
+static int _set_audio_string(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	s32 t = 0;
+	Str b = 0;
+
+	assert(s && l);
+
+	amb_attempt_open_bracket(s, l);
+	amb_pop_int(s, l, &t);
+	amb_pop_string(s, l, &b);
+	amb_attempt_close_bracket(s, l);
+
+	assert(t >= 0 && t < AHAT_COUNT);
+	if(t >= 0 && t < AHAT_COUNT) {
+		game()->audio[t] = AGE_REALLOC(s8, game()->audio[t], strlen(b) + 1);
+		strcpy(game()->audio[t], b);
+	}
+
+	return result;
+}
+
 void register_game_script_interfaces(void) {
 	amb_register_func(get_world()->script, "SET_FOOT_BRUSH", _set_foot_brush);
+	amb_register_func(get_world()->script, "SET_AUDIO_STRING", _set_audio_string);
 }

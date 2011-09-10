@@ -357,7 +357,7 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 	_pm = get_sprite_physics_mode(_sprf->owner, _sprf);
 
 	/* check */
-	if((_pm | PHYSICS_MODE_CHECKER) != PHYSICS_MODE_NULL) {
+	if((_pm & PHYSICS_MODE_CHECKER) != PHYSICS_MODE_NULL) {
 		if(_pixelc->frameCount != 0) {
 			if(_sprf->collided) {
 				_sprf->collided(_sprf->owner, _sprf, _sprf->position.x + _px, _sprf->position.y + _py);
@@ -365,7 +365,7 @@ static bl _try_fill_pixel_collision(Pixel* _pixelc, Pixel* _pixelf, s32 _px, s32
 		}
 	}
 	/* fill */
-	if((_pm | PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
+	if((_pm & PHYSICS_MODE_OBSTACLE) != PHYSICS_MODE_NULL) {
 		if(_pixelc->frameCount < MAX_CACHED_FRAME_COUNT) { /* fill */
 			_pixelc->ownerFrames[
 				_pixelc->frameCount++

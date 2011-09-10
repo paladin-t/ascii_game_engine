@@ -1,7 +1,7 @@
 count: 29
 width: 10
 height: 2
-rate: 6
+rate: 1
 
 @solid
 [~~~~~~~~]
