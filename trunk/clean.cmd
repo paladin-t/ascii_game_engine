@@ -9,6 +9,8 @@ del /f /s /q *.ncb
 
 rd /s /q temp
 
+del /f /s /q game\data\save.bas
+
 del /f /s /q output\*.res
 del /f /s /q output\*.dep
 del /f /s /q output\*.htm

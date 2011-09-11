@@ -61,6 +61,12 @@ AGE_API void age_sleep(s32 _time);
 AGE_API s32 age_rand(s32 _min, s32 _max);
 
 /**
+ * @brief ensure file exists
+ *
+ * @param[in] - file name
+ */
+AGE_API void fensure(const Str _file);
+/**
  * @brief get the length of a file
  *
  * @param[in] _fp - file pointer
