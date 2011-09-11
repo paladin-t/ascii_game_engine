@@ -1,7 +1,19 @@
-count: 4
+count: 6
 width: 3
 height: 4
 rate: 3
+
+@normal
+ O 
+/|\
+J L
+   
+
+@end_normal
+ O 
+/|\
+J L
+   
 
 @walk
  O 

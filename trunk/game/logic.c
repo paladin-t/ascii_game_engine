@@ -542,6 +542,8 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 		}
 	}
 	ud->onBoard[0] = '\0';
+
+	update_sprite(_cvs, _spr, _elapsedTime);
 }
 
 void on_update_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
