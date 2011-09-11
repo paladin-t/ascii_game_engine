@@ -79,6 +79,7 @@ static void _on_init(void) {
 	SetConsoleTitleA("ASCII HERO GO!");
 
 	set_s32_param(AGE_CVS_PAR, "HIGH_SCORE", 0);
+	fensure("data/save.bas");
 	amb_load_data("data/save.bas");
 }
 
