@@ -321,6 +321,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\animation.c"
+			>
+		</File>
+		<File
+			RelativePath=".\animation.h"
+			>
+		</File>
+		<File
 			RelativePath=".\game.c"
 			>
 		</File>
