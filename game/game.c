@@ -29,6 +29,7 @@
 #include <stdlib.h>
 
 #include "age.h"
+#include "animation.h"
 #include "game.h"
 #include "logic.h"
 #include "renderer.h"
