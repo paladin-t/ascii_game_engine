@@ -121,6 +121,10 @@ s32 state_show_splash(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, 
 
 	f.color = get_mapped_color(_COLORS[ci]);
 	draw_string(AGE_CVS, &f, 31, 11, _SPLASH);
+	if(state != _S_TATE_4 && state != _S_DEFAULT) {
+		f.color = get_mapped_color(12);
+		draw_string(AGE_CVS, &f, 31 + 6, 11, "'");
+	}
 
 	return result;
 #undef _S_DEFAULT
@@ -273,8 +277,8 @@ s32 state_text_list(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 		case _S_DEFAULT:
 			clear_screen(AGE_CVS);
 			get_str_param(AGE_CVS_PAR, "STATE_TRANS_DATA", &data);
-			remove_param(AGE_CVS_PAR, "STATE_TRANS_DATA");
 			text = freadall(data);
+			remove_param(AGE_CVS_PAR, "STATE_TRANS_DATA");
 			draw_string(AGE_CVS, 0, 0, 0, text);
 			AGE_FREE(text);
 			++state;
