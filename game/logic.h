@@ -111,6 +111,7 @@ typedef struct PlayerUserdata {
 	s32 jumpTime;
 	s8 onBoard[AGE_STR_LEN];
 	s32 collitionDirection;
+	Fsm* fsm;
 } PlayerUserdata;
 
 typedef void (* BoardAction)(Canvas* _cvs, Sprite* _spr);
