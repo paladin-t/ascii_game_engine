@@ -56,9 +56,9 @@ extern "C" {
 /** Macros */
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 11
+#define _VER_REVISION 12
 #define _MB_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _MB_VERSION_STRING "1.0.0011"
+#define _MB_VERSION_STRING "1.0.0012"
 
 /* Helper */
 #ifndef sgn
@@ -92,7 +92,7 @@ extern "C" {
 #	endif /* _strupr */
 #endif /* __APPLE__ */
 
-#define safe_free(__p) { if(__p) { free(__p); __p = 0; } else { assert("Memory already released"); } }
+#define safe_free(__p) { if(__p) { free(__p); __p = 0; } else { assert(0 && "Memory already released"); } }
 
 /* Hash table size */
 #define _HT_ARRAY_SIZE_SMALL 193
@@ -100,8 +100,8 @@ extern "C" {
 #define _HT_ARRAY_SIZE_BIG 12289
 #define _HT_ARRAY_SIZE_DEFAULT _HT_ARRAY_SIZE_SMALL
 
-/* Max length of per symbol */
-#define _SINGLE_SYMBOL_MAX_LENGTH 256
+/* Max length of a single symbol */
+#define _SINGLE_SYMBOL_MAX_LENGTH 128
 /* Max dimension of an array */
 #define _MAX_DIMENSION_COUNT 4
 
@@ -1325,7 +1325,7 @@ bool_t _is_operator(mb_func_t op) {
 }
 
 char _get_priority(mb_func_t op1, mb_func_t op2) {
-	/* Get a priority of two operators */
+	/* Get the priority of two operators */
 	char result = '\0';
 	int idx1 = 0;
 	int idx2 = 0;
@@ -1341,7 +1341,7 @@ char _get_priority(mb_func_t op1, mb_func_t op2) {
 }
 
 int _get_priority_index(mb_func_t op) {
-	/* Get the index of a operator in the priority table */
+	/* Get the index of an operator in the priority table */
 	int result = 0;
 
 	assert(op);
@@ -1383,7 +1383,7 @@ int _get_priority_index(mb_func_t op) {
 	} else if(op == _core_not) {
 		result = 17;
 	} else {
-		assert("Unknown operator");
+		assert(0 && "Unknown operator");
 	}
 
 	return result;
@@ -1420,7 +1420,7 @@ _object_t* _operate_operand(mb_interpreter_t* s, _object_t* optr, _object_t* opn
 }
 
 bool_t _is_expression_terminal(mb_interpreter_t* s, _object_t* obj) {
-	/* Determine whether an object is an expression terminal */
+	/* Determine whether an object is an expression termination */
 	bool_t result = false;
 
 	assert(s && obj);
@@ -1524,7 +1524,7 @@ int _calc_expression(mb_interpreter_t* s, _ls_node_t** l, _object_t** val) {
 					} else if(arr_type == _DT_STRING) {
 						arr_elem->data.string = arr_val.string;
 					} else {
-						assert("Unsupported");
+						assert(0 && "Unsupported");
 					}
 					_ls_pushback(opnd, arr_elem);
 				} else if(c->type == _DT_FUNC) {
@@ -1665,7 +1665,7 @@ bool_t _is_comment(char c) {
 }
 
 bool_t _is_identifier_char(char c) {
-	/* Determine whether a char is a identifier char */
+	/* Determine whether a char is an identifier char */
 	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
 		(c == '_') ||
 		(c >= '0' && c <= '9') ||
@@ -1675,7 +1675,7 @@ bool_t _is_identifier_char(char c) {
 }
 
 bool_t _is_operator_char(char c) {
-	/* Determine whether a char is a operator char */
+	/* Determine whether a char is an operator char */
 	return (c == '+') || (c == '-') || (c == '*') || (c == '/') ||
 		(c == '^') ||
 		(c == '(') || (c == ')') ||
@@ -2051,7 +2051,7 @@ int _parse_char(mb_interpreter_t* s, char c, int pos) {
 					_handle_error(s, SE_PS_INVALID_CHAR, pos, MB_FUNC_ERR, _exit);
 				}
 			} else {
-				assert("Impossible here");
+				assert(0 && "Impossible here");
 			}
 		}
 	} else if(context->parsing_state == _PS_STRING) {
@@ -2069,7 +2069,7 @@ int _parse_char(mb_interpreter_t* s, char c, int pos) {
 			/* Do nothing */
 		}
 	} else {
-		assert("Unknown parsing state");
+		assert(0 && "Unknown parsing state");
 	}
 
 _exit:
@@ -2094,14 +2094,14 @@ int_t _get_size_of(_data_e type) {
 	} else if(type == _DT_STRING) {
 		result = sizeof(char*);
 	} else {
-		assert("Unsupported");
+		assert(0 && "Unsupported");
 	}
 
 	return result;
 }
 
 bool_t _try_get_value(_object_t* obj, mb_value_u* val, _data_e expected) {
-	/* Try to get a value(typed as int_t, real_t or char* */
+	/* Try to get a value(typed as int_t, real_t or char*) */
 	bool_t result = false;
 
 	assert(obj && val);
@@ -2209,7 +2209,7 @@ bool_t _get_array_elem(mb_interpreter_t* s, _array_t* arr, unsigned int index, m
 		val->string = *((char**)rawptr);
 		*type = _DT_STRING;
 	} else {
-		assert("Unsupported");
+		assert(0 && "Unsupported");
 	}
 
 	return result;
@@ -2236,7 +2236,7 @@ bool_t _set_array_elem(mb_interpreter_t* s, _array_t* arr, unsigned int index, m
 		*((char**)rawptr) = (char*)malloc(strlen(val->string) + 1);
 		memcpy(*((char**)rawptr), val->string, strlen(val->string) + 1);
 	} else {
-		assert("Unsupported");
+		assert(0 && "Unsupported");
 	}
 
 	return result;
@@ -2278,7 +2278,7 @@ void _clear_array(_array_t* arr) {
 				safe_free(arr->raw);
 				break;
 			default:
-				assert("Unsupported");
+				assert(0 && "Unsupported");
 				break;
 		}
 		arr->raw = 0;
@@ -2339,7 +2339,7 @@ bool_t _is_internal_object(_object_t* obj) {
 }
 
 int _destroy_object(void* data, void* extra) {
-	/* Destroy an syntax object */
+	/* Destroy a syntax object */
 	int result = _OP_RESULT_NORMAL;
 	_object_t* obj = 0;
 	_var_t* var = 0;
@@ -3345,7 +3345,7 @@ int _core_dummy_assign(mb_interpreter_t* s, void** l) {
 	/* Operator #, dummy assignment */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -3430,7 +3430,7 @@ int _core_open_bracket(mb_interpreter_t* s, void** l) {
 	/* Operator ( */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -3440,7 +3440,7 @@ int _core_close_bracket(mb_interpreter_t* s, void** l) {
 	/* Operator ) */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -3711,7 +3711,7 @@ int _core_let(mb_interpreter_t* s, void** l) {
 		} else if(val->type == _DT_STRING) {
 			_val.string = val->data.string;
 		} else {
-			assert("Unsupported");
+			assert(0 && "Unsupported");
 		}
 		_set_array_elem(s, arr, arr_idx, &_val, &val->type);
 	}
@@ -3870,7 +3870,7 @@ int _core_then(mb_interpreter_t* s, void** l) {
 	/* THEN statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -3880,7 +3880,7 @@ int _core_else(mb_interpreter_t* s, void** l) {
 	/* ELSE statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -4014,7 +4014,7 @@ int _core_to(mb_interpreter_t* s, void** l) {
 	/* TO statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -4024,7 +4024,7 @@ int _core_step(mb_interpreter_t* s, void** l) {
 	/* STEP statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -4121,7 +4121,7 @@ int _core_wend(mb_interpreter_t* s, void** l) {
 	/* WEND statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -4202,7 +4202,7 @@ int _core_until(mb_interpreter_t* s, void** l) {
 	/* UNTIL statement */
 	int result = MB_FUNC_OK;
 
-	assert("Do nothing, impossible here");
+	assert(0 && "Do nothing, impossible here");
 	_do_nothing;
 
 	return result;
@@ -4953,7 +4953,7 @@ int _std_print(mb_interpreter_t* s, void** l) {
 				} else if(obj->type == _DT_STRING) {
 					printf("%s", (obj->data.string ? obj->data.string : _NULL_STRING));
 				} else {
-					assert("Invalid variable type");
+					assert(0 && "Invalid variable type");
 				}
 				break;
 			case _DT_ARRAY:
@@ -4968,7 +4968,7 @@ int _std_print(mb_interpreter_t* s, void** l) {
 				} else if(arr_type == _DT_STRING) {
 					printf("%s", arr_val.string ? arr_val.string : _NULL_STRING);
 				} else {
-					assert("Unsupported");
+					assert(0 && "Unsupported");
 				}
 				break;
 			case _DT_SEP:
