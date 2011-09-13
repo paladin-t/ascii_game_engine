@@ -25,6 +25,7 @@
 
 #include "logic.h"
 #include "game.h"
+#include "animation.h"
 #include "state.h"
 #include "renderer.h"
 
@@ -315,6 +316,7 @@ PlayerUserdata* create_player_userdata(void) {
 	PlayerUserdata* result = 0;
 
 	result = AGE_MALLOC(PlayerUserdata);
+	result->fsm = create_bitfsm(3, 4, fsm_tag_to_index, fsm_tag_to_command, 0, fsm_step_handler, destroy_fsm_tag);
 
 	return result;
 }
@@ -322,6 +324,7 @@ PlayerUserdata* create_player_userdata(void) {
 void destroy_player_userdata(Ptr _ptr) {
 	PlayerUserdata* ud = (PlayerUserdata*)_ptr;
 	assert(ud);
+	destroy_bitfsm(ud->fsm);
 	AGE_FREE(ud);
 }
 

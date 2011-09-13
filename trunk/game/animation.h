@@ -28,4 +28,24 @@
 
 #include "age.h"
 
+typedef struct AsciiHeroFsmTag {
+	s32 index;
+	struct {
+		Str startFrame;
+		Str endFrame;
+	};
+} AsciiHeroFsmTag;
+
+void destroy_fsm_tag(Ptr _ptr);
+
+Ptr normal_fsm_tag(void);
+Ptr falling_fsm_tag(void);
+Ptr walking_fsm_tag(void);
+
+s32 fsm_tag_to_index(Ptr _obj);
+
+s32 fsm_tag_to_command(Ptr _obj);
+
+void fsm_step_handler(Ptr _src, Ptr _tgt);
+
 #endif /* __ANIMATION_H__ */

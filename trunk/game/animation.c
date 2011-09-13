@@ -25,3 +25,43 @@
 
 #include "animation.h"
 #include "game.h"
+
+static AsciiHeroFsmTag NORMAL_FSM_TAG = { 0, "normal", "end_normal" };
+static AsciiHeroFsmTag FALLING_FSM_TAG = { 0, "walk", "end_walk" };
+static AsciiHeroFsmTag WALKING_FSM_TAG = { 0, "walk", "end_walk" };
+
+void destroy_fsm_tag(Ptr _ptr) {
+	/* do nothing */
+}
+
+Ptr normal_fsm_tag(void) {
+	return &NORMAL_FSM_TAG;
+}
+
+Ptr falling_fsm_tag(void) {
+	return &FALLING_FSM_TAG;
+}
+
+Ptr walking_fsm_tag(void) {
+	return &WALKING_FSM_TAG;
+}
+
+s32 fsm_tag_to_index(Ptr _obj) {
+	AsciiHeroFsmTag* tag = (AsciiHeroFsmTag*)_obj;
+
+	assert(_obj);
+
+	return tag->index;
+}
+
+s32 fsm_tag_to_command(Ptr _obj) {
+	s32 result = 0;
+
+	// TODO
+
+	return result;
+}
+
+void fsm_step_handler(Ptr _src, Ptr _tgt) {
+	// TODO
+}
