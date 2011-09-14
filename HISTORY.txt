@@ -1,3 +1,6 @@
+Sep. 15 2011
+Coding style refactoring.
+
 Sep. 10 2011
 Implemented boards' logic.
 

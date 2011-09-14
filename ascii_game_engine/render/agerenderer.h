@@ -117,8 +117,8 @@ typedef struct Pixel {
 		};
 		/* for canvas frame buffer */
 		struct {
-			struct Frame* ownerFrames[MAX_CACHED_FRAME_COUNT]; /**< owner frames */
-			s32 frameCount;                                    /**< owner frames count */
+			struct Frame* owner_frames[MAX_CACHED_FRAME_COUNT]; /**< owner frames */
+			s32 frame_count;                                    /**< owner frames count */
 		};
 	};
 } Pixel;
@@ -141,27 +141,27 @@ typedef struct Frame {
  * @param[in] _currIdx - current frame index
  * @return - execution status
  */
-typedef s32 (* SpritePlayingCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
+typedef s32 (* sprite_playing_callback_func)(struct Canvas* _cvs, struct Sprite* _spr, const Str _begin, const Str _end, s32 _currIdx);
 
 /**
  * @brief time line structure
  */
 typedef struct TimeLine {
-	Str shapeFileName;                  /**< shape file name */
-	Str brushFileName;                  /**< brush file name */
-	Str paleteFileName;                 /**< palete file name */
-	Frame* frames;                      /**< all frames */
-	s32 frameCount;                     /**< frames count */
-	s32 currentFrame;                   /**< current frame index */
-	s32 lastFrame;                      /**< last frame index */
-	ht_node_t* namedFrames;             /**< named frame information */
-	Str beginName;                      /**< begin frame name */
-	Str endName;                        /**< end frame name */
-	s32 beginIndex;                     /**< begin frame index */
-	s32 endIndex;                       /**< end frame index */
-	bl pause;                           /**< whether paused */
-	bl loop;                            /**< whether loop between begin and end frame */
-	SpritePlayingCallbackFunc callback; /**< sprite playing event callback functor */
+	Str shape_file_name;                   /**< shape file name */
+	Str brush_file_name;                   /**< brush file name */
+	Str palete_file_name;                  /**< palete file name */
+	Frame* frames;                         /**< all frames */
+	s32 frame_count;                       /**< frames count */
+	s32 current_frame;                     /**< current frame index */
+	s32 last_frame;                        /**< last frame index */
+	ht_node_t* named_frames;               /**< named frame information */
+	Str begin_name;                        /**< begin frame name */
+	Str end_name;                          /**< end frame name */
+	s32 begin_index;                       /**< begin frame index */
+	s32 end_index;                         /**< end frame index */
+	bl pause;                              /**< whether paused */
+	bl loop;                               /**< whether loop between begin and end frame */
+	sprite_playing_callback_func callback; /**< sprite playing event callback functor */
 } TimeLine;
 
 /**
@@ -169,7 +169,7 @@ typedef struct TimeLine {
  */
 typedef struct CustomAnimation {
 	Ptr context;       /**< animation context */
-	Destroyer destroy; /**< destroyer functor */
+	destroyer destroy; /**< destroyer functor */
 } CustomAnimation;
 
 /**
@@ -179,7 +179,7 @@ typedef struct CustomAnimation {
  * @param[in] _cvs        - canvas object
  * @param[in] _spr        - removing sprite object
  */
-typedef void (* SpriteRemovingCallbackFunc)(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr);
+typedef void (* sprite_removing_callback_func)(Ptr _handlerObj, struct Canvas* _cvs, struct Sprite* _spr);
 
 /**
  * @brief sprite collision callback functor
@@ -189,7 +189,7 @@ typedef void (* SpriteRemovingCallbackFunc)(Ptr _handlerObj, struct Canvas* _cvs
  * @param[in] _px  - x position of collided pixel in sprite
  * @param[in] _py  - y position of collided pixel in sprite
  */
-typedef void (* SpriteCollisionCallbackFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py);
+typedef void (* sprite_collision_callback_func)(struct Canvas* _cvs, struct Sprite* _spr, s32 _px, s32 _py);
 
 /**
  * @brief sprite updating functor
@@ -198,7 +198,7 @@ typedef void (* SpriteCollisionCallbackFunc)(struct Canvas* _cvs, struct Sprite*
  * @param[in] _spr         - sprite object
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-typedef void (* SpriteUpdateFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+typedef void (* sprite_update_func)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 /**
  * @brief sprite rendering functor
  *
@@ -206,7 +206,7 @@ typedef void (* SpriteUpdateFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @param[in] _spr         - sprite object
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+typedef void (* sprite_render_func)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 /**
  * @brief sprite colliding functor
  *
@@ -214,55 +214,55 @@ typedef void (* SpriteRenderFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 
  * @param[in] _spr         - sprite object
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-typedef void (* SpriteCollideFunc)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
+typedef void (* sprite_collide_func)(struct Canvas* _cvs, struct Sprite* _spr, s32 _elapsedTime);
 
 /**
  * @brief user defined data
  */
 typedef struct Userdata {
 	Ptr data;          /**< data */
-	Destroyer destroy; /**< data destroyer */
+	destroyer destroy; /**< data destroyer */
 } Userdata;
 
 /**
  * @brief sprite structure
  */
 typedef struct Sprite {
-	struct Canvas* owner;                     /**< owner canvas object */
-	Str name;                                 /**< name */
-	s32 visibility;                           /**< visibility */
-	AgeParamSet* params;                      /**< parameter set */
-	bl storeParams;                           /**< whether store parameters to saved data file or not */
-	Userdata userdata;                        /**< user defined data */
-	Point position;                           /**< position */
-	Point oldPosition;                        /**< old position */
-	Point lastFramePosition;                  /**< last frame position */
-	s32 direction;                            /**< moving direction */
-	Size frameSize;                           /**< size of each frame */
-	TimeLine timeLine;                        /**< time line data */
-	CustomAnimation customAnimation;          /**< customized animation data */
-	f32 frameRate;                            /**< frame rate information */
-	s32 frameTick;                            /**< frame updating time tick count */
-	SpriteRemovingCallbackFunc objectRemoved; /**< sprite removing callback */
-	u32 physicsMode;                          /**< physics mode */
-	SpriteCollisionCallbackFunc collided;     /**< collided physics callback */
-	MessageMap messageMap;                    /**< message processing map */
-	ControlProc control;                      /**< controlling functor, for motion controlling */
-	SpriteUpdateFunc update;                  /**< updating functor, for animation controlling */
-	SpriteRenderFunc prevRender;              /**< fire rendering functor */
-	SpriteRenderFunc postRender;              /**< post rendering functor */
-	SpriteCollideFunc collide;                /**< colliding functor */
+	struct Canvas* owner;                         /**< owner canvas object */
+	Str name;                                     /**< name */
+	s32 visibility;                               /**< visibility */
+	AgeParamSet* params;                          /**< parameter set */
+	bl store_params;                              /**< whether store parameters to saved data file or not */
+	Userdata userdata;                            /**< user defined data */
+	Point position;                               /**< position */
+	Point old_position;                           /**< old position */
+	Point last_frame_position;                    /**< last frame position */
+	s32 direction;                                /**< moving direction */
+	Size frame_size;                              /**< size of each frame */
+	TimeLine time_line;                           /**< time line data */
+	CustomAnimation custom_animation;             /**< customized animation data */
+	f32 frame_rate;                               /**< frame rate information */
+	s32 frame_tick;                               /**< frame updating time tick count */
+	sprite_removing_callback_func object_removed; /**< sprite removing callback */
+	u32 physics_mode;                             /**< physics mode */
+	sprite_collision_callback_func collided;      /**< collided physics callback */
+	MessageMap message_map;                       /**< message processing map */
+	control_proc control;                         /**< controlling functor, for motion controlling */
+	sprite_update_func update;                    /**< updating functor, for animation controlling */
+	sprite_render_func prev_render;               /**< fire rendering functor */
+	sprite_render_func post_render;               /**< post rendering functor */
+	sprite_collide_func collide;                  /**< colliding functor */
 } Sprite;
 
 /**
  * @brief running context structure
  */
 typedef struct RunningContext {
-	s32 lastElapsedTime; /**< elapsed time since last frame */
-	u32 lastLParam;      /**< first param of last message */
-	u32 lastWParam;      /**< second param of last message */
-	Ptr lastExtra;       /**< extra user defined data of last message */
-	Color lastColor;     /**< color value since last draw call */
+	s32 last_elapsed_time; /**< elapsed time since last frame */
+	u32 last_lparam;       /**< first param of last message */
+	u32 last_wparam;       /**< second param of last message */
+	Ptr last_extra;        /**< extra user defined data of last message */
+	Color last_color;      /**< color value since last draw call */
 } RunningContext;
 
 /**
@@ -271,27 +271,27 @@ typedef struct RunningContext {
  * @param[in] _cvs         - canvas object
  * @param[in] _elapsedTime - elapsed time since last frame
  */
-typedef void (* CanvasRenderFunc)(struct Canvas* _cvs, s32 _elapsedTime);
+typedef void (* canvas_render_func)(struct Canvas* _cvs, s32 _elapsedTime);
 
 /**
  * @brief canvas structure
  */
 typedef struct Canvas {
-	Str name;                    /**< name */
-	AgeParamSet* params;         /**< parameter set */
-	bl storeParams;              /**< whether store parameters to saved data file or not */
-	Size size;                   /**< canvas size */
-	Pixel* pixels;               /**< frame buffer */
-	ht_node_t* sprites;          /**< alive sprite objects */
-	s32 frameRate;               /**< canvas frame rate, in millisecond */
-	RunningContext context;      /**< running context */
-	Sprite** droppedSprites;     /**< dropped sprites */
-	s32 droppedSpritesCount;     /**< dropped sprites count */
-	s32 droppedSpritesSize;      /**< dropped sprites buffer size */
-	MessageMap messageMap;       /**< message processing map */
-	ControlProc control;         /**< canvas controlling functor*/
-	CanvasRenderFunc prevRender; /**< fire rendering functor */
-	CanvasRenderFunc postRender; /**< post rendering functor */
+	Str name;                       /**< name */
+	AgeParamSet* params;            /**< parameter set */
+	bl store_params;                /**< whether store parameters to saved data file or not */
+	Size size;                      /**< canvas size */
+	Pixel* pixels;                  /**< frame buffer */
+	ht_node_t* sprites;             /**< alive sprite objects */
+	s32 frame_rate;                 /**< canvas frame rate, in millisecond */
+	RunningContext context;         /**< running context */
+	Sprite** dropped_sprites;       /**< dropped sprites */
+	s32 dropped_sprites_count;      /**< dropped sprites count */
+	s32 dropped_sprites_size;       /**< dropped sprites buffer size */
+	MessageMap message_map;         /**< message processing map */
+	control_proc control;           /**< canvas controlling functor*/
+	canvas_render_func prev_render; /**< fire rendering functor */
+	canvas_render_func post_render; /**< post rendering functor */
 } Canvas;
 
 /**
@@ -477,7 +477,7 @@ AGE_API s32 get_named_frame_index(Canvas* _cvs, Sprite* _spr, const Str _name);
  * @param[in] _cb    - playing event callback functor
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, SpritePlayingCallbackFunc _cb);
+AGE_API bl play_sprite(Canvas* _cvs, Sprite* _spr, const Str _begin, const Str _end, bl _loop, sprite_playing_callback_func _cb);
 /**
  * @brief pause an animation of a time line
  *

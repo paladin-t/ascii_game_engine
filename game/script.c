@@ -36,7 +36,7 @@ static int _set_foot_brush(mb_interpreter_t* s, void** l) {
 	amb_pop_string(s, l, &b);
 	amb_attempt_close_bracket(s, l);
 
-	game()->footBrush = b[0];
+	game()->foot_brush = b[0];
 
 	return result;
 }

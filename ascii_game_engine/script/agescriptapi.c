@@ -649,7 +649,7 @@ void amb_load_data(const Str file) {
 
 void amb_save_data(const Str file) {
 	dataFile = fopen(file, "wb+");
-	if(AGE_CVS->storeParams && dataFile) {
+	if(AGE_CVS->store_params && dataFile) {
 		ht_foreach(AGE_CVS->params, _save_cvs_param);
 	}
 	if(dataFile) {

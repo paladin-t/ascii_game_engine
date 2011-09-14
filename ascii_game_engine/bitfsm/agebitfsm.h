@@ -52,7 +52,7 @@ typedef struct FsmStep {
 typedef struct FsmRuleStep {
 	s32 index;        /**< rule step index */
 	FsmStep**  steps; /**< steps in this piece of rule */
-	s32 stepsCount;   /**< count of steps */
+	s32 steps_count;  /**< count of steps */
 	Ptr tag;          /**< tagged rule step data */
 } FsmRuleStep;
 
@@ -90,15 +90,15 @@ typedef void (* ObjStepHandlerFunc)(Ptr _src, Ptr _tgt);
  * @brief fsm structure
  */
 typedef struct Fsm {
-	FsmStatus* current;            /**< current status */
-	FsmRuleStep* ruleSteps;        /**< transition rules */
-	s32 ruleStepsCount;            /**< transition rules count */
-	s32 terminalIndex;             /**< terminal index of this fsm */
-	ObjToIndexFunc objToIndex;     /**< object to index convertion functor */
-	ObjToCommandFunc objToCommand; /**< object to command convertion functor */
-	IntStepHendlerFunc intHandler; /**< stepping callback handler using integer */
-	ObjStepHandlerFunc objHandler; /**< stepping callback handler using object data */
-	Destroyer tagDestructor;       /**< tag destructor functor */
+	FsmStatus* current;              /**< current status */
+	FsmRuleStep* rule_steps;         /**< transition rules */
+	s32 rule_steps_count;            /**< transition rules count */
+	s32 terminal_index;              /**< terminal index of this fsm */
+	ObjToIndexFunc obj_to_index;     /**< object to index convertion functor */
+	ObjToCommandFunc obj_to_command; /**< object to command convertion functor */
+	IntStepHendlerFunc int_handler;  /**< stepping callback handler using integer */
+	ObjStepHandlerFunc obj_handler;  /**< stepping callback handler using object data */
+	destroyer tag_destructor;        /**< tag destructor functor */
 } Fsm;
 
 /**
@@ -179,7 +179,7 @@ AGE_API bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _sta
  * @param[in] _tagDestructor - tag destructor functor
  * @return - created bitfsm object
  */
-AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand, IntStepHendlerFunc _intHandler, ObjStepHandlerFunc _objHandler, Destroyer _tagDestructor);
+AGE_API Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToIndex, ObjToCommandFunc _objToCommand, IntStepHendlerFunc _intHandler, ObjStepHandlerFunc _objHandler, destroyer _tagDestructor);
 /**
  * @brief destroy a bitfsm object
  *
