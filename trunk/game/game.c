@@ -68,14 +68,14 @@ static void _on_exit(void) {
 
 static void _on_init(void) {
 	Str audio[AHAT_COUNT];
-	s8 fb = game()->footBrush;
+	s8 fb = game()->foot_brush;
 	memcpy(audio, game()->audio, sizeof(game()->audio));
 	memset(game(), 0, sizeof(AsciiHeroGame));
 	memcpy(game()->audio, audio, sizeof(game()->audio));
-	game()->footBrush = fb;
+	game()->foot_brush = fb;
 	init();
 	game()->create_score_boards();
-	AGE_CVS->storeParams = TRUE;
+	AGE_CVS->store_params = TRUE;
 
 	SetConsoleTitleA("ASCII HERO GO!");
 

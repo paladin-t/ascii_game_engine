@@ -59,19 +59,19 @@ typedef struct AsciiHeroGame {
 	Str audio[AHAT_COUNT];
 	Sprite* main;
 	Sprite* subsidiary;
-	Sprite* boardTemplate;
-	Sprite** boardPool;
-	s32 boardPoolSize;
-	s32 boardCount;
-	Sprite* scoreBoard[SCORE_BOARD_SIZE];
+	Sprite* board_template;
+	Sprite** board_pool;
+	s32 board_pool_size;
+	s32 board_count;
+	Sprite* score_board[SCORE_BOARD_SIZE];
 	bl game_over;
 	s32 time;
-	s32 lineUpTime;
-	u32 lineCount;
-	u32 levelDistance;
-	u32 levelCount;
-	bl levelGenerated;
-	s8 footBrush;
+	s32 line_up_time;
+	u32 line_count;
+	u32 level_distance;
+	u32 level_count;
+	bl level_generated;
+	s8 foot_brush;
 	AsciiHeroBoardType (* generate_board_type)(void);
 	Sprite* (* add_board_by_type)(AsciiHeroBoardType _type);
 	s32 (* drop_board)(Sprite* _spr);
@@ -106,21 +106,21 @@ typedef struct BoardUserdata {
 
 typedef struct PlayerUserdata {
 	s32 time;
-	s32 fallTime;
-	s32 jumpLine;
-	s32 jumpTime;
-	s8 onBoard[AGE_STR_LEN];
-	s32 collitionDirection;
+	s32 fall_time;
+	s32 jump_line;
+	s32 jump_time;
+	s8 on_board[AGE_STR_LEN];
+	s32 collition_direction;
 	Fsm* fsm;
 } PlayerUserdata;
 
 typedef void (* BoardAction)(Canvas* _cvs, Sprite* _spr);
 typedef struct BoardInfo {
-	const Str startFrame;
-	const Str endFrame;
+	const Str start_frame;
+	const Str end_frame;
 	struct {
-		s32 probMin;
-		s32 probMax;
+		s32 prob_min;
+		s32 prob_max;
 		AsciiHeroBoardType type;
 	};
 	BoardAction action;

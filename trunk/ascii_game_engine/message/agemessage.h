@@ -54,22 +54,22 @@ typedef enum Messages {
  * @param[in] _extra    - extra data
  * @return - execution status
  */
-typedef s32 (* MessageProc)(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+typedef s32 (* message_proc)(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 
 /**
  * @brief message processing functor mapping structure
  */
 typedef struct MessageMap {
-	MessageProc fastTable[MESSAGE_TABLE_SIZE]; /**< functors cached in an array for fast accessing */
-	ht_node_t* procMap;                        /**< functors the array above cannot holds */
+	message_proc fast_table[MESSAGE_TABLE_SIZE]; /**< functors cached in an array for fast accessing */
+	ht_node_t* proc_map;                         /**< functors the array above cannot holds */
 } MessageMap;
 
 /**
  * @brief message processing object structure
  */
 typedef struct MessageReceiver {
-	Ptr receiver;           /**< object */
-	MessageMap* messageMap; /**< processing functor */
+	Ptr receiver;            /**< object */
+	MessageMap* message_map; /**< processing functor */
 } MessageReceiver;
 
 /**
@@ -108,7 +108,7 @@ AGE_API bl destroy_canvas_message_map(Ptr _obj);
  * @param[in] _msg    - message type to get
  * @return - processing functor
  */
-AGE_API MessageProc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg);
+AGE_API message_proc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg);
 /**
  * @brief get a registered message processing functor of a sprite object
  *
@@ -116,7 +116,7 @@ AGE_API MessageProc get_message_map_message_proc(MessageMap* _msgMap, u32 _msg);
  * @param[in] _msg - message type to get
  * @return - processing functor
  */
-AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
+AGE_API message_proc get_sprite_message_proc(Ptr _obj, u32 _msg);
 /**
  * @brief get a registered message processing functor of a canvas object
  *
@@ -124,7 +124,7 @@ AGE_API MessageProc get_sprite_message_proc(Ptr _obj, u32 _msg);
  * @param[in] _msg - message type to get
  * @return - processing functor
  */
-AGE_API MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg);
+AGE_API message_proc get_canvas_message_proc(Ptr _obj, u32 _msg);
 
 /**
  * @brief register a message processing functor to an object
@@ -133,7 +133,7 @@ AGE_API MessageProc get_canvas_message_proc(Ptr _obj, u32 _msg);
  * @param[in] _msg  - message type to be registered
  * @param[in] _proc - processing functor
  */
-AGE_API void register_message_proc(MessageMap* _map, u32 _msg, MessageProc _proc);
+AGE_API void register_message_proc(MessageMap* _map, u32 _msg, message_proc _proc);
 /**
  * @brief unregister a message processing functor of an object
  *
@@ -161,7 +161,7 @@ AGE_API void copy_message_map(MessageMap* _src, MessageMap* _tgt);
  * @param[in] _extra    - extra data
  * @return - message sending status
  */
-AGE_API s32 send_message_to_proc(MessageProc _func, Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
+AGE_API s32 send_message_to_proc(message_proc _func, Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u32 _wparam, Ptr _extra);
 /**
  * @brief send a message to an object
  *

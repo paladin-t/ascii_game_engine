@@ -31,9 +31,9 @@
 #include "../common/ageallocator.h"
 
 typedef struct Bitset {
-	s32 bitCount;
-	s32 dwordCount;
-	s32 byteCount;
+	s32 bit_count;
+	s32 dword_count;
+	s32 byte_count;
 	u32* raw;
 } Bitset;
 

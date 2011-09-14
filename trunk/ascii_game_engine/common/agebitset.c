@@ -42,10 +42,10 @@ Bitset* bs_create(s32 _size) {
 	Bitset* result = 0;
 
 	result = AGE_MALLOC(Bitset);
-	result->bitCount = _size;
-	result->dwordCount = _size_to_dword(_size);
-	result->byteCount = result->dwordCount * sizeof(u32);
-	result->raw = AGE_MALLOC_N(u32, result->dwordCount);
+	result->bit_count = _size;
+	result->dword_count = _size_to_dword(_size);
+	result->byte_count = result->dword_count * sizeof(u32);
+	result->raw = AGE_MALLOC_N(u32, result->dword_count);
 
 	return result;
 }
@@ -56,7 +56,7 @@ void bs_destroy(Bitset* _bs) {
 }
 
 void bs_clear(Bitset* _bs) {
-	memset(_bs->raw, 0, _bs->byteCount);
+	memset(_bs->raw, 0, _bs->byte_count);
 }
 
 void bs_set_bit(Bitset* _bs, s32 _pos, bl _val) {
@@ -72,9 +72,9 @@ void bs_set_bit(Bitset* _bs, s32 _pos, bl _val) {
 
 void bs_set_all_bits(Bitset* _bs, Bitset* _other) {
 	assert(_bs && _other);
-	assert(_bs->bitCount == _other->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		memcpy(_bs->raw, _other->raw, _bs->byteCount);
+	assert(_bs->bit_count == _other->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		memcpy(_bs->raw, _other->raw, _bs->byte_count);
 	}
 }
 
@@ -88,7 +88,7 @@ bl bs_get_bit(Bitset* _bs, s32 _pos) {
 
 bl bs_empty(Bitset* _bs) {
 	s32 i = 0;
-	for(i = 0; i < _bs->dwordCount; ++i) {
+	for(i = 0; i < _bs->dword_count; ++i) {
 		if(_bs->raw[i] != 0) {
 			return FALSE;
 		}
@@ -99,9 +99,9 @@ bl bs_empty(Bitset* _bs) {
 
 bl bs_equals(Bitset* _bs, Bitset* _other) {
 	assert(_bs && _other);
-	assert(_bs->bitCount == _other->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		return (bl)(memcmp(_bs->raw, _other->raw, _bs->byteCount) == 0);
+	assert(_bs->bit_count == _other->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		return (bl)(memcmp(_bs->raw, _other->raw, _bs->byte_count) == 0);
 	} else {
 		return FALSE;
 	}
@@ -111,9 +111,9 @@ void bs_arithmetic_and(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	s32 i = 0;
 
 	assert(_bs && _other && _result);
-	assert(_bs->bitCount == _other->bitCount && _bs->bitCount == _result->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		for(i = 0; i < _bs->dwordCount; ++i) {
+	assert(_bs->bit_count == _other->bit_count && _bs->bit_count == _result->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		for(i = 0; i < _bs->dword_count; ++i) {
 			_result->raw[i] = _bs->raw[i] & _other->raw[i];
 		}
 	}
@@ -123,9 +123,9 @@ void bs_arithmetic_or(Bitset* _bs, Bitset* _other, Bitset* _result) {
 	s32 i = 0;
 
 	assert(_bs && _other && _result);
-	assert(_bs->bitCount == _other->bitCount && _bs->bitCount == _result->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		for(i = 0; i < _bs->dwordCount; ++i) {
+	assert(_bs->bit_count == _other->bit_count && _bs->bit_count == _result->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		for(i = 0; i < _bs->dword_count; ++i) {
 			_result->raw[i] = _bs->raw[i] | _other->raw[i];
 		}
 	}
@@ -135,9 +135,9 @@ bl bs_logic_and(Bitset* _bs, Bitset* _other) {
 	s32 i = 0;
 
 	assert(_bs && _other);
-	assert(_bs->bitCount == _other->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		for(i = 0; i < _bs->dwordCount; ++i) {
+	assert(_bs->bit_count == _other->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		for(i = 0; i < _bs->dword_count; ++i) {
 			if((_bs->raw[i] & _other->raw[i]) != 0) {
 				return TRUE;
 			}
@@ -153,9 +153,9 @@ bl bs_logic_or(Bitset* _bs, Bitset* _other) {
 	s32 i = 0;
 
 	assert(_bs && _other);
-	assert(_bs->bitCount == _other->bitCount);
-	if(_bs->bitCount == _other->bitCount) {
-		for(i = 0; i < _bs->dwordCount; ++i) {
+	assert(_bs->bit_count == _other->bit_count);
+	if(_bs->bit_count == _other->bit_count) {
+		for(i = 0; i < _bs->dword_count; ++i) {
 			if((_bs->raw[i] | _other->raw[i]) != 0) {
 				return TRUE;
 			}

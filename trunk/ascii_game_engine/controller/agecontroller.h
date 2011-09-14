@@ -42,7 +42,7 @@
  * @param[in] _extra       - extra data
  * @return - execution status
  */
-typedef s32 (* ControlProc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
+typedef s32 (* control_proc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra);
 
 /**
  * @brief set a controller of a canvas
@@ -50,14 +50,14 @@ typedef s32 (* ControlProc)(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lp
  * @param[in] _obj  - canvas object
  * @param[in] _proc - controller
  */
-AGE_API void set_canvas_controller(Ptr _obj, ControlProc _proc);
+AGE_API void set_canvas_controller(Ptr _obj, control_proc _proc);
 /**
  * @brief get a controller of a canvas
  *
  * @param[in] _obj  - canvas object
  * @return controller
  */
-AGE_API ControlProc get_canvas_controller(Ptr _obj);
+AGE_API control_proc get_canvas_controller(Ptr _obj);
 
 /**
  * @brief set a controller of a sprite
@@ -65,13 +65,13 @@ AGE_API ControlProc get_canvas_controller(Ptr _obj);
  * @param[in] _obj  - sprite object
  * @param[in] _proc - controller
  */
-AGE_API void set_sprite_controller(Ptr _obj, ControlProc _proc);
+AGE_API void set_sprite_controller(Ptr _obj, control_proc _proc);
 /**
  * @brief get a controller of a sprite
  *
  * @param[in] _obj  - sprite object
  * @return controller
  */
-AGE_API ControlProc get_sprite_controller(Ptr _obj);
+AGE_API control_proc get_sprite_controller(Ptr _obj);
 
 #endif /* __AGE_CONTROLLER_H__ */

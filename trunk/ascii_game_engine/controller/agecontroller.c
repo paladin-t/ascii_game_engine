@@ -28,7 +28,7 @@
 #include "../render/agerenderer.h"
 #include "agecontroller.h"
 
-void set_canvas_controller(Ptr _obj, ControlProc _proc) {
+void set_canvas_controller(Ptr _obj, control_proc _proc) {
 	Canvas* cvs = (Canvas*)_obj;
 
 	assert(cvs);
@@ -36,8 +36,8 @@ void set_canvas_controller(Ptr _obj, ControlProc _proc) {
 	cvs->control = _proc;
 }
 
-ControlProc get_canvas_controller(Ptr _obj) {
-	ControlProc result = 0;
+control_proc get_canvas_controller(Ptr _obj) {
+	control_proc result = 0;
 	Canvas* cvs = (Canvas*)_obj;
 
 	assert(cvs);
@@ -47,7 +47,7 @@ ControlProc get_canvas_controller(Ptr _obj) {
 	return result;
 }
 
-void set_sprite_controller(Ptr _obj, ControlProc _proc) {
+void set_sprite_controller(Ptr _obj, control_proc _proc) {
 	Sprite* spr = (Sprite*)_obj;
 
 	assert(spr);
@@ -55,8 +55,8 @@ void set_sprite_controller(Ptr _obj, ControlProc _proc) {
 	spr->control = _proc;
 }
 
-ControlProc get_sprite_controller(Ptr _obj) {
-	ControlProc result = 0;
+control_proc get_sprite_controller(Ptr _obj) {
+	control_proc result = 0;
 	Sprite* spr = (Sprite*)_obj;
 
 	assert(spr);

@@ -31,8 +31,8 @@
 static void _draw_logo(s32 _time) {
 	s32 i = 0;
 	s32 j = 0;
-	s32 __w = game()->main->frameSize.w;
-	s32 __h = game()->main->frameSize.h;
+	s32 __w = game()->main->frame_size.w;
+	s32 __h = game()->main->frame_size.h;
 	f32 __p = (_time % 3000) / 1000.0f;
 	s32 __c = __w + __h;
 	__c = (s32)(__c * __p);
@@ -226,8 +226,8 @@ s32 state_show_logo(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u3
 							game()->main = game()->subsidiary = 0;
 							stop_sound(AGE_SND, ST_BGM);
 							set_canvas_controller(AGE_CVS, state_main);
-							AGE_CVS->prevRender = main_canvas_prev_render;
-							AGE_CVS->postRender = main_canvas_post_render;
+							AGE_CVS->prev_render = main_canvas_prev_render;
+							AGE_CVS->post_render = main_canvas_post_render;
 							clear_screen(AGE_CVS);
 						} else if(__m == 1) { /* highscore */
 							destroy_sprite(AGE_CVS, game()->main);
@@ -361,7 +361,7 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				"data/sprite/ascii_hero_brush.txt",
 				"data/sprite/ascii_hero_palete.txt"
 			);
-			game()->boardTemplate = create_sprite(
+			game()->board_template = create_sprite(
 				AGE_CVS,
 				"board_template",
 				"data/sprite/board_shape.txt",
@@ -369,24 +369,24 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				"data/sprite/board_palete.txt"
 			);
 			pause_sprite(AGE_CVS, game()->main);
-			pause_sprite(AGE_CVS, game()->boardTemplate);
-			set_sprite_position(AGE_CVS, game()->main, 0, GAME_AREA_TOP - game()->main->frameSize.h + 1);
+			pause_sprite(AGE_CVS, game()->board_template);
+			set_sprite_position(AGE_CVS, game()->main, 0, GAME_AREA_TOP - game()->main->frame_size.h + 1);
 			set_sprite_visible(AGE_CVS, game()->main, FALSE);
-			set_sprite_visible(AGE_CVS, game()->boardTemplate, FALSE);
+			set_sprite_visible(AGE_CVS, game()->board_template, FALSE);
 			set_sprite_controller(game()->main, on_ctrl_for_sprite_main_player);
-			set_sprite_controller(game()->boardTemplate, on_ctrl_for_sprite_board);
-			register_message_proc(&game()->main->messageMap, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
-			register_message_proc(&game()->main->messageMap, MSG_JUMP, on_msg_proc_for_sprite_main_player_jump);
+			set_sprite_controller(game()->board_template, on_ctrl_for_sprite_board);
+			register_message_proc(&game()->main->message_map, MSG_MOVE, on_msg_proc_for_sprite_main_player_move);
+			register_message_proc(&game()->main->message_map, MSG_JUMP, on_msg_proc_for_sprite_main_player_jump);
 			set_sprite_physics_mode(AGE_CVS, game()->main, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
-			game()->main->objectRemoved = on_removing_for_sprite_main_player;
+			game()->main->object_removed = on_removing_for_sprite_main_player;
 			game()->main->collided = on_collide_for_sprite_main_player;
 			game()->main->update = 0;
 			game()->main->userdata.data = create_player_userdata();
 			game()->main->userdata.destroy = destroy_player_userdata;
-			((PlayerUserdata*)(game()->main->userdata.data))->fallTime = DEFAULT_FALL_TIME;
-			game()->boardTemplate->objectRemoved = on_removing_for_sprite_board;
-			game()->boardTemplate->collided = on_collide_for_sprite_board;
-			game()->boardTemplate->update = on_update_for_sprite_board;
+			((PlayerUserdata*)(game()->main->userdata.data))->fall_time = DEFAULT_FALL_TIME;
+			game()->board_template->object_removed = on_removing_for_sprite_board;
+			game()->board_template->collided = on_collide_for_sprite_board;
+			game()->board_template->update = on_update_for_sprite_board;
 			game()->set_score_board_visible(TRUE);
 			game()->set_score_board_value(0);
 			draw_string(AGE_CVS, 0, GAME_AREA_WIDTH + 2, 0, "Score:");
@@ -408,16 +408,16 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 				}
 
 				game()->time += _elapsedTime;
-				if(game()->time >= game()->lineUpTime) {
-					game()->time -= game()->lineUpTime;
-					++game()->lineCount;
-					if(!(game()->lineCount % game()->levelDistance) && !game()->levelGenerated) {
+				if(game()->time >= game()->line_up_time) {
+					game()->time -= game()->line_up_time;
+					++game()->line_count;
+					if(!(game()->line_count % game()->level_distance) && !game()->level_generated) {
 						bt = game()->generate_board_type();
 						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - 10);
-						if(game()->lineCount == game()->levelDistance) {
+						if(game()->line_count == game()->level_distance) {
 							bt = AHBT_SOLID;
 							game()->main->update = on_update_for_sprite_main_player;
-							set_sprite_position(AGE_CVS, game()->main, left + 3, GAME_AREA_TOP - game()->main->frameSize.h + 1);
+							set_sprite_position(AGE_CVS, game()->main, left + 3, GAME_AREA_TOP - game()->main->frame_size.h + 1);
 							set_sprite_visible(AGE_CVS, game()->main, TRUE);
 						}
 						bd = game()->add_board_by_type(bt);
@@ -425,9 +425,9 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 						bu->type = bt;
 						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
 						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
-						game()->levelGenerated = TRUE;
-					} else if(game()->lineCount % game()->levelDistance) {
-						game()->levelGenerated = FALSE;
+						game()->level_generated = TRUE;
+					} else if(game()->line_count % game()->level_distance) {
+						game()->level_generated = FALSE;
 					}
 					send_message_to_canvas(AGE_CVS, 0, MSG_BOARD_UP, 0, 0, 0);
 				}
@@ -436,18 +436,18 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 		case _S_BACK:
 			state = _S_DEFAULT;
 			get_s32_param(AGE_CVS_PAR, "HIGH_SCORE", &hs);
-			if((s32)game()->levelCount > hs) {
-				hs = game()->levelCount;
+			if((s32)game()->level_count > hs) {
+				hs = game()->level_count;
 				set_s32_param(AGE_CVS_PAR, "HIGH_SCORE", hs);
 			}
 			stop_sound(AGE_SND, ST_BGM);
 			destroy_sprite(AGE_CVS, game()->main);
-			destroy_sprite(AGE_CVS, game()->boardTemplate);
+			destroy_sprite(AGE_CVS, game()->board_template);
 			game()->clear_board();
-			game()->boardTemplate = 0;
+			game()->board_template = 0;
 			set_canvas_controller(AGE_CVS, 0);
-			AGE_CVS->prevRender = 0;
-			AGE_CVS->postRender = 0;
+			AGE_CVS->prev_render = 0;
+			AGE_CVS->post_render = 0;
 			if(game()->game_over) {
 				if(game()->audio[AHAT_GAME_OVER]) {
 					play_sound_string(AGE_SND, game()->audio[AHAT_GAME_OVER], ST_BGM, FALSE);

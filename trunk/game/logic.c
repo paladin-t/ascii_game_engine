@@ -51,14 +51,14 @@ static s32 _broadcast_message_to_sprite(Ptr _data, Ptr _extra) {
 
 static AsciiHeroBoardType _generate_board_type(void) {
 	AsciiHeroBoardType result = AHBT_SOLID;
-	s32 probMax = 0;
+	s32 prob_max = 0;
 	s32 prob = 0;
 	s32 i = 0;
 
-	probMax = BOARD_INFO[_countof(BOARD_INFO) - 1].probMax;
-	prob = age_rand(0, probMax);
+	prob_max = BOARD_INFO[_countof(BOARD_INFO) - 1].prob_max;
+	prob = age_rand(0, prob_max);
 	for(i = 0; i < _countof(BOARD_INFO); ++i) {
-		if(prob >= BOARD_INFO[i].probMin && prob <= BOARD_INFO[i].probMax) {
+		if(prob >= BOARD_INFO[i].prob_min && prob <= BOARD_INFO[i].prob_max) {
 			result = BOARD_INFO[i].type;
 			break;
 		}
@@ -73,22 +73,22 @@ static Sprite* _add_board_by_type(AsciiHeroBoardType _type) {
 	s8 newName[AGE_STR_LEN];
 
 	assert(_type >= 0 && _type < AHBT_COUNT);
-	++game()->boardCount;
-	if(game()->boardCount > game()->boardPoolSize) {
-		game()->boardPoolSize = game()->boardCount + 8;
-		game()->boardPool = AGE_REALLOC_N(Sprite*, game()->boardPool, game()->boardPoolSize);
+	++game()->board_count;
+	if(game()->board_count > game()->board_pool_size) {
+		game()->board_pool_size = game()->board_count + 8;
+		game()->board_pool = AGE_REALLOC_N(Sprite*, game()->board_pool, game()->board_pool_size);
 	}
 	sprintf(newName, "board_%u", boardId++);
-	result = clone_sprite(AGE_CVS, game()->boardTemplate->name, newName);
+	result = clone_sprite(AGE_CVS, game()->board_template->name, newName);
 	result->userdata.data = create_board_userdata();
 	result->userdata.destroy = destroy_board_userdata;
-	game()->boardPool[game()->boardCount - 1] = result;
-	register_message_proc(&result->messageMap, MSG_BOARD_UP, on_msg_proc_for_sprite_board_up);
+	game()->board_pool[game()->board_count - 1] = result;
+	register_message_proc(&result->message_map, MSG_BOARD_UP, on_msg_proc_for_sprite_board_up);
 	play_sprite(
 		AGE_CVS,
 		result,
-		BOARD_INFO[_type].startFrame,
-		BOARD_INFO[_type].endFrame,
+		BOARD_INFO[_type].start_frame,
+		BOARD_INFO[_type].end_frame,
 		TRUE,
 		on_playing_for_sprite_board
 	);
@@ -112,14 +112,14 @@ static s32 _remove_board(Sprite* _spr) {
 	s32 i = 0;
 	Sprite* b = 0;
 
-	for(i = 0; i < game()->boardCount; ++i) {
-		b = game()->boardPool[i];
+	for(i = 0; i < game()->board_count; ++i) {
+		b = game()->board_pool[i];
 		if(b == _spr) {
-			--game()->boardCount;
-			if(game()->boardCount) {
-				game()->boardPool[i] = game()->boardPool[game()->boardCount];
+			--game()->board_count;
+			if(game()->board_count) {
+				game()->board_pool[i] = game()->board_pool[game()->board_count];
 			} else {
-				AGE_FREE_N(game()->boardPool);
+				AGE_FREE_N(game()->board_pool);
 			}
 			destroy_sprite(AGE_CVS, b);
 			++result;
@@ -135,16 +135,16 @@ static s32 _clear_board(void) {
 	s32 i = 0;
 	Sprite* b = 0;
 
-	for(i = 0; i < game()->boardCount; ++i) {
-		b = game()->boardPool[i];
-		game()->boardPool[i] = 0;
+	for(i = 0; i < game()->board_count; ++i) {
+		b = game()->board_pool[i];
+		game()->board_pool[i] = 0;
 		destroy_sprite(AGE_CVS, b);
 		++result;
 	}
-	if(game()->boardPool) {
-		game()->boardCount = 0;
-		game()->boardPoolSize = 0;
-		AGE_FREE_N(game()->boardPool);
+	if(game()->board_pool) {
+		game()->board_count = 0;
+		game()->board_pool_size = 0;
+		AGE_FREE_N(game()->board_pool);
 	}
 
 	return result;
@@ -155,26 +155,26 @@ static void _create_score_boards(void) {
 	s8 n[AGE_STR_LEN];
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
 		sprintf(n, "score_cell_%d", i);
-		game()->scoreBoard[i] = create_sprite(
+		game()->score_board[i] = create_sprite(
 			AGE_CVS,
 			n,
 			"data/ui/number_shape.txt",
 			"data/ui/number_brush.txt",
 			"data/ui/number_palete.txt"
 		);
-		play_sprite(AGE_CVS, game()->scoreBoard[i], "s0", "e0", FALSE, 0);
-		set_sprite_position(AGE_CVS, game()->scoreBoard[i], GAME_AREA_WIDTH + (SCORE_BOARD_SIZE - 1 - i) * 4 + 2, 1);
-		set_sprite_physics_mode(AGE_CVS, game()->scoreBoard[i], PHYSICS_MODE_NULL);
-		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], FALSE);
+		play_sprite(AGE_CVS, game()->score_board[i], "s0", "e0", FALSE, 0);
+		set_sprite_position(AGE_CVS, game()->score_board[i], GAME_AREA_WIDTH + (SCORE_BOARD_SIZE - 1 - i) * 4 + 2, 1);
+		set_sprite_physics_mode(AGE_CVS, game()->score_board[i], PHYSICS_MODE_NULL);
+		set_sprite_visible(AGE_CVS, game()->score_board[i], FALSE);
 	}
 }
 
 static void _destroy_score_boards(void) {
 	s32 i = 0;
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
-		destroy_sprite(AGE_CVS, game()->scoreBoard[i]);
+		destroy_sprite(AGE_CVS, game()->score_board[i]);
 	}
-	memset(game()->scoreBoard, 0, sizeof(game()->scoreBoard));
+	memset(game()->score_board, 0, sizeof(game()->score_board));
 }
 
 static void _set_score_board_value(u32 score) {
@@ -187,21 +187,21 @@ static void _set_score_board_value(u32 score) {
 		n = score % 10;
 		sprintf(sf, "s%d", n);
 		sprintf(ef, "e%d", n);
-		assert(i >= 0 && i < _countof(game()->scoreBoard));
-		play_sprite(AGE_CVS, game()->scoreBoard[i], sf, ef, FALSE, 0);
+		assert(i >= 0 && i < _countof(game()->score_board));
+		play_sprite(AGE_CVS, game()->score_board[i], sf, ef, FALSE, 0);
 		++i;
 		score /= 10;
 	}
 	for(j = i; j < SCORE_BOARD_SIZE; ++j) {
-		assert(j >= 0 && j < _countof(game()->scoreBoard));
-		play_sprite(AGE_CVS, game()->scoreBoard[j], "s0", "e0", FALSE, 0);
+		assert(j >= 0 && j < _countof(game()->score_board));
+		play_sprite(AGE_CVS, game()->score_board[j], "s0", "e0", FALSE, 0);
 	}
 }
 
 static void _set_score_board_visible(bl vis) {
 	s32 i = 0;
 	for(i = 0; i < SCORE_BOARD_SIZE; ++i) {
-		set_sprite_visible(AGE_CVS, game()->scoreBoard[i], vis);
+		set_sprite_visible(AGE_CVS, game()->score_board[i], vis);
 	}
 }
 
@@ -289,13 +289,13 @@ void init(void) {
 	game()->set_score_board_visible = _set_score_board_visible;
 
 	game()->time = 0;
-	game()->lineUpTime = DEFAULT_LINE_UP_TIME;
-	game()->lineCount = 0;
-	game()->levelDistance = DEFAULT_LEVEL_DISTANCE;
-	game()->levelCount = 0;
-	game()->levelGenerated = FALSE;
+	game()->line_up_time = DEFAULT_LINE_UP_TIME;
+	game()->line_count = 0;
+	game()->level_distance = DEFAULT_LEVEL_DISTANCE;
+	game()->level_count = 0;
+	game()->level_generated = FALSE;
 
-	register_message_proc(&AGE_CVS->messageMap, MSG_BOARD_UP, on_msg_proc_for_canvas);
+	register_message_proc(&AGE_CVS->message_map, MSG_BOARD_UP, on_msg_proc_for_canvas);
 }
 
 BoardUserdata* create_board_userdata(void) {
@@ -366,8 +366,8 @@ s32 on_msg_proc_for_canvas(Ptr _receiver, Ptr _sender, u32 _msg, u32 _lparam, u3
 	switch(_msg) {
 		case MSG_BOARD_UP:
 			ht_foreach(cvs->sprites, _broadcast_message_to_sprite);
-			for(i = 0; i < game()->boardCount; ++i) {
-				b = game()->boardPool[i];
+			for(i = 0; i < game()->board_count; ++i) {
+				b = game()->board_pool[i];
 				ud = (BoardUserdata*)b->userdata.data;
 				assert(ud);
 				if(ud->drop) {
@@ -427,40 +427,40 @@ void on_collide_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _px, s32 
 
 	fx = _px - _spr->position.x;
 	fy = _py - _spr->position.y;
-	k = _spr->timeLine.currentFrame;
-	b = _spr->timeLine.frames[k].tex[fx + fy * _spr->frameSize.w].brush;
+	k = _spr->time_line.current_frame;
+	b = _spr->time_line.frames[k].tex[fx + fy * _spr->frame_size.w].brush;
 
 	pixelc = &_cvs->pixels[_px + _py * _cvs->size.w];
 	ud = (PlayerUserdata*)(_spr->userdata.data);
-	if(ud->onBoard[0]) {
+	if(ud->on_board[0]) {
 		return;
 	}
-	for(i = 0; i < pixelc->frameCount; ++i) {
-		bd = pixelc->ownerFrames[i]->parent;
+	for(i = 0; i < pixelc->frame_count; ++i) {
+		bd = pixelc->owner_frames[i]->parent;
 		if(bd != _spr) {
-			if(b == game()->footBrush) {
-				assert(strlen(_spr->name) + 1 < _countof(ud->onBoard));
-				sprintf(ud->onBoard, bd->name);
+			if(b == game()->foot_brush) {
+				assert(strlen(_spr->name) + 1 < _countof(ud->on_board));
+				sprintf(ud->on_board, bd->name);
 				ob = TRUE;
 				if(_px + bd->position.x <= _spr->position.x) {
-					ud->collitionDirection = -1;
-				} else if(_px >= _spr->position.x + _spr->frameSize.w) {
-					ud->collitionDirection = 1;
+					ud->collition_direction = -1;
+				} else if(_px >= _spr->position.x + _spr->frame_size.w) {
+					ud->collition_direction = 1;
 				} else {
-					ud->collitionDirection = 0;
+					ud->collition_direction = 0;
 				}
 				break;
 			}
 		} else {
-			if(pixelc->frameCount == 1) {
+			if(pixelc->frame_count == 1) {
 				ob = TRUE;
 			}
 		}
 	}
 
 	if(!ob) {
-		if(ud->collitionDirection && _spr->direction && ud->collitionDirection == _spr->direction) {
-			set_sprite_position(_cvs, _spr, _spr->lastFramePosition.x, _spr->position.y);
+		if(ud->collition_direction && _spr->direction && ud->collition_direction == _spr->direction) {
+			set_sprite_position(_cvs, _spr, _spr->last_frame_position.x, _spr->position.y);
 		}
 	}
 }
@@ -474,11 +474,11 @@ void on_collide_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _px, s32 _py) {
 	assert(_cvs && _spr);
 
 	pixelc = &_cvs->pixels[_px + _py * _cvs->size.w];
-	for(i = 0; i < pixelc->frameCount; ++i) {
-		bd = pixelc->ownerFrames[i]->parent;
+	for(i = 0; i < pixelc->frame_count; ++i) {
+		bd = pixelc->owner_frames[i]->parent;
 		if(bd != _spr) {
 			bu = (BoardUserdata*)(_spr->userdata.data);
-			if(_spr->timeLine.pause) {
+			if(_spr->time_line.pause) {
 				bu->collition = TRUE;
 				resume_sprite(_cvs, _spr);
 				break;
@@ -502,28 +502,28 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 	ud = (PlayerUserdata*)(_spr->userdata.data);
 	assert(ud);
 
-	l = game()->lineCount - GAME_AREA_HEIGHT + y + _spr->frameSize.h;
+	l = game()->line_count - GAME_AREA_HEIGHT + y + _spr->frame_size.h;
 	if(l > 0) {
-		l /= game()->levelDistance;
-		if(l > (s32)game()->levelCount) {
-			game()->levelCount = l;
+		l /= game()->level_distance;
+		if(l > (s32)game()->level_count) {
+			game()->level_count = l;
 			game()->set_score_board_value(l);
 		}
 	}
 
-	if(ud->jumpLine) {
-		ud->jumpTime += _elapsedTime;
-		if(ud->jumpTime >= DEFAULT_JUMP_TIME) {
-			ud->jumpTime -= DEFAULT_JUMP_TIME;
-			--ud->jumpLine;
+	if(ud->jump_line) {
+		ud->jump_time += _elapsedTime;
+		if(ud->jump_time >= DEFAULT_JUMP_TIME) {
+			ud->jump_time -= DEFAULT_JUMP_TIME;
+			--ud->jump_line;
 			--y;
 			set_sprite_position(_cvs, _spr, x, y);
 		}
 	} else {
 		ud->time += _elapsedTime;
-		if(ud->time >= ud->fallTime) {
-			ud->time -= ud->fallTime;
-			if(!ud->onBoard[0]) {
+		if(ud->time >= ud->fall_time) {
+			ud->time -= ud->fall_time;
+			if(!ud->on_board[0]) {
 				++y;
 				set_sprite_position(_cvs, _spr, x, y);
 				if(y > GAME_AREA_BOTTOM) {
@@ -532,19 +532,19 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 			}
 		}
 
-		if(ud->onBoard[0]) {
-			bd = get_sprite_by_name(_cvs, ud->onBoard);
+		if(ud->on_board[0]) {
+			bd = get_sprite_by_name(_cvs, ud->on_board);
 			if(bd) {
 				get_sprite_position(_cvs, bd, &bx, &by);
-				by = by - _spr->frameSize.h + 1;
+				by = by - _spr->frame_size.h + 1;
 				set_sprite_position(_cvs, _spr, x, by);
-				if(by + _spr->frameSize.h <= GAME_AREA_TOP) {
+				if(by + _spr->frame_size.h <= GAME_AREA_TOP) {
 					game()->game_over = TRUE;
 				}
 			}
 		}
 	}
-	ud->onBoard[0] = '\0';
+	ud->on_board[0] = '\0';
 
 	update_sprite(_cvs, _spr, _elapsedTime);
 }
@@ -562,7 +562,7 @@ void on_update_for_sprite_board(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
 			if(BOARD_INFO[bu->type].action) {
 				BOARD_INFO[bu->type].action(_cvs, _spr);
 			}
-		} else if(!_spr->timeLine.pause) {
+		} else if(!_spr->time_line.pause) {
 			pause_sprite(_cvs, _spr);
 		}
 	}
@@ -581,7 +581,7 @@ s32 on_msg_proc_for_sprite_board_up(Ptr _receiver, Ptr _sender, u32 _msg, u32 _l
 
 	get_sprite_position(cvs, spr, &x, &y);
 	--y;
-	if(y < -spr->frameSize.h) {
+	if(y < -spr->frame_size.h) {
 		game()->drop_board(spr);
 	} else {
 		set_sprite_position(cvs, spr, x, y);
@@ -610,8 +610,8 @@ s32 on_msg_proc_for_sprite_main_player_move(Ptr _receiver, Ptr _sender, u32 _msg
 		case DIR_RIGHT:
 			spr->direction = 1;
 			++x;
-			if(x + spr->frameSize.w - 1 >= GAME_AREA_RIGHT) {
-				x = GAME_AREA_RIGHT - spr->frameSize.w;
+			if(x + spr->frame_size.w - 1 >= GAME_AREA_RIGHT) {
+				x = GAME_AREA_RIGHT - spr->frame_size.w;
 			}
 			break;
 		default:
@@ -630,8 +630,8 @@ s32 on_msg_proc_for_sprite_main_player_jump(Ptr _receiver, Ptr _sender, u32 _msg
 
 	spr = (Sprite*)_receiver;
 	ud = (PlayerUserdata*)(spr->userdata.data);
-	ud->jumpLine = DEFAULT_JUMP_LINE;
-	ud->jumpTime = 0;
+	ud->jump_line = DEFAULT_JUMP_LINE;
+	ud->jump_time = 0;
 
 	return result;
 }

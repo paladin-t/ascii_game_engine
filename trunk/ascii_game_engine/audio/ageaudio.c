@@ -35,8 +35,8 @@ static u32 _FREQ[3][7] = {
 };
 
 typedef struct ThreadInfo {
-	DWORD threadId;
-	HANDLE threadHandle;
+	DWORD thread_id;
+	HANDLE thread_handle;
 	CRITICAL_SECTION lock;
 	s32 level;
 	bl loop;
@@ -162,8 +162,8 @@ void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _
 	}
 	_cnt->sequence = copy_string(_seq);
 	thread->loop = _loop;
-	thread->threadHandle = CreateThread(0, 0, sound_proc, _cnt, 0, &thread->threadId);
-	SetThreadPriority(thread->threadHandle, THREAD_PRIORITY_HIGHEST);
+	thread->thread_handle = CreateThread(0, 0, sound_proc, _cnt, 0, &thread->thread_id);
+	SetThreadPriority(thread->thread_handle, THREAD_PRIORITY_HIGHEST);
 	Sleep(1);
 }
 
@@ -178,12 +178,12 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 	}
 	if(thread) {
 		thread->level = 1;
-		if(thread->threadHandle) {
-			TerminateThread(thread->threadHandle, 1);
-			WaitForSingleObject(thread->threadHandle, 10);
-			CloseHandle(thread->threadHandle);
-			thread->threadHandle = 0;
-			thread->threadId = 0;
+		if(thread->thread_handle) {
+			TerminateThread(thread->thread_handle, 1);
+			WaitForSingleObject(thread->thread_handle, 10);
+			CloseHandle(thread->thread_handle);
+			thread->thread_handle = 0;
+			thread->thread_id = 0;
 			if(_cnt->sequence) {
 				AGE_FREE(_cnt->sequence);
 			}

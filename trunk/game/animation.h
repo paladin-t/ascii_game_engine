@@ -31,8 +31,8 @@
 typedef struct AsciiHeroFsmTag {
 	s32 index;
 	struct {
-		Str startFrame;
-		Str endFrame;
+		Str start_frame;
+		Str end_frame;
 	};
 } AsciiHeroFsmTag;
 
