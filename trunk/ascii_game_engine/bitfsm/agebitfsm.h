@@ -315,7 +315,7 @@ AGE_API bl remove_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _con
  * @param[in] _cond     - condition parameters of the rule step to be removed
  * @return - return TRUE if succeed, or FALSE if failed
  */
-AGE_API bl remove_bitfsm_rule_step_ty_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond);
+AGE_API bl remove_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond);
 /**
  * @brief clear a rule step of a bitfsm
  *

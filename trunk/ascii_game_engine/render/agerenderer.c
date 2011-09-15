@@ -436,15 +436,6 @@ s32 get_frame_rate(Canvas* _cvs) {
 }
 
 void collide_canvas(Canvas* _cvs, s32 _elapsedTime) {
-	control_proc ctrl = 0;
-	s32 i = 0;
-	Sprite* spr = 0;
-
-	_cvs->context.last_elapsed_time = _elapsedTime;
-	_cvs->context.last_lparam = 0;
-	_cvs->context.last_wparam = 0;
-	_cvs->context.last_extra = 0;
-
 	ht_foreach(_cvs->sprites, _collide_sprite);
 }
 

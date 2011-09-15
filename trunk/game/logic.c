@@ -317,6 +317,7 @@ PlayerUserdata* create_player_userdata(void) {
 
 	result = AGE_MALLOC(PlayerUserdata);
 	result->fsm = create_bitfsm(3, 4, fsm_tag_to_index, fsm_tag_to_command, 0, fsm_step_handler, destroy_fsm_tag);
+	open_ascii_hero_animation_fsm(result->fsm);
 
 	return result;
 }
@@ -324,6 +325,7 @@ PlayerUserdata* create_player_userdata(void) {
 void destroy_player_userdata(Ptr _ptr) {
 	PlayerUserdata* ud = (PlayerUserdata*)_ptr;
 	assert(ud);
+	close_ascii_hero_animation_fsm(ud->fsm);
 	destroy_bitfsm(ud->fsm);
 	AGE_FREE(ud);
 }

@@ -27,8 +27,13 @@
 #include "game.h"
 
 static AsciiHeroFsmTag NORMAL_FSM_TAG = { 0, "normal", "end_normal" };
-static AsciiHeroFsmTag FALLING_FSM_TAG = { 0, "walk", "end_walk" };
-static AsciiHeroFsmTag WALKING_FSM_TAG = { 0, "walk", "end_walk" };
+static AsciiHeroFsmTag FALLING_FSM_TAG = { 1, "walk", "end_walk" };
+static AsciiHeroFsmTag WALKING_FSM_TAG = { 2, "walk", "end_walk" };
+
+static AsciiHeroFsmCmd NORMAL_FSM_CMD = { "normal" };
+static AsciiHeroFsmCmd WALKING_FSM_CMD = { "walk" };
+static AsciiHeroFsmCmd COLLIDE_FSM_CMD = { "collide" };
+static AsciiHeroFsmCmd NO_COLLIDE_FSM_CMD = { "no_collide" };
 
 void destroy_fsm_tag(Ptr _ptr) {
 	/* do nothing */
@@ -46,6 +51,22 @@ Ptr walking_fsm_tag(void) {
 	return &WALKING_FSM_TAG;
 }
 
+Ptr normal_fsm_cmd(void) {
+	return &NORMAL_FSM_CMD;
+}
+
+Ptr walking_fsm_cmd(void) {
+	return &WALKING_FSM_CMD;
+}
+
+Ptr collide_fsm_cmd(void) {
+	return &COLLIDE_FSM_CMD;
+}
+
+Ptr no_collide_fsm_cmd(void) {
+	return &NO_COLLIDE_FSM_CMD;
+}
+
 s32 fsm_tag_to_index(Ptr _obj) {
 	AsciiHeroFsmTag* tag = (AsciiHeroFsmTag*)_obj;
 
@@ -56,12 +77,33 @@ s32 fsm_tag_to_index(Ptr _obj) {
 
 s32 fsm_tag_to_command(Ptr _obj) {
 	s32 result = 0;
+	AsciiHeroFsmCmd* cmd = (AsciiHeroFsmCmd*)_obj;
 
-	// TODO
+	assert(_obj);
+	if(cmd == &NORMAL_FSM_CMD) {
+		result = 0;
+	} else if(cmd == &WALKING_FSM_CMD) {
+		result = 1;
+	} else if(cmd == &COLLIDE_FSM_CMD) {
+		result = 2;
+	} else if(cmd == &NO_COLLIDE_FSM_CMD) {
+		result = 3;
+	} else {
+		assert(0 && "Unknown FSM command");
+	}
 
 	return result;
 }
 
 void fsm_step_handler(Ptr _src, Ptr _tgt) {
 	// TODO
+}
+
+void open_ascii_hero_animation_fsm(Fsm* _fsm) {
+	register_bitfsm_rule_step_tag(_fsm, normal_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, falling_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, walking_fsm_tag());
+}
+
+void close_ascii_hero_animation_fsm(Fsm* _fsm) {
 }

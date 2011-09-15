@@ -36,16 +36,28 @@ typedef struct AsciiHeroFsmTag {
 	};
 } AsciiHeroFsmTag;
 
+typedef struct AsciiHeroFsmCmd {
+	Str info;
+} AsciiHeroFsmCmd;
+
 void destroy_fsm_tag(Ptr _ptr);
 
 Ptr normal_fsm_tag(void);
 Ptr falling_fsm_tag(void);
 Ptr walking_fsm_tag(void);
 
+Ptr normal_fsm_cmd(void);
+Ptr walking_fsm_cmd(void);
+Ptr collide_fsm_cmd(void);
+Ptr no_collide_fsm_cmd(void);
+
 s32 fsm_tag_to_index(Ptr _obj);
 
 s32 fsm_tag_to_command(Ptr _obj);
 
 void fsm_step_handler(Ptr _src, Ptr _tgt);
+
+void open_ascii_hero_animation_fsm(Fsm* _fsm);
+void close_ascii_hero_animation_fsm(Fsm* _fsm);
 
 #endif /* __ANIMATION_H__ */
