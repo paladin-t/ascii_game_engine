@@ -298,7 +298,7 @@ bl remove_bitfsm_rule_step_by_tag(Fsm* _fsm, Ptr _indexObj, Bitset* _cond) {
 	return remove_bitfsm_rule_step_by_index(_fsm, _index, _cond);
 }
 
-bl remove_bitfsm_rule_step_ty_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond) {
+bl remove_bitfsm_rule_step_by_tag_params(Fsm* _fsm, Ptr _indexObj, ls_node_t* _cond) {
 	bl result = TRUE;
 	s32 _index = _fsm->obj_to_index(_indexObj);
 	Bitset* _condBits = bs_create(_fsm->current->status->bit_count);
