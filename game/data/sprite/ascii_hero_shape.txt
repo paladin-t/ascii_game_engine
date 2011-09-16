@@ -1,4 +1,4 @@
-count: 6
+count: 12
 width: 3
 height: 4
 rate: 3
@@ -32,6 +32,40 @@ _O_
    
 
 @end_walk
+_O_
+ | 
+/ \
+   
+
+@fall
+\O/
+ | 
+/ \
+   
+
+\O/
+ | 
+/ \
+   
+
+_O_
+ | 
+/ \
+   
+
+@end_fall
+_O_
+ | 
+/ \
+   
+
+@died
+_O_
+ | 
+/ \
+   
+
+@end_died
 _O_
  | 
 / \

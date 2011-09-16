@@ -23,6 +23,11 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*
+** This implemention of agebitfsm is a C porting of the original bitfsm in C++
+** For more info about bitfsm, see http://code.google.com/p/bitfsm/
+*/
+
 #ifndef __AGE_BITFSM_H__
 #define __AGE_BITFSM_H__
 

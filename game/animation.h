@@ -45,11 +45,13 @@ void destroy_fsm_tag(Ptr _ptr);
 Ptr normal_fsm_tag(void);
 Ptr falling_fsm_tag(void);
 Ptr walking_fsm_tag(void);
+Ptr died_fsm_tag(void);
 
 Ptr normal_fsm_cmd(void);
 Ptr walking_fsm_cmd(void);
 Ptr collide_fsm_cmd(void);
 Ptr no_collide_fsm_cmd(void);
+Ptr kill_fsm_cmd(void);
 
 s32 fsm_tag_to_index(Ptr _obj);
 

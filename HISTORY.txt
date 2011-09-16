@@ -1,3 +1,7 @@
+Sep. 17 2011
+bitfsm bugfix.
+Basically binded bitfsm to player animation controlling.
+
 Sep. 15 2011
 Coding style refactoring.
 
