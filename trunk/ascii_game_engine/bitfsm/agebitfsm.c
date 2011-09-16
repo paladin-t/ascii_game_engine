@@ -23,6 +23,11 @@
 ** CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*
+** This implemention of agebitfsm is a C porting of the original bitfsm in C++
+** For more info about bitfsm, see http://code.google.com/p/bitfsm/
+*/
+
 #include "agebitfsm.h"
 
 static bl _ensure_index_and_step_index_valid(Fsm* _fsm, s32 _index, s32 _step) {
@@ -78,19 +83,20 @@ FsmRuleStep* create_fsm_rule_step(s32 _count) {
 void destroy_fsm_rule_step(FsmRuleStep* _obj) {
 	s32 i = 0;
 
-	if(_obj->steps) {
-		for(i = 0; i < _obj->steps_count; ++i) {
-			AGE_FREE(_obj->steps[i]);
+	if(_obj) {
+		if(_obj->steps) {
+			for(i = 0; i < _obj->steps_count; ++i) {
+				destroy_fsm_step(_obj->steps[i]);
+			}
+			AGE_FREE(_obj->steps);
 		}
-		AGE_FREE(_obj->steps);
 	}
-	AGE_FREE(_obj);
 }
 
 void append_fsm_rule_step(FsmRuleStep* _ruleStep, FsmStep* _step) {
 	assert(_ruleStep && _step);
 
-	_ruleStep->steps = AGE_REALLOC(FsmStep*, _ruleStep->steps, ++_ruleStep->steps_count);
+	_ruleStep->steps = AGE_REALLOC(FsmStep*, _ruleStep->steps, sizeof(FsmStep*) * (++_ruleStep->steps_count));
 	_ruleStep->steps[_ruleStep->steps_count - 1] = _step;
 }
 
@@ -145,7 +151,15 @@ Fsm* create_bitfsm(s32 _statusCount, s32 _commandCount, ObjToIndexFunc _objToInd
 }
 
 void destroy_bitfsm(Fsm* _fsm) {
-	destroy_fsm_rule_step(_fsm->rule_steps);
+	s32 i = 0;
+	if(_fsm->rule_steps) {
+		for(i = 0; i < _fsm->rule_steps_count; ++i) {
+			destroy_fsm_rule_step(&_fsm->rule_steps[i]);
+		}
+		AGE_FREE(_fsm->rule_steps);
+		_fsm->rule_steps = 0;
+		_fsm->rule_steps_count = 0;
+	}
 	destroy_fsm_status(_fsm->current);
 	AGE_FREE(_fsm);
 }
@@ -332,7 +346,12 @@ void clear_bitfsm_all_rule_steps(Fsm* _fsm) {
 	for(i = 0; i < _fsm->rule_steps_count; ++i) {
 		clear_bitfsm_rule_step(_fsm, i);
 	}
-	destroy_fsm_rule_step(_fsm->rule_steps);
+	for(i = 0; i < _fsm->rule_steps_count; ++i) {
+		destroy_fsm_rule_step(&_fsm->rule_steps[i]);
+	}
+	AGE_FREE(_fsm->rule_steps);
+	_fsm->rule_steps = 0;
+	_fsm->rule_steps_count = 0;
 }
 
 s32 get_bitfsm_current_step(Fsm* _fsm) {

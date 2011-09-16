@@ -27,13 +27,15 @@
 #include "game.h"
 
 static AsciiHeroFsmTag NORMAL_FSM_TAG = { 0, "normal", "end_normal" };
-static AsciiHeroFsmTag FALLING_FSM_TAG = { 1, "walk", "end_walk" };
+static AsciiHeroFsmTag FALLING_FSM_TAG = { 1, "fall", "end_fall" };
 static AsciiHeroFsmTag WALKING_FSM_TAG = { 2, "walk", "end_walk" };
+static AsciiHeroFsmTag DIED_FSM_TAG = { 3, "died", "end_died" };
 
 static AsciiHeroFsmCmd NORMAL_FSM_CMD = { "normal" };
 static AsciiHeroFsmCmd WALKING_FSM_CMD = { "walk" };
 static AsciiHeroFsmCmd COLLIDE_FSM_CMD = { "collide" };
 static AsciiHeroFsmCmd NO_COLLIDE_FSM_CMD = { "no_collide" };
+static AsciiHeroFsmCmd KILL_FSM_CMD = { "kill" };
 
 void destroy_fsm_tag(Ptr _ptr) {
 	/* do nothing */
@@ -51,6 +53,10 @@ Ptr walking_fsm_tag(void) {
 	return &WALKING_FSM_TAG;
 }
 
+Ptr died_fsm_tag(void) {
+	return &DIED_FSM_TAG;
+}
+
 Ptr normal_fsm_cmd(void) {
 	return &NORMAL_FSM_CMD;
 }
@@ -65,6 +71,10 @@ Ptr collide_fsm_cmd(void) {
 
 Ptr no_collide_fsm_cmd(void) {
 	return &NO_COLLIDE_FSM_CMD;
+}
+
+Ptr kill_fsm_cmd(void) {
+	return &KILL_FSM_CMD;
 }
 
 s32 fsm_tag_to_index(Ptr _obj) {
@@ -88,6 +98,8 @@ s32 fsm_tag_to_command(Ptr _obj) {
 		result = 2;
 	} else if(cmd == &NO_COLLIDE_FSM_CMD) {
 		result = 3;
+	} else if(cmd == &KILL_FSM_CMD) {
+		result = 4;
 	} else {
 		assert(0 && "Unknown FSM command");
 	}
@@ -100,10 +112,41 @@ void fsm_step_handler(Ptr _src, Ptr _tgt) {
 }
 
 void open_ascii_hero_animation_fsm(Fsm* _fsm) {
+	Bitset* bs = 0;
+
 	register_bitfsm_rule_step_tag(_fsm, normal_fsm_tag());
 	register_bitfsm_rule_step_tag(_fsm, falling_fsm_tag());
 	register_bitfsm_rule_step_tag(_fsm, walking_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, died_fsm_tag());
+
+	bs = bs_create(4);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, falling_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, normal_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(walking_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, walking_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(normal_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, normal_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, falling_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_destroy(bs);
 }
 
 void close_ascii_hero_animation_fsm(Fsm* _fsm) {
+	clear_bitfsm(_fsm);
 }

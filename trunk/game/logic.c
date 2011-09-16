@@ -316,7 +316,7 @@ PlayerUserdata* create_player_userdata(void) {
 	PlayerUserdata* result = 0;
 
 	result = AGE_MALLOC(PlayerUserdata);
-	result->fsm = create_bitfsm(3, 4, fsm_tag_to_index, fsm_tag_to_command, 0, fsm_step_handler, destroy_fsm_tag);
+	result->fsm = create_bitfsm(4, 5, fsm_tag_to_index, fsm_tag_to_command, 0, fsm_step_handler, destroy_fsm_tag);
 	open_ascii_hero_animation_fsm(result->fsm);
 
 	return result;
