@@ -1,3 +1,6 @@
+Sep. 18 2011
+Binded bitfsm to player animation controlling.
+
 Sep. 17 2011
 bitfsm bugfix.
 Basically binded bitfsm to player animation controlling.

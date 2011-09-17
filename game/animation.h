@@ -53,13 +53,12 @@ Ptr collide_fsm_cmd(void);
 Ptr no_collide_fsm_cmd(void);
 Ptr kill_fsm_cmd(void);
 
-s32 fsm_tag_to_index(Ptr _obj);
+void open_ascii_hero_animation_fsm(Fsm* _fsm);
+void close_ascii_hero_animation_fsm(Fsm* _fsm);
 
+s32 fsm_tag_to_index(Ptr _obj);
 s32 fsm_tag_to_command(Ptr _obj);
 
 void fsm_step_handler(Ptr _src, Ptr _tgt);
-
-void open_ascii_hero_animation_fsm(Fsm* _fsm);
-void close_ascii_hero_animation_fsm(Fsm* _fsm);
 
 #endif /* __ANIMATION_H__ */
