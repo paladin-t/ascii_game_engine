@@ -41,6 +41,7 @@ typedef enum KeyIndex {
 	KC_RIGHT, /**< right key */
 	KC_OK,    /**< ok/confirm/fire/enter key */
 	KC_ESC,   /**< escape/cancel key */
+	KC_P,     /**< 'p' key */
 
 	KC_COUNT  /**< mapped keys count */
 } KeyIndex;

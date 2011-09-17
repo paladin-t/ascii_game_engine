@@ -119,12 +119,17 @@ bl walk_rule_step(FsmRuleStep* _ruleStep, FsmStatus* _curr, Bitset* _status, bl 
 	}
 
 	_s = bs_create(_status->bit_count);
-	bs_arithmetic_or(_curr->status, _status, _s);
+	if(_exact) {
+		bs_set_all_bits(_s, _status);
+	} else {
+		bs_arithmetic_or(_curr->status, _status, _s);
+	}
 	for(i = 0; i < _ruleStep->steps_count; ++i) {
 		_ck = _ruleStep->steps[i];
 		if((_ck->exact && bs_equals(_ck->condition, _s)) || (!_ck->exact && (bs_logic_and(_ck->condition, _s)))) {
 			_curr->index = _ck->next;
-			bs_set_all_bits(_curr->status, _exact ? _status : _s);
+			bs_set_all_bits(_curr->status, _s);
+			bs_destroy(_s);
 
 			return TRUE;
 		}

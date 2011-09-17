@@ -111,6 +111,7 @@ typedef struct PlayerUserdata {
 	s32 jump_time;
 	s8 on_board[AGE_STR_LEN];
 	s32 collition_direction;
+	u32 hold_step_count;
 	Fsm* fsm;
 } PlayerUserdata;
 

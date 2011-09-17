@@ -77,6 +77,48 @@ Ptr kill_fsm_cmd(void) {
 	return &KILL_FSM_CMD;
 }
 
+void open_ascii_hero_animation_fsm(Fsm* _fsm) {
+	Bitset* bs = 0;
+
+	register_bitfsm_rule_step_tag(_fsm, normal_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, falling_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, walking_fsm_tag());
+	register_bitfsm_rule_step_tag(_fsm, died_fsm_tag());
+
+	bs = bs_create(5);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, falling_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, normal_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(walking_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, walking_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(normal_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, normal_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, falling_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_clear(bs);
+	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
+	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, died_fsm_tag(), TRUE);
+	bs_destroy(bs);
+
+	set_bitfsm_current_step_tag(_fsm, normal_fsm_tag());
+}
+
+void close_ascii_hero_animation_fsm(Fsm* _fsm) {
+	clear_bitfsm(_fsm);
+}
+
 s32 fsm_tag_to_index(Ptr _obj) {
 	AsciiHeroFsmTag* tag = (AsciiHeroFsmTag*)_obj;
 
@@ -108,45 +150,18 @@ s32 fsm_tag_to_command(Ptr _obj) {
 }
 
 void fsm_step_handler(Ptr _src, Ptr _tgt) {
-	// TODO
-}
+	s8 buf[AGE_STR_LEN];
+	AsciiHeroFsmTag* t1 = (AsciiHeroFsmTag*)_src;
+	AsciiHeroFsmTag* t2 = (AsciiHeroFsmTag*)_tgt;
+	sprintf(buf, "from %d: %s, to %d: %s\n", t1->index, t1->start_frame, t2->index, t2->start_frame);
+#ifdef _DEBUG
+	OutputDebugStringA(buf);
+#endif
 
-void open_ascii_hero_animation_fsm(Fsm* _fsm) {
-	Bitset* bs = 0;
-
-	register_bitfsm_rule_step_tag(_fsm, normal_fsm_tag());
-	register_bitfsm_rule_step_tag(_fsm, falling_fsm_tag());
-	register_bitfsm_rule_step_tag(_fsm, walking_fsm_tag());
-	register_bitfsm_rule_step_tag(_fsm, died_fsm_tag());
-
-	bs = bs_create(4);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, falling_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(collide_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, normal_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(walking_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, walking_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(normal_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, normal_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(no_collide_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, falling_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, normal_fsm_tag(), bs, died_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, falling_fsm_tag(), bs, died_fsm_tag(), TRUE);
-	bs_clear(bs);
-	bs_set_bit(bs, fsm_tag_to_command(kill_fsm_cmd()), TRUE);
-	add_bitfsm_rule_step_by_tag(_fsm, walking_fsm_tag(), bs, died_fsm_tag(), TRUE);
-	bs_destroy(bs);
-}
-
-void close_ascii_hero_animation_fsm(Fsm* _fsm) {
-	clear_bitfsm(_fsm);
+	play_sprite(AGE_CVS, game()->main,
+		t2->start_frame, t2->end_frame,
+		TRUE,
+		on_playing_for_sprite_main_player
+	);
+	resume_sprite(AGE_CVS, game()->main);
 }

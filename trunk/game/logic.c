@@ -29,6 +29,8 @@
 #include "state.h"
 #include "renderer.h"
 
+#define _HOLD_FRAME 12
+
 typedef struct MessageContext {
 	Ptr receiver;
 	Ptr sender;
@@ -216,6 +218,13 @@ void spring_board_action(Canvas* _cvs, Sprite* _spr) {
 }
 
 void serration_board_action(Canvas* _cvs, Sprite* _spr) {
+	PlayerUserdata* ud = 0;
+
+	ud = (PlayerUserdata*)(game()->main->userdata.data);
+	assert(ud);
+
+	walk_bitfsm_with_tag(ud->fsm, kill_fsm_cmd(), TRUE);
+
 	game()->game_over = TRUE;
 }
 
@@ -332,12 +341,32 @@ void destroy_player_userdata(Ptr _ptr) {
 
 s32 on_ctrl_for_sprite_main_player(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wparam, Ptr _extra) {
 	s32 result = 0;
+	PlayerUserdata* ud = 0;
+	Sprite* spr = 0;
+	bl d = FALSE;
 
-	game()->main->direction = 0;
+	spr = (Sprite*)_obj;
+	assert(spr);
+	ud = (PlayerUserdata*)(spr->userdata.data);
+	assert(ud);
+
+	spr->direction = 0;
 	if(is_key_down(AGE_IPT, 0, KC_LEFT)) {
-		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_LEFT, 0, 0);
+		d = TRUE;
+
+		send_message_to_sprite(spr, 0, MSG_MOVE, DIR_LEFT, 0, 0);
+
+		walk_bitfsm_with_tag(ud->fsm, walking_fsm_cmd(), TRUE);
 	} else if(is_key_down(AGE_IPT, 0, KC_RIGHT)) {
-		send_message_to_sprite(game()->main, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
+		d = TRUE;
+
+		send_message_to_sprite(spr, 0, MSG_MOVE, DIR_RIGHT, 0, 0);
+
+		walk_bitfsm_with_tag(ud->fsm, walking_fsm_cmd(), TRUE);
+	}
+
+	if(ud->hold_step_count != 0xFFFFFFFF && d) {
+		ud->hold_step_count += _HOLD_FRAME;
 	}
 
 	return result;
@@ -504,6 +533,7 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 	ud = (PlayerUserdata*)(_spr->userdata.data);
 	assert(ud);
 
+	/* part 1: add score? */
 	l = game()->line_count - GAME_AREA_HEIGHT + y + _spr->frame_size.h;
 	if(l > 0) {
 		l /= game()->level_distance;
@@ -513,7 +543,9 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 		}
 	}
 
+	/* part 2: motion processing */
 	if(ud->jump_line) {
+		/* jump */
 		ud->jump_time += _elapsedTime;
 		if(ud->jump_time >= DEFAULT_JUMP_TIME) {
 			ud->jump_time -= DEFAULT_JUMP_TIME;
@@ -521,7 +553,10 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 			--y;
 			set_sprite_position(_cvs, _spr, x, y);
 		}
+
+		walk_bitfsm_with_tag(ud->fsm, no_collide_fsm_cmd(), TRUE);
 	} else {
+		/* fall */
 		ud->time += _elapsedTime;
 		if(ud->time >= ud->fall_time) {
 			ud->time -= ud->fall_time;
@@ -529,25 +564,46 @@ void on_update_for_sprite_main_player(Canvas* _cvs, Sprite* _spr, s32 _elapsedTi
 				++y;
 				set_sprite_position(_cvs, _spr, x, y);
 				if(y > GAME_AREA_BOTTOM) {
+					walk_bitfsm_with_tag(ud->fsm, kill_fsm_cmd(), TRUE);
+
 					game()->game_over = TRUE;
 				}
 			}
 		}
 
+		/* collide? */
 		if(ud->on_board[0]) {
+			walk_bitfsm_with_tag(ud->fsm, collide_fsm_cmd(), TRUE);
+
+			if(!ud->hold_step_count) {
+				walk_bitfsm_with_tag(ud->fsm, normal_fsm_cmd(), TRUE);
+			}
+
 			bd = get_sprite_by_name(_cvs, ud->on_board);
 			if(bd) {
 				get_sprite_position(_cvs, bd, &bx, &by);
 				by = by - _spr->frame_size.h + 1;
 				set_sprite_position(_cvs, _spr, x, by);
 				if(by + _spr->frame_size.h <= GAME_AREA_TOP) {
+					walk_bitfsm_with_tag(ud->fsm, kill_fsm_cmd(), TRUE);
+
 					game()->game_over = TRUE;
 				}
 			}
+			ud->on_board[0] = '\0';
+		} else {
+			walk_bitfsm_with_tag(ud->fsm, no_collide_fsm_cmd(), TRUE);
+		}
+
+		/* standing without moving? */
+		if(ud->hold_step_count > _HOLD_FRAME) {
+			ud->hold_step_count = _HOLD_FRAME;
+		} else if(ud->hold_step_count) {
+			--ud->hold_step_count;
 		}
 	}
-	ud->on_board[0] = '\0';
 
+	/* part 3: original motion updating */
 	update_sprite(_cvs, _spr, _elapsedTime);
 }
 
