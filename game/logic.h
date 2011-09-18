@@ -138,10 +138,10 @@ void rscroll_board_action(Canvas* _cvs, Sprite* _spr);
 static const BoardInfo BOARD_INFO[AHBT_COUNT] = {
 	{ "solid", "end_solid", 0, 29, AHBT_SOLID, solid_board_action },
 	{ "spring", "end_spring", 30, 39, AHBT_SPRING, spring_board_action },
-	{ "serration", "end_serration", 40, 54, AHBT_SERRATION, serration_board_action },
-	{ "overturn", "end_overturn", 55, 69, AHBT_OVERTURN, overturn_board_action },
-	{ "l-scroll", "end_l-scroll", 70, 79, AHBT_L_SCROLL, lscroll_board_action },
-	{ "r-scroll", "end_r-scroll", 80, 89, AHBT_R_SCROLL, rscroll_board_action },
+	{ "serration", "end_serration", 40, 49, AHBT_SERRATION, serration_board_action },
+	{ "overturn", "end_overturn", 50, 64, AHBT_OVERTURN, overturn_board_action },
+	{ "l-scroll", "end_l-scroll", 65, 74, AHBT_L_SCROLL, lscroll_board_action },
+	{ "r-scroll", "end_r-scroll", 75, 84, AHBT_R_SCROLL, rscroll_board_action },
 };
 
 void init(void);
