@@ -159,6 +159,12 @@ void fsm_step_handler(Ptr _src, Ptr _tgt) {
 	OutputDebugStringA(buf);
 #endif
 
+	if(_src == falling_fsm_tag() && _tgt == normal_fsm_tag()) {
+		if(game()->audio[AHAT_COLLIDE]) {
+			play_sound_string(AGE_SND, game()->audio[AHAT_COLLIDE], ST_SFX, FALSE);
+		}
+	}
+
 	play_sprite(AGE_CVS, game()->main,
 		t2->start_frame, t2->end_frame,
 		TRUE,

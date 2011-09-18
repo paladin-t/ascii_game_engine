@@ -412,6 +412,10 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 					game()->time -= game()->line_up_time;
 					++game()->line_count;
 					if(!(game()->line_count % game()->level_distance) && !game()->level_generated) {
+						if(game()->audio[AHAT_TICK]) {
+							play_sound_string(AGE_SND, game()->audio[AHAT_TICK], ST_SFX, FALSE);
+						}
+
 						bt = game()->generate_board_type();
 						left = age_rand(GAME_AREA_LEFT + 1, GAME_AREA_RIGHT - 1 - 10);
 						if(game()->line_count == game()->level_distance) {
