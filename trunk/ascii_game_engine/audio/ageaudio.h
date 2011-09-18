@@ -39,6 +39,7 @@ typedef struct SoundContext {
 	s32 time;     /**< audio updated time count */
 	Ptr bgm;      /**< bgm thread information */
 	Ptr sfx;      /**< sfx thread information */
+	bl mute;      /**< mute or not */
 } SoundContext;
 
 /**
@@ -70,6 +71,14 @@ AGE_API void destroy_sound_context(SoundContext* _cnt);
  * @param[in] _elapsedTime - elapsed time since last frame
  */
 AGE_API void update_sound(SoundContext* _cnt, s32 _elapsedTime);
+
+/**
+ * @brief set audio mute enabled or disable
+ *
+ * @param[in] _cnt  - sound system context
+ * @param[in] _mute - enabled or disable
+ */
+AGE_API void set_sound_mute(SoundContext* _cnt, bl _mute);
 
 /**
  * @brief play a sound sequence

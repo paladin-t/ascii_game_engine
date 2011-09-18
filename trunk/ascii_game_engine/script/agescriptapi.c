@@ -133,6 +133,21 @@ int age_api_beep(mb_interpreter_t* s, void** l) {
 	return result;
 }
 
+int age_api_set_mute(mb_interpreter_t* s, void** l) {
+	int result = MB_FUNC_OK;
+	s32 en = 0;
+
+	assert(s && l);
+
+	mb_attempt_open_bracket(s, l);
+	mb_pop_int(s, l, &en);
+	mb_attempt_close_bracket(s, l);
+
+	set_sound_mute(AGE_SND, !!en);
+
+	return result;
+}
+
 int age_api_reg_key_code(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;
 	s32 _ply = 0;

@@ -29,6 +29,7 @@
 #include "age.h"
 
 #define DEFAULT_LINE_UP_TIME 500
+#define MIN_LINE_UP_TIME 150
 #define DEFAULT_LEVEL_DISTANCE 6
 #define DEFAULT_FALL_TIME 100
 

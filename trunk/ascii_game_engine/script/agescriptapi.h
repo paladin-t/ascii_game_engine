@@ -90,6 +90,11 @@ AGE_API int amb_push_value(mb_interpreter_t* s, void** l, mb_value_t val);
 AGE_INTERNAL int age_api_beep(mb_interpreter_t* s, void** l);
 
 /**
+ * @brief my-basic api: set audio mute enabled or disable
+ */
+AGE_INTERNAL int age_api_set_mute(mb_interpreter_t* s, void** l);
+
+/**
  * @brief my-basic api: register a key code mapping item
  */
 AGE_INTERNAL int age_api_reg_key_code(mb_interpreter_t* s, void** l);
