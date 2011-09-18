@@ -34,9 +34,6 @@
  * @brief sound context
  */
 typedef struct SoundContext {
-	Str sequence; /**< sound command sequence */
-	s32 position; /**< playing position */
-	s32 time;     /**< audio updated time count */
 	Ptr bgm;      /**< bgm thread information */
 	Ptr sfx;      /**< sfx thread information */
 	bl mute;      /**< mute or not */

@@ -35,11 +35,20 @@ static u32 _FREQ[3][7] = {
 };
 
 typedef struct ThreadInfo {
+	SoundContext* context;
 	DWORD thread_id;
 	HANDLE thread_handle;
-	CRITICAL_SECTION lock;
+	union {
+		CRITICAL_SECTION lock;
+		LPCRITICAL_SECTION plock;
+	};
 	s32 level;
 	bl loop;
+	bl stop;
+	Str sequence;
+	s32 position;
+	s32 time;
+	struct ThreadInfo* shadow;
 } ThreadInfo;
 
 static void _lock(Ptr _info) {
@@ -70,51 +79,91 @@ static void _age_beep(s32 _level, s8 _note) {
 	}
 }
 
+static void _copy_sound_thread_info(ThreadInfo* _src, ThreadInfo* _tgt) {
+	_tgt->context = _src->context;
+	_tgt->thread_id = _src->thread_id;
+	_tgt->thread_handle = _src->thread_handle;
+	_tgt->plock = &_src->lock;
+	_tgt->level = _src->level;
+	_tgt->loop = _src->loop;
+	if(_tgt->sequence) {
+		AGE_FREE(_tgt->sequence);
+		_tgt->sequence = 0;
+	}
+	if(_src->sequence) {
+		_tgt->sequence = copy_string(_src->sequence);
+		AGE_FREE(_src->sequence);
+		_src->sequence = 0;
+	}
+	_tgt->position = _src->position;
+	_tgt->time = _src->time;
+}
+
 #define __PLAY_ONE_NOTE(__c) \
 	if(_is_note(note) || _is_note(last)) { \
-		if(!cnt->mute) { \
+		if(!info->context->mute) { \
 			_age_beep(info->level, note ? note : last); \
 			note = __c; \
 		} \
 	}
 static s32 WINAPI sound_proc(Ptr param) {
 	DWORD result = 0;
-	SoundContext* cnt = (SoundContext*)param;
-	s32 len = strlen(cnt->sequence);
+	ThreadInfo* _info = (ThreadInfo*)param;
 	ThreadInfo* info = 0;
+	s32 len = 0;
 	s8 last = '\0';
 	s8 ch = '\0';
 	s8 note = '\0';
 
-	if(cnt->bgm) {
-		info = (ThreadInfo*)(cnt->bgm);
-	} else if(cnt->sfx) {
-		info = (ThreadInfo*)(cnt->sfx);
-	} else {
-		return result;
-	}
+	EnterCriticalSection(&_info->lock); {
+		info = AGE_MALLOC(ThreadInfo);
+		_info->shadow = info;
+		_copy_sound_thread_info(_info, info);
+		len = info->sequence ? strlen(info->sequence) : 0;
+	} LeaveCriticalSection(&_info->lock);
 
 _again:
-	while(cnt->position < len) {
-		ch = cnt->sequence[cnt->position++];
-		if(ch == '>') {
-			__PLAY_ONE_NOTE('\0');
-			if(info->level < 2) {
-				++info->level;
-			}
-		} else if(ch == '<') {
-			__PLAY_ONE_NOTE('\0');
-			if(info->level > 0) {
-				--info->level;
-			}
-		} else if(_is_note(ch) || ch == '\0') {
-			__PLAY_ONE_NOTE(ch);
+	EnterCriticalSection(info->plock); {
+		if(_info->sequence) {
+			_copy_sound_thread_info(_info, info);
+			len = info->sequence ? strlen(info->sequence) : 0;
 		}
-		last = ch;
-		age_sleep(80);
-	}
-	if(info->loop) {
-		cnt->position = 0;
+		if(_info->stop) {
+			_info->stop = FALSE;
+			AGE_FREE(info->sequence);
+			info->sequence = 0;
+			len = 0;
+		}
+	} LeaveCriticalSection(info->plock);
+	if(info->sequence) {
+		while(info->position < len) {
+			ch = info->sequence[info->position++];
+			if(ch == '>') {
+				__PLAY_ONE_NOTE('\0');
+				if(info->level < 2) {
+					++info->level;
+				}
+			} else if(ch == '<') {
+				__PLAY_ONE_NOTE('\0');
+				if(info->level > 0) {
+					--info->level;
+				}
+			} else if(_is_note(ch) || ch == '\0') {
+				__PLAY_ONE_NOTE(ch);
+			}
+			last = ch;
+			age_sleep(80);
+		}
+		if(info->loop) {
+			info->position = 0;
+			goto _again;
+		} else {
+			AGE_FREE(info->sequence);
+			info->position = 0;
+			goto _again;
+		}
+	} else {
+		age_sleep(100);
 		goto _again;
 	}
 
@@ -125,26 +174,70 @@ _again:
 
 SoundContext* create_sound_context(void) {
 	SoundContext* result = AGE_MALLOC(SoundContext);
-	result->bgm = AGE_MALLOC(ThreadInfo);
-	result->sfx = AGE_MALLOC(ThreadInfo);
-	((ThreadInfo*)(result->bgm))->level = 1;
-	((ThreadInfo*)(result->sfx))->level = 1;
-	InitializeCriticalSection(&((ThreadInfo*)(result->bgm))->lock);
-	InitializeCriticalSection(&((ThreadInfo*)(result->sfx))->lock);
+	ThreadInfo* bgm = 0;
+	ThreadInfo* sfx = 0;
+	bgm = result->bgm = AGE_MALLOC(ThreadInfo);
+	sfx = result->sfx = AGE_MALLOC(ThreadInfo);
+	bgm->context = result;
+	sfx->context = result;
+	bgm->level = 1;
+	sfx->level = 1;
+
+	InitializeCriticalSection(&bgm->lock);
+	InitializeCriticalSection(&sfx->lock);
+
+	bgm->thread_handle = CreateThread(0, 0, sound_proc, bgm, 0, &bgm->thread_id);
+	sfx->thread_handle = CreateThread(0, 0, sound_proc, sfx, 0, &sfx->thread_id);
+	SetThreadPriority(bgm->thread_handle, THREAD_PRIORITY_HIGHEST);
+	SetThreadPriority(sfx->thread_handle, THREAD_PRIORITY_HIGHEST);
+	age_sleep(1);
 
 	return result;
 }
 
 void destroy_sound_context(SoundContext* _cnt) {
+	ThreadInfo* bgm = 0;
+	ThreadInfo* sfx = 0;
+	bgm = (ThreadInfo*)_cnt->bgm;
+	sfx = (ThreadInfo*)_cnt->sfx;
+
 	stop_sound(_cnt, ST_BGM);
 	stop_sound(_cnt, ST_SFX);
-	DeleteCriticalSection(&((ThreadInfo*)(_cnt->bgm))->lock);
-	DeleteCriticalSection(&((ThreadInfo*)(_cnt->sfx))->lock);
+
+	TerminateThread(bgm->thread_handle, 1);
+	WaitForSingleObject(bgm->thread_handle, 10);
+	CloseHandle(bgm->thread_handle);
+	bgm->thread_handle = 0;
+	bgm->thread_id = 0;
+	TerminateThread(sfx->thread_handle, 1);
+	WaitForSingleObject(sfx->thread_handle, 10);
+	CloseHandle(sfx->thread_handle);
+	sfx->thread_handle = 0;
+	sfx->thread_id = 0;
+
+	DeleteCriticalSection(&bgm->lock);
+	DeleteCriticalSection(&sfx->lock);
+
+	if(bgm->shadow) {
+		if(bgm->shadow->sequence) {
+			AGE_FREE(bgm->shadow->sequence);
+		}
+		AGE_FREE(bgm->shadow);
+	}
+	if(sfx->shadow) {
+		if(sfx->shadow->sequence) {
+			AGE_FREE(sfx->shadow->sequence);
+		}
+		AGE_FREE(sfx->shadow);
+	}
+	if(bgm->sequence) {
+		AGE_FREE(bgm->sequence);
+	}
+	if(sfx->sequence) {
+		AGE_FREE(sfx->sequence);
+	}
 	AGE_FREE(_cnt->bgm);
 	AGE_FREE(_cnt->sfx);
-	if(_cnt->sequence) {
-		AGE_FREE(_cnt->sequence);
-	}
 	AGE_FREE(_cnt);
 }
 
@@ -166,11 +259,12 @@ void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _
 	} else {
 		assert(0 && "Unknown sound type");
 	}
-	_cnt->sequence = copy_string(_seq);
-	thread->loop = _loop;
-	thread->thread_handle = CreateThread(0, 0, sound_proc, _cnt, 0, &thread->thread_id);
-	SetThreadPriority(thread->thread_handle, THREAD_PRIORITY_HIGHEST);
-	Sleep(1);
+	EnterCriticalSection(&thread->lock); {
+		thread->sequence = copy_string(_seq);
+		thread->loop = _loop;
+		thread->stop = FALSE;
+	} LeaveCriticalSection(&thread->lock);
+	age_sleep(1);
 }
 
 void stop_sound(SoundContext* _cnt, SoundType _type) {
@@ -183,17 +277,15 @@ void stop_sound(SoundContext* _cnt, SoundType _type) {
 		assert(0 && "Unknown sound type");
 	}
 	if(thread) {
-		thread->level = 1;
 		if(thread->thread_handle) {
-			TerminateThread(thread->thread_handle, 1);
-			WaitForSingleObject(thread->thread_handle, 10);
-			CloseHandle(thread->thread_handle);
-			thread->thread_handle = 0;
-			thread->thread_id = 0;
-			if(_cnt->sequence) {
-				AGE_FREE(_cnt->sequence);
-			}
-			_cnt->position = 0;
+			EnterCriticalSection(&thread->lock); {
+				thread->stop = TRUE;
+				if(thread->sequence) {
+					AGE_FREE(thread->sequence);
+				}
+				thread->level = 1;
+				thread->position = 0;
+			} LeaveCriticalSection(&thread->lock);
 		}
 	}
 }
