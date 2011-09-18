@@ -1,5 +1,7 @@
 Sep. 18 2011
 Binded bitfsm to player animation controlling.
+Board up speeding up.
+Mutable audio.
 
 Sep. 17 2011
 bitfsm bugfix.

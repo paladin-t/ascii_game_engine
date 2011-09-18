@@ -426,6 +426,13 @@ s32 state_main(Ptr _obj, const Str _name, s32 _elapsedTime, u32 _lparam, u32 _wp
 						set_sprite_position(AGE_CVS, bd, left, CANVAS_HEIGHT + 1);
 						set_sprite_physics_mode(AGE_CVS, bd, PHYSICS_MODE_OBSTACLE | PHYSICS_MODE_CHECKER);
 						game()->level_generated = TRUE;
+
+						if(game()->line_up_time > MIN_LINE_UP_TIME) {
+							game()->line_up_time -= 3;
+							if(game()->line_up_time < MIN_LINE_UP_TIME) {
+								game()->line_up_time = MIN_LINE_UP_TIME;
+							}
+						}
 					} else if(game()->line_count % game()->level_distance) {
 						game()->level_generated = FALSE;
 					}

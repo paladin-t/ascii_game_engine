@@ -43,6 +43,7 @@ static bl _register_apis(mb_interpreter_t* s) {
 	bl result = TRUE;
 
 	mb_register_func(s, "BEEP", age_api_beep);
+	mb_register_func(s, "SET_MUTE", age_api_set_mute);
 	mb_register_func(s, "REG_KEY", age_api_reg_key_code);
 	mb_register_func(s, "SET_FRAME_RATE", age_api_set_frame_rate);
 	mb_register_func(s, "CREATE_SPRITE", age_api_create_sprite);

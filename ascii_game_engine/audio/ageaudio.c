@@ -72,8 +72,10 @@ static void _age_beep(s32 _level, s8 _note) {
 
 #define __PLAY_ONE_NOTE(__c) \
 	if(_is_note(note) || _is_note(last)) { \
-		_age_beep(info->level, note ? note : last); \
-		note = __c; \
+		if(!cnt->mute) { \
+			_age_beep(info->level, note ? note : last); \
+			note = __c; \
+		} \
 	}
 static s32 WINAPI sound_proc(Ptr param) {
 	DWORD result = 0;
@@ -148,6 +150,10 @@ void destroy_sound_context(SoundContext* _cnt) {
 
 void update_sound(SoundContext* _cnt, s32 _elapsedTime) {
 	/* do nothing */
+}
+
+void set_sound_mute(SoundContext* _cnt, bl _mute) {
+	_cnt->mute = _mute;
 }
 
 void play_sound_string(SoundContext* _cnt, const Str _seq, SoundType _type, bl _loop) {

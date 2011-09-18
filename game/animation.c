@@ -113,6 +113,7 @@ void open_ascii_hero_animation_fsm(Fsm* _fsm) {
 	bs_destroy(bs);
 
 	set_bitfsm_current_step_tag(_fsm, normal_fsm_tag());
+	walk_bitfsm_with_tag(_fsm, no_collide_fsm_cmd(), TRUE);
 }
 
 void close_ascii_hero_animation_fsm(Fsm* _fsm) {
