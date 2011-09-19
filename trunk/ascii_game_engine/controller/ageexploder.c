@@ -29,13 +29,13 @@
 #include "ageexploder.h"
 
 void update_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
-	// TODO
+	/* TODO */
 }
 
 void fire_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
-	// TODO
+	/* TODO */
 }
 
 void post_render_sprite_ex(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime) {
-	// TODO
+	/* TODO */
 }

@@ -219,18 +219,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\data\sprite\blink_star_brush.txt"
-					>
-				</File>
-				<File
-					RelativePath=".\data\sprite\blink_star_palete.txt"
-					>
-				</File>
-				<File
-					RelativePath=".\data\sprite\blink_star_shape.txt"
-					>
-				</File>
-				<File
 					RelativePath=".\data\sprite\board_brush.txt"
 					>
 				</File>

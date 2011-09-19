@@ -1,20 +1,20 @@
 
   #-------------------------------------------------------------------------#
  ##                                                                         ##
- |                            About Ascii Hero Go!                           |
+ |                                                                           |
+ |                                                                           |
+ |                                                                           |
+ |                            About ASCII HERO GO!                           |
  |                                                                           |
  |        How simple and crude could a game rendering be? AGE is born        |
  |        because of the thinking of this problem partly,  as well it        |
  |        is  an  exploration  on logic layer architecture  of a game        |
- |        engine for the project founder.                                    |
- |        Ascii Hero Go!  is the first game created with  AGE.  It is        |
- |        also a tutorial for beginners using AGE.                           |
- |                                                                           |
- |                                                                           |
- |                                                                           |
- |                                                                           |
- |                                                                           |
- |                                                                           |
+ |        engine from the project founder.                                   |
+ |        ASCII HERO GO!  is the first game created with  AGE.  It is        |
+ |        also a tutorial for beginners using AGE. Enjoy it!                 |
+ |        See   http://code.google.com/p/ascii-game-engine/  for  the        |
+ |        latest info.                                                       |
+ |                                                               Tony        |
  |                                                                           |
  |                                                                           |
  |                                                                           |
