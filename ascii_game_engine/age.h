@@ -74,13 +74,13 @@ typedef struct World {
 /**
  * @brief get the version of current ascii game engine
  *
- * @return - version in integer format
+ * @return - the version in unsigned integer format
  */
 AGE_API u32 get_ver(void);
 /**
  * @brief get the version of current ascii game engine
  *
- * @return - version in string format
+ * @return - the version in string format
  */
 AGE_API const Str get_ver_string(void);
 
@@ -104,7 +104,7 @@ AGE_API void destroy_world(void);
 /**
  * @brief run a script to config the game world
  *
- * @param[in] _cfgFile  - configuration script file name
+ * @param[in] _cfgFile - configuration script file name
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl config_world(const Str _cfgFile);
@@ -123,14 +123,14 @@ AGE_API void exit_world(void);
 /**
  * @brief run a script in the world context
  *
- * @param[in] _sptFile  - script file name
+ * @param[in] _sptFile - script file name
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl run_world_script(const Str _sptFile);
 /**
  * @brief run a script in a new context
  *
- * @param[in] _sptFile  - script file name
+ * @param[in] _sptFile - script file name
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl run_new_script(const Str _sptFile);

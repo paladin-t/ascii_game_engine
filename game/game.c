@@ -41,18 +41,24 @@ static AsciiHeroGame _game;
 static void _on_exit(void) {
 	s32 c = 0;
 	s32 i = 0;
+	static bl destroyed = FALSE;
 
-	for(i = 0; i < AHAT_COUNT; ++i) {
-		if(game()->audio[i]) {
-			AGE_FREE(game()->audio[i]);
+	if(!destroyed) {
+		for(i = 0; i < AHAT_COUNT; ++i) {
+			if(game()->audio[i]) {
+				AGE_FREE(game()->audio[i]);
+				game()->audio[i] = 0;
+			}
 		}
+		game()->destroy_score_boards();
+		game()->clear_board();
+
+		amb_save_data("data/save.bas");
+
+		destroy_world();
+
+		destroyed = TRUE;
 	}
-	game()->destroy_score_boards();
-	game()->clear_board();
-
-	amb_save_data("data/save.bas");
-
-	destroy_world();
 
 	c = _CrtDumpMemoryLeaks();
 
@@ -99,6 +105,8 @@ s32 main(s32 argc, Str argv[]) {
 	_on_init();
 
 	run_world();
+
+	_on_exit();
 
 	return 0;
 }

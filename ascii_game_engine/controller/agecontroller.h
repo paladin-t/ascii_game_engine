@@ -54,7 +54,7 @@ AGE_API void set_canvas_controller(Ptr _obj, control_proc _proc);
 /**
  * @brief get a controller of a canvas
  *
- * @param[in] _obj  - canvas object
+ * @param[in] _obj - canvas object
  * @return controller
  */
 AGE_API control_proc get_canvas_controller(Ptr _obj);
@@ -69,7 +69,7 @@ AGE_API void set_sprite_controller(Ptr _obj, control_proc _proc);
 /**
  * @brief get a controller of a sprite
  *
- * @param[in] _obj  - sprite object
+ * @param[in] _obj - sprite object
  * @return controller
  */
 AGE_API control_proc get_sprite_controller(Ptr _obj);

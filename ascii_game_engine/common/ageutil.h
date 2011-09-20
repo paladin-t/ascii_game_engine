@@ -39,7 +39,7 @@
 AGE_API void age_beep(void);
 
 /**
- * @brief get the system tick count
+ * @brief get system tick count
  *
  * @return - the system tick count, in millisecond
  */
@@ -56,7 +56,7 @@ AGE_API void age_sleep(s32 _time);
  *
  * @param[in] _min - minimum
  * @param[in] _max - maximum
- * @return - a random number
+ * @return - random number
  */
 AGE_API s32 age_rand(s32 _min, s32 _max);
 
@@ -67,7 +67,7 @@ AGE_API s32 age_rand(s32 _min, s32 _max);
  */
 AGE_API void fensure(const Str _file);
 /**
- * @brief get the length of a file
+ * @brief get length of a file
  *
  * @param[in] _fp - file pointer
  * @return - file length in bytes
@@ -120,7 +120,7 @@ AGE_API Str copy_substring(const Str _str, s32 _start, s32 _count);
  * @param[in] _right - second pointer
  * @return - 0 if _left equals to _right,
  *           1 if _left is greater than _right,
- *           -1 if _left is less than _right;
+ *           -1 if _left is less than _right
  */
 AGE_API s32 cmp_ptr(const Ptr _left, const Ptr _right);
 
