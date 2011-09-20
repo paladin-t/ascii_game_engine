@@ -47,13 +47,13 @@ typedef enum KeyIndex {
 } KeyIndex;
 
 /**
- * @brief open input system
+ * @brief open the input system
  *
  * @return - return TRUE if succeed, or FALSE if failed
  */
 AGE_API bl open_input(void);
 /**
- * @brief close input system
+ * @brief close the input system
  *
  * @return - return TRUE if succeed, or FALSE if failed
  */
@@ -92,10 +92,10 @@ AGE_API bl register_key_map(s32 _player, KeyIndex _keyIdx, s32 _keyCode);
 /**
  * @brief determine whether the given index key of a player is down
  *
- * @param[in] _ctx - input context to be detected
- * @param[in] _player  - player index
- * @param[in] _keyIdx  - key index
- * @return - return TRUE if down
+ * @param[in] _ctx    - input context to be detected
+ * @param[in] _player - player index
+ * @param[in] _keyIdx - key index
+ * @return - return TRUE if the key is down or FALSE
  */
 AGE_API bl is_key_down(Ptr _ctx, s32 _player, KeyIndex _keyIdx);
 

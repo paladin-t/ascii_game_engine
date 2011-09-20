@@ -304,7 +304,7 @@ AGE_API Canvas* create_canvas(const Str _name);
 /**
  * @brief destroy a canvas object
  *
- * @param[in] _cvs - canvas object
+ * @param[in] _cvs - canvas object to be destroyed
  */
 AGE_API void destroy_canvas(Canvas* _cvs);
 
@@ -324,7 +324,7 @@ AGE_API void set_frame_rate(Canvas* _cvs, s32 _rate);
 AGE_API s32 get_frame_rate(Canvas* _cvs);
 
 /**
- * @brief run collition in a canvas
+ * @brief run collition detection in a canvas
  *
  * @param[in] _cvs         - canvas object
  * @param[in] _elapsedTime - elapsed time since last frame
@@ -355,8 +355,8 @@ AGE_API void render_canvas(Canvas* _cvs, s32 _elapsedTime);
 /**
  * @brief get a sprite by name
  *
- * @param[in] _cvs        - canvas object
- * @param[in] _name       - sprite name
+ * @param[in] _cvs  - canvas object
+ * @param[in] _name - sprite name
  * @return - corresponded sprite object, zero pointer for none
  */
 AGE_API Sprite* get_sprite_by_name(Canvas* _cvs, const Str _name);
@@ -395,18 +395,18 @@ AGE_API void destroy_sprite(Canvas* _cvs, Sprite* _spr);
 AGE_API void destroy_all_sprites(Canvas* _cvs);
 
 /**
- * @brief get the color of a pixel in a sprite
+ * @brief get color of a pixel in a sprite
  *
  * @param[in] _cvs   - canvas object
  * @param[in] _spr   - sprite object
  * @param[in] _frame - frame index
  * @param[in] _x     - x offset of a pixel
  * @param[in] _y     - y offset of a pixel
- * @return - color of the appointed pixel
+ * @return - color of an appointed pixel
  */
 AGE_API Color get_sprite_pixel_color(Canvas* _cvs, Sprite* _spr, s32 _frame, s32 _x, s32 _y);
 /**
- * @brief set the color of a pixel in a sprite
+ * @brief set color of a pixel in a sprite
  *
  * @param[in] _cvs   - canvas object
  * @param[in] _spr   - sprite object
@@ -458,7 +458,7 @@ AGE_API bl set_sprite_position(Canvas* _cvs, Sprite* _spr, s32 _x, s32 _y);
 AGE_API bl get_sprite_position(Canvas* _cvs, Sprite* _spr, s32* _x, s32* _y);
 
 /**
- * @brief get the index of a given named frame
+ * @brief get index of a given named frame
  *
  * @param[in] _cvs  - canvas object
  * @param[in] _spr  - sprite object
@@ -538,7 +538,7 @@ AGE_API void post_render_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 AGE_API void collide_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
 
 /**
- * @brief get the physics mode of a sprite object
+ * @brief get physics mode of a sprite object
  *
  * @param[in] _cvs - canvas object
  * @param[in] _spr - sprite object
@@ -546,7 +546,7 @@ AGE_API void collide_sprite(Canvas* _cvs, Sprite* _spr, s32 _elapsedTime);
  */
 AGE_API u32 get_sprite_physics_mode(Canvas* _cvs, Sprite* _spr);
 /**
- * @brief set the physics mode of a sprite object
+ * @brief set physics mode of a sprite object
  *
  * @param[in] _cvs  - canvas object
  * @param[in] _spr  - sprite object
@@ -590,7 +590,7 @@ AGE_API Color get_mapped_color(s32 _index);
  */
 AGE_API void set_cursor_visible(Canvas* _cvs, bl _vis);
 /**
- * @brief set the console cursor posotion to a given place
+ * @brief set console cursor posotion to a given place
  *
  * @param[in] _cvs - canvas object
  * @param[in] _x   - x
@@ -598,7 +598,7 @@ AGE_API void set_cursor_visible(Canvas* _cvs, bl _vis);
  */
 AGE_API void goto_xy(Canvas* _cvs, s32 _x, s32 _y);
 /**
- * @brief set the console output color
+ * @brief set console output color
  *
  * @param[in] _cvs - canvas object
  * @param[in] _col - console output color

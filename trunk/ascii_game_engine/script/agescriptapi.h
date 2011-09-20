@@ -100,7 +100,7 @@ AGE_INTERNAL int age_api_set_mute(mb_interpreter_t* s, void** l);
 AGE_INTERNAL int age_api_reg_key_code(mb_interpreter_t* s, void** l);
 
 /**
- * @brief my-basic api: set the frame rate of a canvas
+ * @brief my-basic api: set frame rate of a canvas
  */
 AGE_INTERNAL int age_api_set_frame_rate(mb_interpreter_t* s, void** l);
 
@@ -120,17 +120,17 @@ AGE_INTERNAL int age_api_destroy_sprite(mb_interpreter_t* s, void** l);
 AGE_INTERNAL int age_api_destroy_all_sprites(mb_interpreter_t* s, void** l);
 
 /**
- * @brief my-basic api: set the position of a sprite object
+ * @brief my-basic api: set position of a sprite object
  */
 AGE_INTERNAL int age_api_set_sprite_position(mb_interpreter_t* s, void** l);
 
 /**
- * @brief my-basic api: get the x position of a sprite object
+ * @brief my-basic api: get x position of a sprite object
  */
 AGE_INTERNAL int age_api_get_sprite_position_x(mb_interpreter_t* s, void** l);
 
 /**
- * @brief my-basic api: get the y position of a sprite object
+ * @brief my-basic api: get y position of a sprite object
  */
 AGE_INTERNAL int age_api_get_sprite_position_y(mb_interpreter_t* s, void** l);
 
