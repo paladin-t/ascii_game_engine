@@ -56,9 +56,9 @@ extern "C" {
 /** Macros */
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 12
+#define _VER_REVISION 13
 #define _MB_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _MB_VERSION_STRING "1.0.0012"
+#define _MB_VERSION_STRING "1.0.0013"
 
 /* Helper */
 #ifndef sgn
@@ -2063,7 +2063,7 @@ int _parse_char(mb_interpreter_t* s, char c, int pos) {
 			result += _append_char_to_symbol(s, c);
 		}
 	} else if(context->parsing_state == _PS_COMMENT) {
-		if(_is_newline(c)) { /* \r \n EOF*/
+		if(_is_newline(c)) { /* \r \n EOF */
 			context->parsing_state = _PS_NORMAL;
 		} else {
 			/* Do nothing */
@@ -3326,7 +3326,7 @@ int mb_set_error_handler(mb_interpreter_t* s, mb_error_handler_t h) {
 	/* Set an error handler to an interpreter instance */
 	int result = MB_FUNC_OK;
 
-	assert(s && h);
+	assert(s);
 
 	s->error_handler = h;
 
@@ -5014,6 +5014,8 @@ int _std_input(mb_interpreter_t* s, void** l) {
 	int result = MB_FUNC_OK;
 	_ls_node_t* ast = 0;
 	_object_t* obj = 0;
+	char line[256];
+	char* conv_suc = 0;
 
 	assert(s && l);
 
@@ -5023,16 +5025,27 @@ int _std_input(mb_interpreter_t* s, void** l) {
 	obj = (_object_t*)(ast->data);
 
 	if(obj->data.variable->data->type == _DT_INT) {
-		scanf("%d", &obj->data.variable->data->data.integer);
+		gets(line);
+		obj->data.variable->data->data.integer = (int_t)strtol(line, &conv_suc, 0);
+		if(*conv_suc != '\0') {
+			result = MB_FUNC_ERR;
+			goto _exit;
+		}
 	} else if(obj->data.variable->data->type == _DT_REAL) {
-		scanf("%f", &obj->data.variable->data->data.float_point);
+		gets(line);
+		obj->data.variable->data->data.float_point = (real_t)strtod(line, &conv_suc);
+		if(*conv_suc != '\0') {
+			result = MB_FUNC_ERR;
+			goto _exit;
+		}
 	} else if(obj->data.variable->data->type == _DT_STRING) {
 		if(obj->data.variable->data->data.string) {
 			safe_free(obj->data.variable->data->data.string);
 		}
 		obj->data.variable->data->data.string = (char*)malloc(256);
 		memset(obj->data.variable->data->data.string, 0, 256);
-		scanf("%s", obj->data.variable->data->data.string);
+		gets(line);
+		strcpy(obj->data.variable->data->data.string, line);
 	} else {
 		result = MB_FUNC_ERR;
 		goto _exit;
