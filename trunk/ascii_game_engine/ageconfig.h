@@ -74,7 +74,7 @@
 #endif
 
 #ifndef EXPECTED_FPS
-#	define EXPECTED_FPS 60
+#	define EXPECTED_FPS 20
 #endif
 #ifndef EXPECTED_FRAME_TIME
 #	define EXPECTED_FRAME_TIME (1000 / EXPECTED_FPS)

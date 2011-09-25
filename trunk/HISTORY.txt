@@ -1,3 +1,6 @@
+Sep. 25 2011
+File exists ensuring bugfix.
+
 Sep. 18 2011
 Binded bitfsm to player animation controlling.
 Board up speeding up.

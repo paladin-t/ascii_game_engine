@@ -60,9 +60,14 @@ s32 age_rand(s32 _min, s32 _max) {
 }
 
 void fensure(const Str _file) {
-	FILE* fp = fopen(_file, "wb+");
-	assert(fp);
-	fclose(fp);
+	FILE* fp = fopen(_file, "rb");
+	if(!fp) {
+		fp = fopen(_file, "wb");
+		assert(fp);
+		fclose(fp);
+	} else {
+		fclose(fp);
+	}
 }
 
 s32 flen(FILE* _fp) {
