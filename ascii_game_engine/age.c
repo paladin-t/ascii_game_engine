@@ -27,9 +27,9 @@
 
 #define _VER_MAJOR 1
 #define _VER_MINOR 0
-#define _VER_REVISION 1
+#define _VER_REVISION 2
 #define _AGE_VERSION ((_VER_MAJOR << 24) | (_VER_MINOR << 16) | (_VER_REVISION))
-#define _AGE_VERSION_STRING "1.0.0001"
+#define _AGE_VERSION_STRING "1.0.0002"
 
 static World* _gWorld = 0;
 
