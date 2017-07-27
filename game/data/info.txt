@@ -12,9 +12,9 @@
  |        engine from the project founder.                                   |
  |        ASCII HERO GO!  is the first game created with  AGE.  It is        |
  |        also a tutorial for beginners using AGE. Enjoy it!                 |
- |        See   http://code.google.com/p/ascii-game-engine/  for  the        |
+ |        See https://github.com/paladin-t/ascii_game_engine/ for the        |
  |        latest info.                                                       |
- |                                                               Tony        |
+ |                                                        Wang Renxin        |
  |                                                                           |
  |                                                                           |
  |                                                                           |
